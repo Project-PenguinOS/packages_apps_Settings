@@ -1370,6 +1370,9 @@ When the screen is off, the torch can be enabled with one of the following key c
     <!-- Ambient timeout -->
     <string name="ambient_time_out_title">Ambient notification time out</string>
     <string name="ambient_time_out_summary">%1$d seconds</string>
+
+    <!-- Notification log -->
+    <string name="notification_log_summary">Show notifications history log</string>
 </resources>
 
 
