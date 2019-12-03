@@ -1465,6 +1465,10 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="app_list_search">Search</string>
     <string name="app_list_search_apps">Search apps</string>
     <string name="app_list_loading">Loading apps\u2026</string>
+
+    <!-- Annoying Notifications -->
+    <string name="notification_sound_vib_screen_on_title">Annoying Notifications</string>
+    <string name="notification_sound_vib_screen_on_summary">Play sound and vibration for notifications when screen is on</string>
 </resources>
 
 
