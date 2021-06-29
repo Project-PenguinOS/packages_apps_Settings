@@ -129,6 +129,13 @@
         android:fragment="com.android.settings.users.UserSettings"
         settings:controller="com.android.settings.users.MultiUserPreferenceController"/>
 
+    <Preference
+        android:key="default_usb_configuration"
+        android:fragment="com.android.settings.connecteddevice.usb.UsbDefaultFragment"
+        android:icon="@drawable/ic_usb_24"
+        android:title="@string/usb_default_config_title"
+        android:summary="@string/usb_default_config_summary"/>    
+
     <com.android.settings.spa.preference.ComposePreference
         android:key="developer_options"
         android:order="-40"
