@@ -95,6 +95,15 @@
             android:defaultValue="true" />
 
         <com.android.settingslib.widget.SliderPreference
+            android:key="gesture_navbar_length_preference"
+            android:title="@string/gesture_navbar_length_title"
+            android:max="2"
+            android:selectable="true"
+            settings:textStart="@string/short_label"
+            settings:textEnd="@string/long_label"
+            android:dependency="navigation_bar_hint" />
+
+        <com.android.settingslib.widget.SliderPreference
             android:key="gesture_navbar_height_preference"
             android:title="@string/gesture_navbar_radius_title"
             android:max="4"
