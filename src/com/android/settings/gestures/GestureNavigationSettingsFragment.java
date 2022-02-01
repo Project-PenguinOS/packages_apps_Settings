@@ -17,11 +17,13 @@
 package com.android.settings.gestures;
 
 import android.app.settings.SettingsEnums;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.UserHandle;
 import android.provider.Settings;
 import android.view.Display;
 import android.view.WindowManager;
@@ -66,6 +68,7 @@ public class GestureNavigationSettingsFragment extends DashboardFragment {
     private static final String LAUNCHER3_PACKAGE_NAME = "com.android.launcher3";
     private static final String LAUNCHER3_NOGESTUREHINT_OVERLAY = "com.android.launcher3.overlay.nogesturehint";
     private static final String GESTURE_BACK_HEIGHT_KEY = "gesture_back_height";
+    private static final String GESTURE_NAVBAR_HEIGHT_MODE_KEY = "gesture_navbar_height_preference";
 
     private WindowManager mWindowManager;
     private BackGestureIndicatorView mIndicatorView;
@@ -102,6 +105,7 @@ public class GestureNavigationSettingsFragment extends DashboardFragment {
         initSliderPreference(RIGHT_EDGE_SEEKBAR_KEY);
         initSliderPreference(GESTURE_BACK_HEIGHT_KEY);
         initTutorialButton();
+        initGestureNavbarHeightPreference();
 
         SecureSettingSwitchPreference gestureHintPref =
                 getPreferenceScreen().findPreference(GESTURE_HINT_KEY);
@@ -255,6 +259,24 @@ public class GestureNavigationSettingsFragment extends DashboardFragment {
             }
 
             pref.setSliderStateDescription(formatStateDescription(pref, (int) v));
+            return true;
+        });
+    }
+
+    private void initGestureNavbarHeightPreference() {
+        final ContentResolver resolver = getContext().getContentResolver();
+        final SliderPreference pref =
+            getPreferenceScreen().findPreference(GESTURE_NAVBAR_HEIGHT_MODE_KEY);
+        if (pref == null) return;
+        pref.setUpdatesContinuously(true);
+        pref.setHapticFeedbackMode(SliderPreference.HAPTIC_FEEDBACK_MODE_ON_TICKS);
+        pref.setSliderIncrement(1);
+        pref.setTickVisible(true);
+        pref.setValue(Settings.System.getIntForUser(resolver,
+            Settings.System.GESTURE_NAVBAR_HEIGHT_MODE, 3, UserHandle.USER_CURRENT));
+        pref.setOnPreferenceChangeListener((p, v) -> {
+            Settings.System.putIntForUser(resolver,
+                Settings.System.GESTURE_NAVBAR_HEIGHT_MODE, (Integer) v, UserHandle.USER_CURRENT);
             return true;
         });
     }
