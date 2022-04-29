@@ -20,6 +20,8 @@ import android.app.settings.SettingsEnums;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+
+import static com.android.systemui.shared.recents.utilities.Utilities.isLargeScreen;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -122,6 +124,12 @@ public class GestureNavigationSettingsFragment extends DashboardFragment {
 
             return true;
         });
+
+        boolean isTaskbarEnabled = Settings.System.getInt(getContext().getContentResolver(),
+                Settings.System.ENABLE_TASKBAR, isLargeScreen(getContext()) ? 1 : 0) == 1;
+        if (isTaskbarEnabled && gestureHintPref != null) {
+            getPreferenceScreen().removePreference(gestureHintPref);
+        }
     }
 
     @Override
