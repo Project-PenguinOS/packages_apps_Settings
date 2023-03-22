@@ -1366,6 +1366,10 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="blur_intensity_value">%1$d%%</string>
     <string name="blur_settings_summary_on">On (%1$d%%)</string>
     <string name="blur_settings_summary_off">Off</string>
+
+    <!-- Ambient timeout -->
+    <string name="ambient_time_out_title">Ambient notification time out</string>
+    <string name="ambient_time_out_summary">%1$d seconds</string>
 </resources>
 
 

@@ -22,6 +22,7 @@ import static android.app.admin.DevicePolicyResources.Strings.Settings.WORK_PROF
 import android.app.settings.SettingsEnums;
 import android.content.Context;
 import android.database.ContentObserver;
+import android.content.res.Resources;
 import android.hardware.display.AmbientDisplayConfiguration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,6 +36,10 @@ import androidx.annotation.VisibleForTesting;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
+
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.Preference.OnPreferenceChangeListener;
 
 import com.android.settings.R;
 import com.android.settings.dashboard.DashboardFragment;
@@ -57,9 +62,10 @@ import java.util.Set;
  */
 @SearchIndexable
 public class LockscreenDashboardFragment extends DashboardFragment
-        implements OwnerInfoPreferenceController.OwnerInfoCallback {
-
+        implements OwnerInfoPreferenceController.OwnerInfoCallback, OnPreferenceChangeListener {
     private static final String TAG = "LockscreenDashboardFragment";
+
+    private static final String PREF_AMBIENT_TIME_OUT = "ambient_notif_timeout";
 
     @VisibleForTesting
     static final String KEY_LOCK_SCREEN_NOTIFICATON = "security_setting_lock_screen_notif";
@@ -79,6 +85,8 @@ public class LockscreenDashboardFragment extends DashboardFragment
     @VisibleForTesting
     ContentObserver mControlsContentObserver;
 
+    private ListPreference mAmbientTimeOut;
+
     @Override
     public int getMetricsCategory() {
         return SettingsEnums.SETTINGS_LOCK_SCREEN_PREFERENCES;
@@ -97,6 +105,22 @@ public class LockscreenDashboardFragment extends DashboardFragment
                 R.string.locked_work_profile_notification_title);
         replaceEnterpriseStringTitle("security_setting_lock_screen_notif_work_header",
                 WORK_PROFILE_NOTIFICATIONS_SECTION_HEADER, R.string.profile_section_header);
+
+        Resources systemUiResources;
+        try {
+            systemUiResources = getPackageManager().getResourcesForApplication("com.android.systemui");
+        } catch (Exception e) {
+            return;
+        }
+
+        int defaultTimeOut = systemUiResources.getInteger(systemUiResources.getIdentifier(
+                    "com.android.systemui:integer/heads_up_notification_decay", null, null));
+        mAmbientTimeOut = (ListPreference) findPreference(PREF_AMBIENT_TIME_OUT);
+        mAmbientTimeOut.setOnPreferenceChangeListener(this);
+        int ambientTimeOut = Settings.System.getInt(getContentResolver(),
+                Settings.System.AMBIENT_NOTIF_TIMEOUT, defaultTimeOut);
+        mAmbientTimeOut.setValue(String.valueOf(ambientTimeOut));
+        updateAmbientTimeOutSummary(ambientTimeOut);        
     }
 
     @Override
@@ -188,6 +212,21 @@ public class LockscreenDashboardFragment extends DashboardFragment
     }
 
     @Override
+    public boolean onPreferenceChange(Preference preference, Object objValue) {
+        if (preference == mAmbientTimeOut) {
+            int ambientTimeOut = Integer.valueOf((String) objValue);
+            Settings.System.putInt(getContentResolver(),
+                    Settings.System.AMBIENT_NOTIF_TIMEOUT,
+                    ambientTimeOut);
+            mAmbientTimeOut.setValue(String.valueOf(ambientTimeOut));
+
+            // Update the summary to reflect the new value
+            updateAmbientTimeOutSummary(ambientTimeOut);
+        }
+        return true;
+    }
+
+    @Override
     protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         final List<AbstractPreferenceController> controllers = new ArrayList<>();
         final Lifecycle lifecycle = getSettingsLifecycle();
@@ -221,6 +260,11 @@ public class LockscreenDashboardFragment extends DashboardFragment
             mConfig = new AmbientDisplayConfiguration(context);
         }
         return mConfig;
+    }
+
+    private void updateAmbientTimeOutSummary(int value) {
+        String summary = getResources().getString(R.string.ambient_time_out_summary, value / 1000);
+        mAmbientTimeOut.setSummary(summary);
     }
 
     public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
