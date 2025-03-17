@@ -124,12 +124,6 @@ public class GestureNavigationSettingsFragment extends DashboardFragment {
 
             return true;
         });
-
-        boolean isTaskbarEnabled = Settings.System.getInt(getContext().getContentResolver(),
-                Settings.System.ENABLE_TASKBAR, isLargeScreen(getContext()) ? 1 : 0) == 1;
-        if (isTaskbarEnabled && gestureHintPref != null) {
-            getPreferenceScreen().removePreference(gestureHintPref);
-        }
     }
 
     @Override
