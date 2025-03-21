@@ -18,9 +18,11 @@ package com.android.settings.gestures;
 
 import android.app.settings.SettingsEnums;
 import android.content.Context;
+import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.preference.Preference;
 
 import com.android.settings.R;
 import com.android.settings.dashboard.DashboardFragment;
@@ -37,6 +39,22 @@ public class ButtonNavigationSettingsFragment extends DashboardFragment {
 
     public static final String BUTTON_NAVIGATION_SETTINGS =
             "com.android.settings.BUTTON_NAVIGATION_SETTINGS";
+
+    private static final String KEY_ENABLE_TASKBAR = "enable_taskbar";
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        boolean isLargeScreen = getContext().getResources().getConfiguration().smallestScreenWidthDp >= 600;
+        if (!isLargeScreen) {
+             Preference pref = getPreferenceScreen().findPreference(KEY_ENABLE_TASKBAR);
+             if (pref != null) {
+                 getPreferenceScreen().removePreference(pref);
+             }
+         }
+
+    }
 
 
     @Override
