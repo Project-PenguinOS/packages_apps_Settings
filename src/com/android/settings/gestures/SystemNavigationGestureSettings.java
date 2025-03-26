@@ -200,7 +200,8 @@ public class SystemNavigationGestureSettings extends RadioButtonPickerFragment i
                 Settings.System.ENABLE_TASKBAR, isLargeScreen(getContext()) ? 1 : 0) == 1;
 
         if (SystemNavigationPreferenceController.isOverlayPackageAvailable(c,
-                NAV_BAR_MODE_GESTURAL_OVERLAY)) {
+                NAV_BAR_MODE_GESTURAL_OVERLAY)
+                && SystemNavigationPreferenceController.isGestureAvailable(c)) {
             candidates.add(new CandidateInfoExtra(
                     c.getText(R.string.edge_to_edge_navigation_title),
                     c.getText(R.string.edge_to_edge_navigation_summary),
@@ -315,7 +316,7 @@ public class SystemNavigationGestureSettings extends RadioButtonPickerFragment i
 
                 @Override
                 protected boolean isPageSearchEnabled(Context context) {
-                    return SystemNavigationPreferenceController.isGestureAvailable(context);
+                    return true;
                 }
 
                 @Override
@@ -325,7 +326,8 @@ public class SystemNavigationGestureSettings extends RadioButtonPickerFragment i
                     final List<SearchIndexableRaw> result = new ArrayList<>();
 
                     if (SystemNavigationPreferenceController.isOverlayPackageAvailable(context,
-                            NAV_BAR_MODE_GESTURAL_OVERLAY)) {
+                            NAV_BAR_MODE_GESTURAL_OVERLAY) &&
+                            SystemNavigationPreferenceController.isGestureAvailable(context)) {
                         SearchIndexableRaw data = new SearchIndexableRaw(context);
                         data.title = res.getString(R.string.edge_to_edge_navigation_title);
                         data.key = KEY_SYSTEM_NAV_GESTURAL;
