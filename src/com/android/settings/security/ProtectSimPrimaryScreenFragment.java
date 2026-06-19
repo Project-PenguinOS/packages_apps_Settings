@@ -204,6 +204,10 @@ public class ProtectSimPrimaryScreenFragment extends BaseSimPinFragment {
 
         int activeSlot = activeSlots[slotIndex];
 
+        // Update the category title to reflect the actual physical slot number.
+        category.setTitle(activeSlot == 0 ? R.string.first_sim_card_slot_title
+                : R.string.second_sim_card_slot_title);
+
         SubscriptionInfo info = sSubscriptionManager.getActiveSubscriptionInfoForSimSlotIndex(
                 activeSlot);
         if (info != null) {
