@@ -4201,7 +4201,7 @@
     <!-- Tethering controls, item title to go into the tethering settings when USB and Bluetooth tethering are available [CHAR LIMIT=25]-->
     <string name="tether_settings_title_usb_bluetooth">Tethering</string>
     <!-- Tethering controls, item title to go into the tethering settings when USB, Bluetooth and Wifi tethering are available [CHAR LIMIT=60]-->
-    <string name="tether_settings_title_all">Hotspot &amp; tethering</string>
+    <string name="tether_settings_title_all">Hotspot</string>
     <!-- Tethering setting summary when both Wi-Fi hotspot and tether are turned on [CHAR LIMIT=NONE]-->
     <string name="tether_settings_summary_hotspot_on_tether_on">Hotspot on, tethering</string>
     <!-- Tethering setting summary when Wi-Fi hotspot is on and tether is off [CHAR LIMIT=NONE]-->
@@ -8810,7 +8810,7 @@
     <string name="network_dashboard_summary_no_mobile">Wi\u2011Fi, hotspot</string>
 
     <!-- Title for setting tile leading to Connected devices settings [CHAR LIMIT=40]-->
-    <string name="connected_devices_dashboard_title">Connected devices</string>
+    <string name="connected_devices_dashboard_title">Bluetooth</string>
     <!-- Summary for Connected devices settings, explaining default settings under it [CHAR LIMIT=NONE]-->
     <string name="connected_devices_dashboard_default_summary">Bluetooth, pairing</string>
     <!-- Summary for Connected devices settings, explaning a few important settings under it [CHAR LIMIT=NONE]-->
@@ -15807,4 +15807,6 @@
     <!-- Search keywords for Human interface device access setting -->
     <string name="keywords_access_hid">hid, human, access, device</string>
     <!-- Access HID end -->
+    <string name="aospa_version">Android Version</string>
+    <string name="lava_gay">Android 17</string>
 </resources>

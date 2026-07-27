@@ -3623,7 +3623,7 @@
     <string name="dashboard_title" msgid="5660733037244683387">"Settings"</string>
     <string name="network_dashboard_title" msgid="788543070557731240">"Network and Internet"</string>
     <string name="network_dashboard_summary_no_mobile" msgid="4022575916334910790">"Wi‑Fi, hotspot"</string>
-    <string name="connected_devices_dashboard_title" msgid="19868275519754895">"Connected devices"</string>
+    <string name="connected_devices_dashboard_title" msgid="19868275519754895">"Bluetooth"</string>
     <string name="connected_devices_dashboard_default_summary" msgid="7211769956193710397">"Bluetooth, pairing"</string>
     <string name="connected_devices_dashboard_summary" msgid="6927727617078296491">"Bluetooth, driving mode, NFC"</string>
     <string name="connected_devices_dashboard_no_nfc_summary" msgid="8424794257586524040">"Bluetooth, driving mode"</string>

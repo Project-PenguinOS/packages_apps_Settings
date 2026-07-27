@@ -1,27 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Copyright (C) 2019 The Android Open Source Project
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-  -->
-
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:settings="http://schemas.android.com/apk/res-auto"
     android:title="@string/model_info"
     settings:keywords="@string/keywords_model_and_hardware">
 
-    <!-- Model -->
+    <Preference
+        android:key="hardware_info_market_name"
+        android:title="@string/device_market_name"
+        android:summary="@string/summary_placeholder"
+        android:selectable="false"
+        settings:controller="com.android.settings.deviceinfo.hardwareinfo.MarketNamePreferenceController"
+        settings:enableCopying="true"/>
+
     <Preference
         android:key="hardware_info_device_model"
         android:title="@string/model_info"
@@ -30,7 +21,22 @@
         settings:controller="com.android.settings.deviceinfo.hardwareinfo.DeviceModelPreferenceController"
         settings:enableCopying="true"/>
 
-    <!-- SerialNumber -->
+    <Preference
+        android:key="hardware_info_soc_model"
+        android:title="@string/soc_model"
+        android:summary="@string/summary_placeholder"
+        android:selectable="false"
+        settings:controller="com.android.settings.deviceinfo.hardwareinfo.SoCModelPreferenceController"
+        settings:enableCopying="true"/>
+
+    <Preference
+        android:key="hardware_info_ram"
+        android:title="@string/total_ram"
+        android:summary="@string/summary_placeholder"
+        android:selectable="false"
+        settings:controller="com.android.settings.deviceinfo.hardwareinfo.TotalRAMPreferenceController"
+        settings:enableCopying="true"/>
+
     <Preference
         android:key="hardware_info_device_serial"
         android:title="@string/status_serial_number"
@@ -39,7 +45,6 @@
         settings:controller="com.android.settings.deviceinfo.hardwareinfo.SerialNumberPreferenceController"
         settings:enableCopying="true"/>
 
-    <!-- Hardware revision -->
     <Preference
         android:key="hardware_info_device_revision"
         android:title="@string/hardware_revision"
@@ -48,7 +53,6 @@
         settings:controller="com.android.settings.deviceinfo.hardwareinfo.HardwareRevisionPreferenceController"
         settings:enableCopying="true"/>
 
-    <!-- Manufactured year -->
     <Preference
         android:key="hardware_info_manufactured_year"
         android:title="@string/manufactured_year"
@@ -56,5 +60,46 @@
         android:selectable="false"
         settings:controller="com.android.settings.deviceinfo.hardwareinfo.ManufacturedYearPreferenceController"
         settings:enableCopying="true"/>
+
+    <com.android.settings.widget.ValidatedEditTextPreference
+        android:key="device_name"
+        android:title="@string/my_device_info_device_name_preference_title"
+        android:summary="@string/summary_placeholder"
+        settings:controller="com.android.settings.deviceinfo.DeviceNamePreferenceController"
+        settings:enableCopying="true"/>
+
+    <PreferenceCategory
+        android:key="device_status_category"
+        android:title="Venkat">
+
+        <Preference
+            android:key="wifi_ip_address"
+            android:title="@string/wifi_ip_address"
+            android:summary="@string/summary_placeholder"
+            android:selectable="false"
+            settings:enableCopying="true"/>
+
+        <Preference
+            android:key="saved_accesspoints_wifi_mac_address"
+            android:title="@string/status_wifi_mac_address"
+            android:summary="@string/view_saved_network"
+            android:fragment="com.android.settings.wifi.savedaccesspoints2.SavedAccessPointsWifiSettings2"
+            settings:enableCopying="false"/>
+
+        <Preference
+            android:key="wifi_mac_address"
+            android:title="@string/status_device_wifi_mac_address"
+            android:summary="@string/summary_placeholder"
+            android:selectable="false"
+            settings:enableCopying="true"/>
+
+        <Preference
+            android:key="bt_address"
+            android:title="@string/status_bt_address"
+            android:summary="@string/summary_placeholder"
+            android:selectable="false"
+            settings:enableCopying="true"/>
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

@@ -64,8 +64,6 @@ public class TopLevelBatteryPreferenceController extends BasePreferenceControlle
                                 Log.d(TAG, "getBatteryInfo: " + info);
                                 mBatteryInfo = info;
                                 updateState(mPreference);
-                                // Update the preference summary text to the latest state.
-                                setSummaryAsync(info);
                             },
                             true /* shortString */);
                 });
@@ -197,16 +195,6 @@ public class TopLevelBatteryPreferenceController extends BasePreferenceControlle
     /** Callback which receives text for the label. */
     @Override
     public void updateBatteryStatus(String label, BatteryInfo info) {
-        mBatteryStatusLabel = label; // Null if adaptive charging is not active
-        if (mPreference == null) {
-            return;
-        }
-        // Do not triggerBatteryStatusUpdate() here to cause infinite loop
-        final CharSequence summary = getSummary(false /* batteryStatusUpdate */);
-        if (summary != null) {
-            mPreference.setSummary(summary);
-        }
-        Log.d(TAG, "updateBatteryStatus: " + label + " summary: " + summary);
     }
 
     @VisibleForTesting

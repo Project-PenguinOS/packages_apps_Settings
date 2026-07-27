@@ -43,7 +43,6 @@
             android:key="top_level_connected_devices"
             android:order="-10"
             android:title="@string/connected_devices_dashboard_title"
-            android:summary="@string/connected_devices_dashboard_default_summary"
             settings:highlightableMenuKey="@string/menu_key_connected_devices"
             settings:controller="com.android.settings.connecteddevice.TopLevelConnectedDevicesPreferenceController"/>
     </com.android.settingslib.widget.UntitledPreferenceCategory>

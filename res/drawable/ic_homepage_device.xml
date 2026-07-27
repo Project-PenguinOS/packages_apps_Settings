@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Copyright (C) 2025 The Android Open Source Project
+  Copyright (C) 2018 The Android Open Source Project
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,18 +16,18 @@
   -->
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- TODO: b/448125141 - Update the icon and color. -->
+
     <item>
         <com.android.settingslib.widget.AdaptiveIconShapeDrawable
             android:width="@dimen/dashboard_tile_image_size"
             android:height="@dimen/dashboard_tile_image_size"
-            android:color="@color/homepage_device_background" />
+            android:color="@color/homepage_icon_bg" />
     </item>
 
     <item
-        android:width="@dimen/dashboard_tile_foreground_image_size"
-        android:height="@dimen/dashboard_tile_foreground_image_size"
-        android:start="@dimen/dashboard_tile_foreground_image_inset"
-        android:top="@dimen/dashboard_tile_foreground_image_inset"
-        android:drawable="@drawable/ic_settings_device_expressive" />
+        android:width="@dimen/dashboard_tile_foreground_image_size_pers"
+        android:height="@dimen/dashboard_tile_foreground_image_size_pers"
+        android:gravity="center"
+        android:drawable="@drawable/ic_settings"
+        android:tint="@color/homepage_subicon_bg"/>
 </layer-list>

@@ -46,13 +46,4 @@ constructor(
         }
     }
 
-    override fun getSummary(): CharSequence {
-        val summaryResId =
-            if (simRepository.showMobileNetworkPageEntrance()) {
-                R.string.network_dashboard_summary_mobile
-            } else {
-                R.string.network_dashboard_summary_no_mobile
-            }
-        return BidiFormatter.getInstance().unicodeWrap(mContext.getString(summaryResId))
-    }
 }

@@ -23,6 +23,8 @@ import static com.google.common.truth.Truth.assertThat;
 
 import android.content.Context;
 
+import androidx.preference.Preference;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,5 +53,22 @@ public class TopLevelConnectedDevicesPreferenceControllerTest {
     @Config(qualifiers = "mcc999")
     public void getAvailabilityStatus_unsupportedWhenSet() {
         assertThat(mController.getAvailabilityStatus()).isEqualTo(UNSUPPORTED_ON_DEVICE);
+    }
+
+    @Test
+    public void getSummary_returnsNull() {
+        assertThat(mController.getSummary()).isNull();
+    }
+
+    @Test
+    public void updateState_setsTitleAndClearsSummary() {
+        Preference preference = new Preference(mContext);
+        preference.setTitle("Some Title");
+        preference.setSummary("Some Summary");
+
+        mController.updateState(preference);
+
+        assertThat(preference.getTitle().toString()).isEqualTo("Bluetooth");
+        assertThat(preference.getSummary()).isNull();
     }
 }

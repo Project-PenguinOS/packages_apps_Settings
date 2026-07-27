@@ -48,6 +48,10 @@ public class TopLevelHighlightMixin implements Parcelable, DialogInterface.OnSho
     public TopLevelHighlightMixin() {
     }
 
+    public TopLevelHighlightMixin(boolean activityEmbedded) {
+        mActivityEmbedded = activityEmbedded;
+    }
+
     public TopLevelHighlightMixin(Parcel source) {
         mCurrentKey = source.readString();
         mPreviousKey = source.readString();

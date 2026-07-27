@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -46,6 +46,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.Toolbar;
+import com.android.settings.flags.Flags;
 
 import androidx.annotation.VisibleForTesting;
 import androidx.core.graphics.Insets;
@@ -62,23 +65,21 @@ import androidx.window.embedding.SplitInfo;
 import androidx.window.embedding.SplitRule;
 import androidx.window.java.embedding.SplitControllerCallbackAdapter;
 
-import com.android.settings.PccAwareUidComparator;
 import com.android.settings.R;
 import com.android.settings.Settings;
 import com.android.settings.SettingsActivity;
 import com.android.settings.SettingsApplication;
+import com.android.settings.accounts.AvatarViewMixin;
 import com.android.settings.activityembedding.ActivityEmbeddingRulesController;
 import com.android.settings.activityembedding.ActivityEmbeddingUtils;
 import com.android.settings.activityembedding.EmbeddedDeepLinkUtils;
 import com.android.settings.core.CategoryMixin;
 import com.android.settings.core.FeatureFlags;
-import com.android.settings.flags.Flags;
 import com.android.settings.homepage.contextualcards.ContextualCardsFragment;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.safetycenter.SafetyCenterManagerWrapper;
 import com.android.settingslib.Utils;
 import com.android.settingslib.core.lifecycle.HideNonSystemOverlayMixin;
-import com.android.settingslib.widget.SettingsThemeHelper;
 
 import com.google.android.setupcompat.util.WizardManagerHelper;
 
@@ -106,13 +107,9 @@ public class SettingsHomepageActivity extends FragmentActivity implements
     static final String EXTRA_INITIAL_REFERRER = "initial_referrer";
 
     static final int DEFAULT_HIGHLIGHT_MENU_KEY = R.string.menu_key_network;
-    private static final long HOMEPAGE_LOADING_TIMEOUT_MS = 300;
 
     private TopLevelSettings mMainFragment;
-    private View mHomepageView;
-    private View mSuggestionView;
     private CategoryMixin mCategoryMixin;
-    private Set<HomepageLoadedListener> mLoadedListeners;
     private boolean mIsEmbeddingActivityEnabled;
     private boolean mIsTwoPane;
     // A regular layout shows icons on homepage, whereas a simplified layout doesn't.
@@ -120,13 +117,15 @@ public class SettingsHomepageActivity extends FragmentActivity implements
 
     private SplitControllerCallbackAdapter mSplitControllerAdapter;
     private SplitInfoCallback mCallback;
-    private boolean mAllowUpdateSuggestion = true;
 
     /** A listener receiving homepage loaded events. */
+    // CRASH-FIX: Removed suggestion-related interface
+    /*
     public interface HomepageLoadedListener {
-        /** Called when the homepage is loaded. */
+        /** Called when the homepage is loaded. *
         void onHomepageLoaded();
     }
+    */
 
     private interface FragmentCreator<T extends Fragment> {
         T create();
@@ -141,6 +140,8 @@ public class SettingsHomepageActivity extends FragmentActivity implements
      *
      * @return Whether the listener is added.
      */
+    // CRASH-FIX: Removed suggestion-related method
+    /*
     public boolean addHomepageLoadedListener(HomepageLoadedListener listener) {
         if (mHomepageView == null) {
             return false;
@@ -151,16 +152,20 @@ public class SettingsHomepageActivity extends FragmentActivity implements
             return true;
         }
     }
+    */
 
     /**
      * Shows the homepage and shows/hides the suggestion together. Only allows to be executed once
      * to avoid the flicker caused by the suggestion suddenly appearing/disappearing.
      */
+    // CRASH-FIX: Removed suggestion-related method
+    /*
     public void showHomepageWithSuggestion(boolean showSuggestion) {
         if (mAllowUpdateSuggestion) {
             Log.i(TAG, "showHomepageWithSuggestion: " + showSuggestion);
             mAllowUpdateSuggestion = false;
             mSuggestionView.setVisibility(showSuggestion ? View.VISIBLE : View.GONE);
+            mTwoPaneSuggestionView.setVisibility(showSuggestion ? View.VISIBLE : View.GONE);
         }
 
         if (mHomepageView == null) {
@@ -172,6 +177,7 @@ public class SettingsHomepageActivity extends FragmentActivity implements
         mLoadedListeners.clear();
         homepageView.setVisibility(View.VISIBLE);
     }
+    */
 
     /** Returns the main content fragment */
     public TopLevelSettings getMainFragment() {
@@ -186,10 +192,6 @@ public class SettingsHomepageActivity extends FragmentActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (SettingsThemeHelper.isExpressiveTheme(this)) {
-            setTheme(R.style.Theme_Settings_Home_Expressive);
-        }
 
         // Ensure device is provisioned in order to access Settings home
         // TODO(b/331254029): This should later be replaced in favor of an allowlist
@@ -230,19 +232,16 @@ public class SettingsHomepageActivity extends FragmentActivity implements
             }
         }
 
-        final boolean isEmbeddedDeepLink = shouldLaunchDeepLinkIntentToRight();
         final boolean isDeepLinkStartedFromSearch = getIntent().getBooleanExtra(
                 EXTRA_IS_DEEPLINK_HOME_STARTED_FROM_SEARCH, false /* defaultValue */);
         if (!isTaskRoot && !isDeepLinkStartedFromSearch) {
-            if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_NEW_TASK) != 0
-                    && !isEmbeddedDeepLink) {
+            if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_NEW_TASK) != 0) {
                 Log.i(TAG, "Activity has been started, finishing");
             } else {
-                Log.i(TAG, "Homepage is not started as the task root, restarting");
+                Log.i(TAG, "Homepage should be started with FLAG_ACTIVITY_NEW_TASK, restarting");
                 Intent intent = new Intent(getIntent())
                         .setPackage(getPackageName())
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                | Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 | Intent.FLAG_ACTIVITY_FORWARD_RESULT)
                         .putExtra(EXTRA_USER_HANDLE, getUser())
                         .putExtra(EXTRA_INITIAL_REFERRER, getCurrentReferrer());
@@ -257,9 +256,10 @@ public class SettingsHomepageActivity extends FragmentActivity implements
 
         mIsTwoPane = ActivityEmbeddingUtils.isAlreadyEmbedded(this);
 
+        updateAppBarMinHeight();
         initHomepageContainer();
+        updateHomepageAppBar();
         updateHomepageBackground();
-        mLoadedListeners = new ArraySet<>();
 
         initSearchBarView();
 
@@ -268,6 +268,9 @@ public class SettingsHomepageActivity extends FragmentActivity implements
         getLifecycle().addObserver(mCategoryMixin);
 
         final String highlightMenuKey = getHighlightMenuKey();
+
+        // CRASH-FIX: Removed suggestion and contextual card loading to prevent crash
+        /*
         // Only allow features on high ram devices.
         if (!getSystemService(ActivityManager.class).isLowRamDevice()) {
             final boolean scrollNeeded = mIsEmbeddingActivityEnabled
@@ -280,6 +283,8 @@ public class SettingsHomepageActivity extends FragmentActivity implements
                         .getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
             }
         }
+        */
+
         mMainFragment = showFragment(() -> {
             final TopLevelSettings fragment = new TopLevelSettings();
             fragment.getArguments().putString(SettingsActivity.EXTRA_FRAGMENT_ARG_KEY,
@@ -287,8 +292,7 @@ public class SettingsHomepageActivity extends FragmentActivity implements
             return fragment;
         }, R.id.main_content);
 
-        // Launch the intent of the embedded deep link
-        if (isEmbeddedDeepLink) {
+        if (shouldLaunchDeepLinkIntentToRight()) {
             launchDeepLinkIntentToRight();
         }
 
@@ -299,6 +303,7 @@ public class SettingsHomepageActivity extends FragmentActivity implements
             initSplitPairRules();
         }
 
+        updateHomepagePaddings();
         updateSplitLayout();
 
         enableTaskLocaleOverride();
@@ -324,7 +329,6 @@ public class SettingsHomepageActivity extends FragmentActivity implements
     @Override
     protected void onStop() {
         super.onStop();
-        mAllowUpdateSuggestion = true;
         if (mSplitControllerAdapter != null && mCallback != null) {
             mSplitControllerAdapter.removeSplitListener(mCallback);
             mCallback = null;
@@ -343,7 +347,6 @@ public class SettingsHomepageActivity extends FragmentActivity implements
         if (isFinishing()) {
             return;
         }
-        // Launch the intent of the embedded deep link.
         if (shouldLaunchDeepLinkIntentToRight()) {
             launchDeepLinkIntentToRight();
         }
@@ -387,49 +390,42 @@ public class SettingsHomepageActivity extends FragmentActivity implements
         });
     }
 
-    private void setupEdgeToEdge() {
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content),
-                (v, windowInsets) -> {
-                    Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()
-                            | WindowInsetsCompat.Type.displayCutout());
-                    // Apply the insets paddings to the view.
-                    v.setPadding(insets.left, 0, insets.right, insets.bottom);
+private void setupEdgeToEdge() {
+    WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+    ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content),
+            (v, windowInsets) -> {
+                Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()
+                        | WindowInsetsCompat.Type.displayCutout());
+                v.setPadding(insets.left, 0, insets.right, insets.bottom);
 
-                    // reset the top padding of search bar container to original top padding
-                    // plus insets top.
-                    View container = findViewById(R.id.app_bar_container);
-                    final int top_padding = getResources().getDimensionPixelSize(
-                            R.dimen.search_bar_container_top_padding);
-                    container.setPadding(container.getPaddingLeft(), top_padding + insets.top,
-                            container.getPaddingRight(), container.getPaddingBottom());
-
-                    // Return CONSUMED if you don't want the window insets to keep being
-                    // passed down to descendant views.
-                    return WindowInsetsCompat.CONSUMED;
-                });
-    }
-
+                return WindowInsetsCompat.CONSUMED;
+            });
+}
     private void initSearchBarView() {
         View toolbar = findViewById(R.id.search_action_bar);
         FeatureFactory.getFeatureFactory().getSearchFeatureProvider()
-                .initSearchToolbar(this /* activity */, toolbar,
-                        SettingsEnums.SETTINGS_HOMEPAGE);
+                .initSearchToolbar(this /* activity */, toolbar, SettingsEnums.SETTINGS_HOMEPAGE);
+
+        if (mIsEmbeddingActivityEnabled) {
+            final Toolbar toolbarTwoPaneVersion = findViewById(R.id.search_action_bar_two_pane);
+            FeatureFactory.getFeatureFactory().getSearchFeatureProvider()
+                    .initSearchToolbar(this /* activity */, toolbarTwoPaneVersion,
+                            SettingsEnums.SETTINGS_HOMEPAGE);
+        }
     }
 
     private void updateHomepageUI() {
         final boolean newTwoPaneState = ActivityEmbeddingUtils.isAlreadyEmbedded(this);
         if (mIsTwoPane != newTwoPaneState) {
             mIsTwoPane = newTwoPaneState;
+            updateHomepageAppBar();
             updateHomepageBackground();
+            updateHomepagePaddings();
         }
         updateSplitLayout();
     }
 
     private void updateHomepageBackground() {
-        if (!mIsEmbeddingActivityEnabled) {
-            return;
-        }
 
         final Window window = getWindow();
         final int color = mIsTwoPane
@@ -440,10 +436,11 @@ public class SettingsHomepageActivity extends FragmentActivity implements
 
         // Update content background.
         findViewById(android.R.id.content).setBackgroundColor(color);
-        //Update search bar background
-        findViewById(R.id.app_bar_container).setBackgroundColor(color);
+	findViewById(R.id.app_bar_container).setBackgroundColor(color);
     }
 
+    // CRASH-FIX: Removed suggestion-related method
+    /*
     private void showSuggestionFragment(boolean scrollNeeded) {
         final Class<? extends Fragment> fragmentClass = FeatureFactory.getFeatureFactory()
                 .getSuggestionFeatureProvider().getSuggestionFragment();
@@ -452,6 +449,7 @@ public class SettingsHomepageActivity extends FragmentActivity implements
         }
 
         mSuggestionView = findViewById(R.id.suggestion_content);
+        mTwoPaneSuggestionView = findViewById(R.id.two_pane_suggestion_content);
         mHomepageView = findViewById(R.id.settings_homepage_container);
         // Hide the homepage for preparing the suggestion. If scrolling is needed, the list views
         // should be initialized in the invisible homepage view to prevent a scroll flicker.
@@ -459,9 +457,14 @@ public class SettingsHomepageActivity extends FragmentActivity implements
         // Schedule a timer to show the homepage and hide the suggestion on timeout.
         mHomepageView.postDelayed(() -> showHomepageWithSuggestion(false),
                 HOMEPAGE_LOADING_TIMEOUT_MS);
-        showFragment(new SuggestionFragCreator(fragmentClass, true),
-                R.id.suggestion_content);
+            showFragment(new SuggestionFragCreator(fragmentClass, /* isTwoPaneLayout= * / false),
+                    R.id.suggestion_content);
+            if (mIsEmbeddingActivityEnabled) {
+                showFragment(new SuggestionFragCreator(fragmentClass, /* isTwoPaneLayout= * / true),
+                        R.id.two_pane_suggestion_content);
+        }
     }
+    */
 
     private <T extends Fragment> T showFragment(FragmentCreator<T> fragmentCreator, int id) {
         final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -480,8 +483,7 @@ public class SettingsHomepageActivity extends FragmentActivity implements
         return showFragment;
     }
 
-    @VisibleForTesting
-    boolean shouldLaunchDeepLinkIntentToRight() {
+    private boolean shouldLaunchDeepLinkIntentToRight() {
         if (!ActivityEmbeddingUtils.isSettingsSplitEnabled(this)
                 || !FeatureFlagUtils.isEnabled(this,
                         FeatureFlagUtils.SETTINGS_SUPPORT_LARGE_SCREEN)) {
@@ -640,7 +642,7 @@ public class SettingsHomepageActivity extends FragmentActivity implements
 
         // When activityInfo.exported is false, Activity still can be launched if applications have
         // the same user ID.
-        if (PccAwareUidComparator.isSameApp(this, callerUid, targetUid)) {
+        if (UserHandle.isSameApp(callerUid, targetUid)) {
             return true;
         }
 
@@ -712,17 +714,16 @@ public class SettingsHomepageActivity extends FragmentActivity implements
     }
 
     private void reloadHighlightMenuKey() {
-        if (mMainFragment == null) {
-            return;
-        }
         mMainFragment.getArguments().putString(SettingsActivity.EXTRA_FRAGMENT_ARG_KEY,
                 getHighlightMenuKey());
         mMainFragment.reloadHighlightMenuKey();
     }
 
     private void initHomepageContainer() {
-        // Force scroll capture to select the NestedScrollView, instead of the non-scrollable
-        // RecyclerView which is contained inside it with no height constraint.
+        final View view = findViewById(R.id.homepage_container);
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+
         final View scrollableContainer = findViewById(R.id.main_content_scrollable_container);
         if (scrollableContainer != null) {
             scrollableContainer.setScrollCaptureHint(
@@ -730,6 +731,45 @@ public class SettingsHomepageActivity extends FragmentActivity implements
         }
     }
 
+    private void updateHomepageAppBar() {
+        if (!mIsEmbeddingActivityEnabled) {
+            return;
+        }
+        updateAppBarMinHeight();
+        if (mIsTwoPane) {
+            findViewById(R.id.homepage_app_bar_regular_phone_view).setVisibility(View.GONE);
+            findViewById(R.id.homepage_app_bar_two_pane_view).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.homepage_app_bar_regular_phone_view).setVisibility(View.VISIBLE);
+            findViewById(R.id.homepage_app_bar_two_pane_view).setVisibility(View.GONE);
+        }
+    }
+
+    private void updateHomepagePaddings() {
+        if (!mIsEmbeddingActivityEnabled) {
+            return;
+        }
+        if (mIsTwoPane) {
+            int padding = getResources().getDimensionPixelSize(
+                    R.dimen.homepage_padding_horizontal_two_pane);
+            mMainFragment.setPaddingHorizontal(padding);
+        } else {
+            mMainFragment.setPaddingHorizontal(0);
+        }
+        mMainFragment.updatePreferencePadding(mIsTwoPane);
+    }
+
+    private void updateAppBarMinHeight() {
+        final int searchBarHeight = getResources().getDimensionPixelSize(R.dimen.search_bar_height);
+        final int margin = getResources().getDimensionPixelSize(
+                mIsEmbeddingActivityEnabled && mIsTwoPane
+                        ? R.dimen.homepage_app_bar_padding_two_pane
+                        : R.dimen.search_bar_margin);
+        findViewById(R.id.app_bar_container).setMinimumHeight(searchBarHeight + margin * 2);
+    }
+
+    // CRASH-FIX: Removed suggestion-related class
+    /*
     private static class SuggestionFragCreator implements FragmentCreator {
 
         private final Class<? extends Fragment> mClass;
@@ -758,6 +798,7 @@ public class SettingsHomepageActivity extends FragmentActivity implements
             }
         }
     }
+    */
 
     /** The callback invoked while AE splitting. */
     private static class SplitInfoCallback implements Consumer<List<SplitInfo>> {
@@ -771,12 +812,7 @@ public class SettingsHomepageActivity extends FragmentActivity implements
 
         @Override
         public void accept(List<SplitInfo> splitInfoList) {
-            if (splitInfoList.isEmpty()) {
-                TopLevelSettings fragment = mActivity.mMainFragment;
-                if (fragment != null) {
-                    fragment.setDefaultHighlightIfNeeded();
-                }
-            } else if (!mIsSplitUpdatedUI && !mActivity.isFinishing()
+            if (!splitInfoList.isEmpty() && !mIsSplitUpdatedUI && !mActivity.isFinishing()
                     && ActivityEmbeddingUtils.isAlreadyEmbedded(mActivity)) {
                 mIsSplitUpdatedUI = true;
                 mActivity.updateHomepageUI();

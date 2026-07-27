@@ -17,6 +17,7 @@
 package com.android.settings.connecteddevice;
 
 import android.content.Context;
+import androidx.preference.Preference;
 
 import com.android.settings.R;
 import com.android.settings.core.BasePreferenceController;
@@ -33,6 +34,20 @@ public class TopLevelConnectedDevicesPreferenceController extends BasePreference
     public int getAvailabilityStatus() {
         return mContext.getResources().getBoolean(R.bool.config_show_top_level_connected_devices)
                 ? AVAILABLE : UNSUPPORTED_ON_DEVICE;
+    }
+
+    @Override
+    public void updateState(Preference preference) {
+        super.updateState(preference);
+        if (preference != null) {
+            preference.setTitle(mContext.getText(R.string.connected_devices_dashboard_title));
+            preference.setSummary("");
+        }
+    }
+
+    @Override
+    public CharSequence getSummary() {
+        return null;
     }
 }
 // LINT.ThenChange(ConnectedDeviceDashboardScreen.kt)

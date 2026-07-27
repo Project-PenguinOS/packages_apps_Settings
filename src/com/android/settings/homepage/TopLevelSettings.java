@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,14 +23,13 @@ import android.app.ActivityManager;
 import android.app.settings.SettingsEnums;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.SearchIndexableResource;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowInsets;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -42,25 +41,35 @@ import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.window.embedding.ActivityEmbeddingController;
+import android.util.Log;
 
 import com.android.settings.R;
+import com.android.settings.Utils;
 import com.android.settings.activityembedding.ActivityEmbeddingRulesController;
 import com.android.settings.activityembedding.ActivityEmbeddingUtils;
-import com.android.settings.core.RoundCornerPreferenceAdapter;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settings.support.SupportPreferenceController;
-import com.android.settings.utils.DesktopSettingsUtils;
 import com.android.settings.widget.HomepagePreference;
 import com.android.settings.widget.HomepagePreferenceLayoutHelper.HomepagePreferenceLayout;
 import com.android.settingslib.core.instrumentation.Instrumentable;
 import com.android.settingslib.drawer.Tile;
 import com.android.settingslib.search.SearchIndexable;
 import com.android.settingslib.widget.SettingsThemeHelper;
+import com.android.settingslib.widget.LayoutPreference;
+import com.android.settings.widget.EntityHeaderController;
+import androidx.recyclerview.widget.GridLayoutManager;
+import android.provider.Settings;
+import androidx.preference.PreferenceGroupAdapter;
+
 
 import java.util.List;
+
+
+import java.util.HashMap;
+import java.util.Map;
 
 @SearchIndexable(forTarget = MOBILE)
 public class TopLevelSettings extends DashboardFragment implements SplitLayoutListener,
@@ -76,6 +85,33 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
     private boolean mScrollNeeded = true;
     private boolean mFirstStarted = true;
     private ActivityEmbeddingController mActivityEmbeddingController;
+
+    private int declanXafterlifeStyle() {
+        return Settings.System.getInt(getContentResolver(), "afl_dashboard_style", 0);
+    }
+
+    public static final String[] CHANGE_LAYOUT_AND_ORDER_KEYS = {
+        "dashboard_tile_pref_com.oneplus.extras.DeviceSettings",
+        "dashboard_tile_pref_org.lineageos.settings.device",
+        "dashboard_tile_pref_org.lineageos.settings",
+        "dashboard_tile_pref_org.omnirom.devices",
+        "dashboard_tile_pref_org.omnirom.device",
+        "dashboard_tile_pref_com.poco.parts",
+        "dashboard_tile_pref_com.xiaomi.parts",
+        "dashboard_tile_pref_com.asus.zenparts"
+    };
+
+    public static final String[] CHANGE_LAYOUT_KEYS = {
+        "top_level_google",
+        "dashboard_tile_pref_com.google.android.apps.wellbeing.settings.TopLevelSettingsActivity",
+        "top_level_wellbeing",
+    };
+
+    public static final int[] LAYOUTS_N = {
+        R.layout.pengu_card_google,
+        R.layout.pengu_card_wellbeing,
+        R.layout.pengu_card_wellbeing
+    };
 
     public TopLevelSettings() {
         final Bundle args = new Bundle();
@@ -161,14 +197,16 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
             return;
         }
 
+        boolean activityEmbedded = isActivityEmbedded();
         if (icicle != null) {
             mHighlightMixin = icicle.getParcelable(SAVED_HIGHLIGHT_MIXIN);
             if (mHighlightMixin != null) {
-                mScrollNeeded = !mHighlightMixin.isActivityEmbedded() && isActivityEmbedded();
+                mScrollNeeded = !mHighlightMixin.isActivityEmbedded() && activityEmbedded;
+                mHighlightMixin.setActivityEmbedded(activityEmbedded);
             }
         }
         if (mHighlightMixin == null) {
-            mHighlightMixin = new TopLevelHighlightMixin();
+            mHighlightMixin = new TopLevelHighlightMixin(activityEmbedded);
         }
     }
 
@@ -187,18 +225,15 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
             mFirstStarted = false;
             FeatureFactory.getFeatureFactory().getSearchFeatureProvider().sendPreIndexIntent(
                     getContext());
-        }
-        super.onStart();
-    }
-
-    void setDefaultHighlightIfNeeded() {
-        if (isOnlyOneActivityInTask() && !isActivityEmbedded()) {
+        } else if (mIsEmbeddingActivityEnabled && isOnlyOneActivityInTask()
+                && !isActivityEmbedded()) {
             // Set default highlight menu key for 1-pane homepage since it will show the placeholder
             // page once changing back to 2-pane.
             Log.i(TAG, "Set default menu key");
             setHighlightMenuKey(getString(SettingsHomepageActivity.DEFAULT_HIGHLIGHT_MENU_KEY),
                     /* scrollNeeded= */ false);
         }
+        super.onStart();
     }
 
     private boolean isOnlyOneActivityInTask() {
@@ -211,15 +246,79 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mHighlightMixin != null) {
-            mHighlightMixin.setActivityEmbedded(isActivityEmbedded());
             outState.putParcelable(SAVED_HIGHLIGHT_MIXIN, mHighlightMixin);
         }
+    }
+
+    @Override
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        super.onCreatePreferences(savedInstanceState, rootKey);
+        onSetPrefCard();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         highlightPreferenceIfNeeded();
+    }
+
+private void onSetPrefCard() {
+        final PreferenceScreen screen = getPreferenceScreen();
+        if (screen == null) return;
+
+        Map<String, Integer> layoutMapStyle0 = new HashMap<>();
+        layoutMapStyle0.put("internet_settingso", R.layout.pengu_cardview_single_left);
+        layoutMapStyle0.put("internet_settings", R.layout.pengu_cardview_single_right);
+        layoutMapStyle0.put("tether_settings", R.layout.pengu_cardview_single_left);
+        layoutMapStyle0.put("top_level_connected_devices", R.layout.pengu_cardview_single_right);
+        layoutMapStyle0.put("top_level_communal", R.layout.pengu_card_top);
+        layoutMapStyle0.put("top_level_apps", R.layout.pengu_card_top);
+        layoutMapStyle0.put("top_level_notifications", R.layout.pengu_card_mid);
+        layoutMapStyle0.put("top_level_priority_modes", R.layout.pengu_card_bot);
+        layoutMapStyle0.put("top_level_battery", R.layout.pengu_card_top);
+        layoutMapStyle0.put("top_level_storage", R.layout.pengu_card_mid);
+        layoutMapStyle0.put("top_level_sound", R.layout.pengu_card_mid);
+        layoutMapStyle0.put("top_level_display", R.layout.pengu_card_bot);
+        layoutMapStyle0.put("ftop_level_wallpapers", R.layout.pengu_card_top);
+        layoutMapStyle0.put("top_level_accessibility", R.layout.pengu_card_mid);
+        layoutMapStyle0.put("top_level_security", R.layout.pengu_card_mid);
+        layoutMapStyle0.put("top_level_location", R.layout.pengu_card_mid);
+        layoutMapStyle0.put("top_level_emergency", R.layout.pengu_card_bot);
+        layoutMapStyle0.put("top_level_accounts", R.layout.pengu_card_top);
+        layoutMapStyle0.put("top_level_system", R.layout.pengu_card_mid);
+        layoutMapStyle0.put("top_level_about_device", R.layout.pengu_card_bot);
+        layoutMapStyle0.put("top_level_support", R.layout.pengu_card_bot);
+        int defaultLayoutStyle0 = R.layout.pengu_card_mid;
+
+        applyLayoutsToPreferences(screen, layoutMapStyle0, defaultLayoutStyle0);
+
+        for (int i = 0; i < CHANGE_LAYOUT_KEYS.length; i++) {
+            Preference preference = findPreference(CHANGE_LAYOUT_KEYS[i]);
+            if (preference != null) {
+                if (i < LAYOUTS_N.length) {
+                    preference.setLayoutResource(LAYOUTS_N[i]);
+                }
+            }
+        }
+    }
+
+    private void applyLayoutsToPreferences(PreferenceGroup group, Map<String, Integer> layoutMap, int defaultLayout) {
+        if (group == null) return;
+        for (int i = 0; i < group.getPreferenceCount(); i++) {
+            Preference preference = group.getPreference(i);
+
+            if (preference instanceof PreferenceGroup) {
+                applyLayoutsToPreferences((PreferenceGroup) preference, layoutMap, defaultLayout);
+            } else {
+                String key = preference.getKey();
+                if (declanXafterlifeStyle() == 0) {
+                    int layout = layoutMap.getOrDefault(key, defaultLayout);
+                    preference.setLayoutResource(layout);
+                } else {
+                    preference.setLayoutResource(defaultLayout);
+                }
+            }
+        }
     }
 
     @Override
@@ -245,17 +344,43 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
                 savedInstanceState);
         recyclerView.setVerticalScrollBarEnabled(false);
         recyclerView.setHorizontalScrollBarEnabled(false);
+        recyclerView.setPadding(mPaddingHorizontal, 0, mPaddingHorizontal, 0);
+        if (declanXafterlifeStyle() == 0) {
+            GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
 
-        recyclerView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-            @Override
-            public void onViewAttachedToWindow(View v) {
-                setPaddingHorizontal(mPaddingHorizontal);
-            }
+            layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    RecyclerView.Adapter adapter = getListView().getAdapter();
+                    if (adapter == null) {
+                        return 2;
+                    }
 
-            @Override
-            public void onViewDetachedFromWindow(View v) {
-            }
-        });
+                    final Preference preference = ((PreferenceGroupAdapter) adapter).getItem(position);
+
+                    if (preference instanceof PreferenceCategory) {
+                        return 2;
+                    }
+
+                    String key = preference.getKey();
+                    if (key == null) {
+                        return 2;
+                    }
+
+                    switch (key) {
+                        case "internet_settingso":
+                        case "internet_settings":
+                        case "tether_settings":
+                        case "top_level_connected_devices":
+                            return 1;
+
+                        default:
+                            return 2;
+                    }
+                }
+            });
+            recyclerView.setLayoutManager(layoutManager);
+        }
         return recyclerView;
     }
 
@@ -264,25 +389,35 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
         mPaddingHorizontal = padding;
         RecyclerView recyclerView = getListView();
         if (recyclerView != null) {
-            int paddingBottom = 0;
-            if (isRunningInFreeformWindow(recyclerView)) {
-                paddingBottom = getResources().getDimensionPixelSize(
-                    R.dimen.dashboard_padding_bottom);
-            }
-            recyclerView.setPadding(padding, 0, padding, paddingBottom);
+            recyclerView.setPadding(padding, 0, padding, 0);
         }
     }
 
-    /**
-     * Returns true if the view is running in a freeform window.
-     */
-    @VisibleForTesting
-    boolean isRunningInFreeformWindow(View view) {
-        WindowInsets insets = view.getRootWindowInsets();
-        if (insets != null) {
-            return insets.isVisible(WindowInsets.Type.captionBar());
-        }
-        return false;
+    public void updatePreferencePadding(boolean isTwoPane) {
+        iteratePreferences(new PreferenceJob() {
+            private int mIconPaddingStart;
+            private int mTextPaddingStart;
+
+            @Override
+            public void init() {
+                mIconPaddingStart = getResources().getDimensionPixelSize(isTwoPane
+                        ? R.dimen.homepage_preference_icon_padding_start_two_pane
+                        : R.dimen.homepage_preference_icon_padding_start);
+                mTextPaddingStart = getResources().getDimensionPixelSize(isTwoPane
+                        ? R.dimen.homepage_preference_text_padding_start_two_pane
+                        : R.dimen.homepage_preference_text_padding_start);
+            }
+
+            @Override
+            public void doForEach(Preference preference) {
+                if (preference instanceof HomepagePreferenceLayout) {
+                    ((HomepagePreferenceLayout) preference).getHelper()
+                            .setIconPaddingStart(mIconPaddingStart);
+                    ((HomepagePreferenceLayout) preference).getHelper()
+                            .setTextPaddingStart(mTextPaddingStart);
+                }
+            }
+        });
     }
 
     /** Returns a {@link TopLevelHighlightMixin} that performs highlighting */
@@ -335,7 +470,7 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
             return mHighlightMixin.onCreateAdapter(this, preferenceScreen, mScrollNeeded);
         }
 
-        return new RoundCornerPreferenceAdapter(preferenceScreen);
+        return super.onCreateAdapter(preferenceScreen);
     }
 
     @Override
@@ -381,13 +516,7 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
     }
 
     private static int getPreferenceLayoutResId(Context context) {
-        if (DesktopSettingsUtils.shouldShowTopLevelDeviceCategory(context)) {
-            return R.xml.top_level_settings_expressive_desktop;
-        }
-
-        return SettingsThemeHelper.isExpressiveTheme(context)
-                ? R.xml.top_level_settings_expressive
-                : R.xml.top_level_settings;
+        return R.xml.top_level_settings;
     }
 
     public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =

@@ -35,6 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.preference.PreferenceGroupAdapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -46,6 +47,7 @@ import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.android.settings.widget.HighlightableAdapter;
 
 import com.android.settings.accessibility.AccessibilityFragmentUtils;
 import com.android.settings.core.InstrumentedPreferenceFragment;
@@ -54,6 +56,7 @@ import com.android.settings.flags.Flags;
 import com.android.settings.restriction.UserRestrictionBindingHelper;
 import com.android.settings.support.actionbar.HelpResourceProvider;
 import com.android.settings.widget.HighlightablePreferenceGroupAdapter;
+import com.android.settings.widget.TopLevelHighlightablePreferenceGroupAdapter;
 import com.android.settings.widget.LoadingViewController;
 import com.android.settingslib.CustomDialogPreferenceCompat;
 import com.android.settingslib.CustomEditTextPreferenceCompat;
@@ -131,7 +134,7 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
     private boolean mAnimationAllowed;
 
     @VisibleForTesting
-    public HighlightablePreferenceGroupAdapter mAdapter;
+    public PreferenceGroupAdapter mAdapter;
     private boolean mPreferenceHighlighted = false;
 
     private @Nullable UserRestrictionBindingHelper mUserRestrictionBindingHelper;
@@ -242,7 +245,8 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
         super.onSaveInstanceState(outState);
 
         if (mAdapter != null) {
-            outState.putBoolean(SAVE_HIGHLIGHTED_KEY, mAdapter.isHighlightRequested());
+	    outState.putBoolean(SAVE_HIGHLIGHTED_KEY,
+	    ((HighlightableAdapter) mAdapter).isHighlightRequested());
         }
     }
 
@@ -302,7 +306,8 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
             return;
         }
         if (mAdapter != null) {
-            mAdapter.requestHighlight(getView(), getListView(), mAppBarLayout);
+            ((HighlightableAdapter) mAdapter).requestHighlight(
+                    getView(), getListView(), mAppBarLayout);
         }
     }
 
@@ -421,12 +426,18 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
             key = intent != null ? intent.getStringExtra(EXTRA_FRAGMENT_ARG_KEY) : null;
         }
         key = PreferenceSearchIndexablesProvider.Companion.getHighlightKey(key);
-        mAdapter = new HighlightablePreferenceGroupAdapter(
-                preferenceScreen,
-                key,
-                mPreferenceHighlighted,
-                getFooterDataMap()
-        );
+        if (this instanceof com.android.settings.homepage.TopLevelSettings
+                || this instanceof com.android.settings.deviceinfo.aboutphone.MyDeviceInfoFragment) {
+            Log.d(TAG, "Using TopLevelHighlightablePreferenceGroupAdapter");
+            mAdapter = new TopLevelHighlightablePreferenceGroupAdapter(preferenceScreen, key,
+                    mPreferenceHighlighted);
+        } else {
+            mAdapter = new HighlightablePreferenceGroupAdapter(
+                    preferenceScreen,
+                    key,
+                    mPreferenceHighlighted
+            );
+        }
         return mAdapter;
     }
 

@@ -69,19 +69,23 @@
     <dimen name="actionbar_subsettings_contentInsetStart">72dp</dimen>
 
     <!-- Dashboard image tile size -->
-    <dimen name="dashboard_tile_image_size">40dp</dimen>
+    <dimen name="dashboard_tile_image_size">42dp</dimen>
     <dimen name="dashboard_padding_bottom">16dp</dimen>
 
     <!-- Dashboard foreground image size -->
     <dimen name="dashboard_tile_foreground_image_size">24dp</dimen>
+    <dimen name="dashboard_tile_foreground_image_size_pers">24dp</dimen>
 
     <!-- Dashboard foreground image inset (from background edge to foreground edge) -->
-    <dimen name="dashboard_tile_foreground_image_inset">8dp</dimen>
+    <dimen name="dashboard_tile_foreground_image_inset">7dp</dimen>
+    <dimen name="dashboard_tile_foreground_image_inset_pers">9.5dp</dimen>
 
     <!-- Preference icon foreground image inset (from background edge to foreground edge) -->
     <dimen name="preference_icon_foreground_image_inset">12dp</dimen>
 
     <!-- Search bar -->
+    <dimen name="search_bar_margin">16dp</dimen>
+    <dimen name="search_bar_height">48dp</dimen>
     <dimen name="search_bar_text_size">20sp</dimen>
     <dimen name="search_bar_corner_radius">28dp</dimen>
     <dimen name="search_bar_title_padding_start">-4dp</dimen>
@@ -89,6 +93,9 @@
     <dimen name="search_bar_container_top_padding">8dp</dimen>
 
     <!-- Avatar -->
+    <dimen name="avatar_length">48dp</dimen>
+    <dimen name="avatar_margin_top">28dp</dimen>
+    <dimen name="avatar_margin_end">24dp</dimen>
     <dimen name="multiple_users_avatar_size">20dp</dimen>
     <dimen name="multiple_users_user_icon_size">40dp</dimen>
 
@@ -602,4 +609,12 @@
     <dimen name="bluetooth_battery_indicator_battery_meter_height">16dp</dimen>
     <dimen name="bluetooth_battery_indicator_charging_icon_width">12dp</dimen>
     <dimen name="bluetooth_battery_indicator_charging_icon_height">16dp</dimen>
+
+    <!-- Homepage two-pane dimensions -->
+    <dimen name="homepage_padding_horizontal_two_pane">0dp</dimen>
+    <dimen name="homepage_app_bar_padding_two_pane">16dp</dimen>
+    <dimen name="homepage_app_bar_margin_bottom_two_pane">10dp</dimen>
+    <dimen name="homepage_preference_icon_padding_start_two_pane">24dp</dimen>
+    <dimen name="homepage_preference_icon_padding_start">16dp</dimen>
+    <dimen name="homepage_preference_text_padding_start_two_pane">16dp</dimen>
 </resources>

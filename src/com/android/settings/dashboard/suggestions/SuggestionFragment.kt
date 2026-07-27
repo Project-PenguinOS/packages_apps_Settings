@@ -229,7 +229,6 @@ class SuggestionFragment : InstrumentedFragment(),
             SettingsEnums.ACTION_CONTEXTUAL_HOME_SHOW,
             totalTime.toInt()
         )
-        (activity as? SettingsHomepageActivity)?.showHomepageWithSuggestion(show)
     }
 
     private companion object {

@@ -43,7 +43,7 @@ class HomepageDisplayTests {
     private companion object {
         val HOMEPAGE_ITEMS = listOf(
             "Network & internet",
-            "Connected devices",
+            "Bluetooth",
             "Apps",
             "Notifications",
             "Battery",

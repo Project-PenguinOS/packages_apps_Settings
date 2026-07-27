@@ -92,26 +92,12 @@ constructor(
         }
 
         tetheredRepository.tetheredTypesFlow().collectLatestWithLifecycle(viewLifecycleOwner) {
-            preference?.setSummary(getSummaryResId(it))
         }
     }
 
     private suspend fun getTitleResId(): Int? = withContext(Dispatchers.Default) {
         if (isTetherConfigDisallowed(mContext)) null
         else Utils.getTetheringLabel(tetheringManager)
-    }
-
-    @VisibleForTesting
-    @StringRes
-    fun getSummaryResId(tetheredTypes: Set<Int>): Int {
-        val hotSpotOn = TetheringManager.TETHERING_WIFI in tetheredTypes
-        val tetherOn = tetheredTypes.any { it != TetheringManager.TETHERING_WIFI }
-        return when {
-            hotSpotOn && tetherOn -> R.string.tether_settings_summary_hotspot_on_tether_on
-            hotSpotOn -> R.string.tether_settings_summary_hotspot_on_tether_off
-            tetherOn -> R.string.tether_settings_summary_hotspot_off_tether_on
-            else -> R.string.tether_preference_summary_off
-        }
     }
 
     override fun updateNonIndexableKeys(keys: MutableList<String>) {
