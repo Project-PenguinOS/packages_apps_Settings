@@ -64,6 +64,12 @@
             settings:controller="com.android.settings.display.darkmode.DarkModeScheduleSelectorController"
             settings:keywords="@string/keywords_dark_ui_mode"/>
 
+        <co.aospa.framework.preference.SecureSettingSwitchPreference
+            android:key="system_black_theme"
+            android:title="@string/system_black_theme_title"
+            android:summary="@string/system_black_theme_summary"
+            android:defaultValue="false" />
+
         <Preference
             android:key="dark_theme_start_time"
             android:title="@string/night_display_start_time_title"

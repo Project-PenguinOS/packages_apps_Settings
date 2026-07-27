@@ -43,12 +43,23 @@ import android.util.ArraySet;
 import android.util.FeatureFlagUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toolbar;
 import com.android.settings.flags.Flags;
+import eightbitlab.com.blurview.BlurView;
+import eightbitlab.com.blurview.BlurTarget;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
+import android.view.ViewOutlineProvider;
 
 import androidx.annotation.VisibleForTesting;
 import androidx.core.graphics.Insets;
@@ -92,6 +103,7 @@ public class SettingsHomepageActivity extends FragmentActivity implements
         CategoryMixin.CategoryHandler {
 
     private static final String TAG = "SettingsHomepageActivity";
+    private Drawable mCachedNoiseDrawable;
 
     // Additional extra of Settings#ACTION_SETTINGS_LARGE_SCREEN_DEEP_LINK.
     // Put true value to the intent when startActivity for a deep link intent from this Activity.
@@ -375,7 +387,7 @@ public class SettingsHomepageActivity extends FragmentActivity implements
 
         // Update search title padding
         View searchTitle = findViewById(R.id.search_bar_title);
-        if (searchTitle != null) {
+        if (searchTitle != null && mIsTwoPane) {
             int paddingStart = getResources().getDimensionPixelSize(
                     mIsRegularLayout
                             ? R.dimen.search_bar_title_padding_start_regular_two_pane
@@ -390,17 +402,24 @@ public class SettingsHomepageActivity extends FragmentActivity implements
         });
     }
 
-private void setupEdgeToEdge() {
-    WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-    ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content),
-            (v, windowInsets) -> {
-                Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()
-                        | WindowInsetsCompat.Type.displayCutout());
-                v.setPadding(insets.left, 0, insets.right, insets.bottom);
+    private void setupEdgeToEdge() {
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content),
+                (v, windowInsets) -> {
+                    Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()
+                            | WindowInsetsCompat.Type.displayCutout());
+                    v.setPadding(insets.left, 0, insets.right, insets.bottom);
 
-                return WindowInsetsCompat.CONSUMED;
-            });
-}
+                    View appBar = findViewById(R.id.app_bar);
+                    if (appBar != null) {
+                        appBar.setPadding(appBar.getPaddingLeft(), insets.top,
+                                appBar.getPaddingRight(), appBar.getPaddingBottom());
+                    }
+
+                    return WindowInsetsCompat.CONSUMED;
+                });
+    }
+
     private void initSearchBarView() {
         View toolbar = findViewById(R.id.search_action_bar);
         FeatureFactory.getFeatureFactory().getSearchFeatureProvider()
@@ -412,6 +431,173 @@ private void setupEdgeToEdge() {
                     .initSearchToolbar(this /* activity */, toolbarTwoPaneVersion,
                             SettingsEnums.SETTINGS_HOMEPAGE);
         }
+
+        setupSearchBarBlur();
+    }
+
+    private void setupSearchBarBlur() {
+        final BlurView blurView = findViewById(R.id.bottom_search_bar_container);
+        final BlurTarget target = findViewById(R.id.main_content_blur_target);
+        if (blurView == null || target == null) {
+            return;
+        }
+
+        float blurRadius = 14f;
+        android.view.WindowManager wm = getSystemService(android.view.WindowManager.class);
+        if (wm != null && !wm.isCrossWindowBlurEnabled()) {
+            blurRadius = 0f;
+        }
+
+        Drawable windowBackground = getWindow().getDecorView().getBackground();
+        blurView.setupWith(target)
+                .setFrameClearDrawable(windowBackground)
+                .setBlurRadius(blurRadius);
+
+        blurView.setOutlineProvider(new android.view.ViewOutlineProvider() {
+            @Override
+            public void getOutline(android.view.View view, android.graphics.Outline outline) {
+                int radius = (int) (24 * view.getResources().getDisplayMetrics().density);
+                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), radius);
+            }
+        });
+        blurView.setClipToOutline(true);
+
+        final View cardView = findViewById(R.id.homepage_app_bar_regular_phone_view);
+        if (cardView instanceof com.google.android.material.card.MaterialCardView) {
+            com.google.android.material.card.MaterialCardView materialCardView =
+                    (com.google.android.material.card.MaterialCardView) cardView;
+            materialCardView.setCardBackgroundColor(android.graphics.Color.TRANSPARENT);
+            materialCardView.setStrokeColor(android.content.res.ColorStateList.valueOf(android.graphics.Color.TRANSPARENT));
+        }
+        if (cardView != null) {
+            View searchActionBar = cardView.findViewById(R.id.search_action_bar);
+            if (searchActionBar != null) {
+                searchActionBar.setBackground(null);
+            }
+            
+            cardView.setScaleX(0.98f);
+            cardView.setScaleY(0.98f);
+            
+            int onSurfaceVariantColor = 0;
+            int onSurfaceVariantAttrId = getResources().getIdentifier("colorOnSurfaceVariant", "attr", getPackageName());
+            if (onSurfaceVariantAttrId != 0) {
+                onSurfaceVariantColor = Utils.getColorAttrDefaultColor(this, onSurfaceVariantAttrId, 0);
+            }
+            if (onSurfaceVariantColor == 0) {
+                onSurfaceVariantColor = Utils.getColorAttrDefaultColor(this, android.R.attr.textColorSecondary, 0);
+            }
+            if (onSurfaceVariantColor == 0) {
+                onSurfaceVariantColor = Utils.getColorAttrDefaultColor(this, android.R.attr.textColorPrimary, 0);
+            }
+            if (onSurfaceVariantColor == 0) {
+                onSurfaceVariantColor = 0xFF888888;
+            }
+            
+            onSurfaceVariantColor = androidx.core.graphics.ColorUtils.setAlphaComponent(onSurfaceVariantColor, 255);
+            
+            android.widget.ImageView searchIcon = cardView.findViewById(R.id.imageView);
+            if (searchIcon != null) {
+                searchIcon.setImageTintList(android.content.res.ColorStateList.valueOf(onSurfaceVariantColor));
+            }
+            
+            android.widget.TextView searchTitle = cardView.findViewById(R.id.search_bar_title);
+            if (searchTitle != null) {
+                searchTitle.setTextColor(onSurfaceVariantColor);
+            }
+
+            cardView.setFocusable(true);
+            cardView.setOnFocusChangeListener((v, hasFocus) -> {
+                animateSearchFocus(blurView, cardView, hasFocus);
+            });
+            
+            cardView.setOnTouchListener((v, event) -> {
+                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+                    animateSearchFocus(blurView, cardView, true);
+                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP 
+                        || event.getAction() == android.view.MotionEvent.ACTION_CANCEL) {
+                    animateSearchFocus(blurView, cardView, cardView.hasFocus());
+                }
+                return false;
+            });
+        }
+
+        boolean isBlurEnabled = wm != null && wm.isCrossWindowBlurEnabled();
+        refreshGlassBackground(blurView, isBlurEnabled ? 0.45f : 1.0f);
+    }
+
+    private void refreshGlassBackground(BlurView blurView, float alpha) {
+        float density = getResources().getDisplayMetrics().density;
+        
+        GradientDrawable glassDrawable = new GradientDrawable();
+        glassDrawable.setShape(GradientDrawable.RECTANGLE);
+        glassDrawable.setCornerRadius(28f * density);
+        
+        int attrId = getResources().getIdentifier("colorSurfaceContainerHigh", "attr", getPackageName());
+        if (attrId == 0) {
+            attrId = android.R.attr.colorBackgroundFloating;
+        }
+        int surfaceColor = Utils.getColorAttrDefaultColor(this, attrId);
+        int tintColor = androidx.core.graphics.ColorUtils.setAlphaComponent(surfaceColor, (int)(255 * alpha));
+        glassDrawable.setColor(tintColor);
+        
+        int outlineAttrId = getResources().getIdentifier("colorOutlineVariant", "attr", getPackageName());
+        if (outlineAttrId == 0) {
+            outlineAttrId = android.R.attr.colorControlActivated;
+        }
+        int outlineColor = Utils.getColorAttrDefaultColor(this, outlineAttrId);
+        int softOutlineColor = androidx.core.graphics.ColorUtils.setAlphaComponent(outlineColor, (int)(255 * 0.30f));
+        glassDrawable.setStroke((int)(0.5f * density), softOutlineColor);
+        
+        Drawable noiseDrawable = getNoiseDrawable();
+        Drawable[] layers = {glassDrawable, noiseDrawable};
+        LayerDrawable layerDrawable = new LayerDrawable(layers);
+        
+        blurView.setBackground(layerDrawable);
+        blurView.setOutlineProvider(ViewOutlineProvider.BACKGROUND);
+        blurView.setClipToOutline(true);
+    }
+
+    private Drawable getNoiseDrawable() {
+        if (mCachedNoiseDrawable == null) {
+            int size = 128;
+            Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+            java.util.Random random = new java.util.Random();
+            for (int y = 0; y < size; y++) {
+                for (int x = 0; x < size; x++) {
+                    int alpha = 1 + random.nextInt(3);
+                    int val = random.nextBoolean() ? 255 : 0;
+                    bitmap.setPixel(x, y, Color.argb(alpha, val, val, val));
+                }
+            }
+            BitmapDrawable drawable = new BitmapDrawable(getResources(), bitmap);
+            drawable.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+            mCachedNoiseDrawable = drawable;
+        }
+        return mCachedNoiseDrawable;
+    }
+
+    private void animateSearchFocus(BlurView blurView, View cardView, boolean focused) {
+        float targetScale = focused ? 1.0f : 0.98f;
+        float targetBlur = focused ? 20f : 14f;
+        android.view.WindowManager wm = getSystemService(android.view.WindowManager.class);
+        boolean isBlurEnabled = wm != null && wm.isCrossWindowBlurEnabled();
+        float targetAlpha = isBlurEnabled ? (focused ? 0.60f : 0.45f) : 1.0f;
+        
+        cardView.animate()
+                .scaleX(targetScale)
+                .scaleY(targetScale)
+                .setDuration(220)
+                .setInterpolator(new android.view.animation.PathInterpolator(0.2f, 0f, 0f, 1f))
+                .start();
+                
+        refreshGlassBackground(blurView, targetAlpha);
+        
+        float finalRadius = targetBlur;
+        if (wm != null && !wm.isCrossWindowBlurEnabled()) {
+            finalRadius = 0f;
+        }
+        blurView.setBlurRadius(finalRadius);
+        blurView.invalidate();
     }
 
     private void updateHomepageUI() {
@@ -436,7 +622,7 @@ private void setupEdgeToEdge() {
 
         // Update content background.
         findViewById(android.R.id.content).setBackgroundColor(color);
-	findViewById(R.id.app_bar_container).setBackgroundColor(color);
+        findViewById(R.id.app_bar_container).setBackgroundColor(color);
     }
 
     // CRASH-FIX: Removed suggestion-related method
@@ -732,15 +918,40 @@ private void setupEdgeToEdge() {
     }
 
     private void updateHomepageAppBar() {
-        if (!mIsEmbeddingActivityEnabled) {
-            return;
-        }
         updateAppBarMinHeight();
+        View bottomContainer = findViewById(R.id.bottom_search_bar_container);
+        View bottomShadow = findViewById(R.id.bottom_gradient_shadow);
+        View titleContainer = findViewById(R.id.homepage_title_container);
+        View appBarContainer = findViewById(R.id.app_bar_container);
         if (mIsTwoPane) {
             findViewById(R.id.homepage_app_bar_regular_phone_view).setVisibility(View.GONE);
+            if (bottomContainer != null) {
+                bottomContainer.setVisibility(View.GONE);
+            }
+            if (bottomShadow != null) {
+                bottomShadow.setVisibility(View.GONE);
+            }
+            if (titleContainer != null) {
+                titleContainer.setVisibility(View.GONE);
+            }
+            if (appBarContainer != null) {
+                appBarContainer.setVisibility(View.VISIBLE);
+            }
             findViewById(R.id.homepage_app_bar_two_pane_view).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.homepage_app_bar_regular_phone_view).setVisibility(View.VISIBLE);
+            if (bottomContainer != null) {
+                bottomContainer.setVisibility(View.VISIBLE);
+            }
+            if (bottomShadow != null) {
+                bottomShadow.setVisibility(View.VISIBLE);
+            }
+            if (titleContainer != null) {
+                titleContainer.setVisibility(View.VISIBLE);
+            }
+            if (appBarContainer != null) {
+                appBarContainer.setVisibility(View.GONE);
+            }
             findViewById(R.id.homepage_app_bar_two_pane_view).setVisibility(View.GONE);
         }
     }

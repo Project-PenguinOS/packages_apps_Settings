@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:androidprv="http://schemas.android.com/apk/prv/res/android">
 
-    <color name="pengu_crd_bg">@android:color/system_neutral1_0</color>
+    <color name="pengu_crd_bg">@androidprv:color/materialColorSurfaceBright</color>
     <color name="scrimCol">#000000</color>
     <color name="textCol">#000000</color>
 </resources>

@@ -4,23 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/pengu_cardview_single"
-    android:padding="16dp"
-    android:minHeight="88dp"
+    android:padding="12dp"
+    android:minHeight="68dp"
     
     android:layout_marginTop="0dp"
-    android:layout_marginBottom="16dp"
+    android:layout_marginBottom="12dp"
     android:layout_marginStart="4dp"
     android:layout_marginEnd="16dp">
 
     <ImageView
         android:id="@android:id/icon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="12dp"
         android:background="@drawable/adaptive_icon_shape"
-        android:padding="8dp"
+        android:padding="6dp"
         android:tint="?android:attr/colorAccent" />
 
     <LinearLayout
@@ -37,7 +37,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="?android:attr/textColorPrimary"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@android:id/summary"

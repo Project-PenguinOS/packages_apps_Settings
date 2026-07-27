@@ -14,37 +14,51 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/SearchBarStyle_v2"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/homepage_app_bar_regular_phone_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="48dp"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:strokeWidth="0dp">
 
     <LinearLayout
         android:id="@+id/search_action_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="72dp"
+        android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
-        android:background="@drawable/search_bar_selected_background">
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:baselineAligned="false">
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:alpha="0.6"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_homepage_search" />
+            android:src="@drawable/ic_homepage_search"
+            android:tint="#FFFFFF" />
+
         <TextView
             android:id="@+id/search_bar_title"
-            style="@style/TextAppearance.SearchBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
             android:paddingEnd="8dp"
-            android:text="@string/search_settings"/>
+            android:text="@string/search_settings"
+            android:textSize="17sp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="#FFFFFF"
+            android:alpha="0.6"
+            android:includeFontPadding="false"
+            android:translationY="1dp" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
