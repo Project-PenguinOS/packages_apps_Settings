@@ -65,6 +65,12 @@
             android:summary="@string/qs_connectivity_folder_summary"
             android:defaultValue="true" />
 
+        <Preference
+            android:key="dynamic_island_settings"
+            android:title="@string/dynamic_island_title"
+            android:summary="@string/dynamic_island_summary"
+            android:fragment="com.android.settings.display.DynamicIslandSettings" />
+
         <com.android.settings.custom.preference.SecureSettingSwitchPreference
             android:key="qs_show_auto_brightness"
             android:title="@string/status_bar_brightness_slider_auto_title"

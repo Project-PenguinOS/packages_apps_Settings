@@ -43,6 +43,27 @@
     <string name="qs_connectivity_folder_title">Connectivity folder</string>
     <string name="qs_connectivity_folder_summary">Group Wifi, mobile data and Bluetooth into one Quick Settings card</string>
 
+     <!-- Dynamic island -->
+    <string name="dynamic_island_title">Dynamic Island</string>
+    <string name="dynamic_island_summary">Show media, alarms and other activity in a pill around the camera cutout</string>
+    <string name="dynamic_island_features_title">Features</string>
+    <string name="dynamic_island_media_controls_title">Media controls</string>
+    <string name="dynamic_island_media_controls_summary">Show playback controls and artwork in the island</string>
+    <string name="dynamic_island_screen_recording_title">Screen recording</string>
+    <string name="dynamic_island_screen_recording_summary">Show the recording timer and controls in the island</string>
+    <string name="dynamic_island_alarms_title">Alarms</string>
+    <string name="dynamic_island_alarms_summary">Show your next alarm or active alarm notification in the island</string>
+    <string name="dynamic_island_flashlight_title">Flashlight</string>
+    <string name="dynamic_island_flashlight_summary">Show flashlight status in the island when it is enabled</string>
+    <string name="dynamic_island_stopwatch_title">Stopwatch</string>
+    <string name="dynamic_island_stopwatch_summary">Show stopwatch progress and controls in the island</string>
+    <string name="dynamic_island_live_scores_title">Live scores</string>
+    <string name="dynamic_island_live_scores_summary">Show live scores for sports in the island for apps that give live score notification.</string>
+    <string name="dynamic_island_lyrics_title">Show lyrics</string>
+    <string name="dynamic_island_lyrics_summary">Show lyrics for supported apps in a card below the music card in the island</string>
+    <string name="dynamic_island_footer_title">About Dynamic Island</string>
+    <string name="dynamic_island_intro">Turn on Dynamic island and choose the features you want in the centered chip.</string>
+
      <!-- Power menu style -->
      <string name="power_menu_style_title">Power menu style</string>
      <string name="power_menu_style_penguin">Penguin</string>
