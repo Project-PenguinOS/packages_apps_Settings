@@ -46,6 +46,9 @@
      <!-- Dynamic island -->
     <string name="dynamic_island_title">Dynamic Island</string>
     <string name="dynamic_island_summary">Show media, alarms and other activity in a pill around the camera cutout</string>
+    <string name="dynamic_island_customization_title">Dynamic Island Customization</string>
+    <string name="dynamic_island_width_scale_title">Width Scale</string>
+    <string name="dynamic_island_height_scale_title">Height Scale</string>
     <string name="dynamic_island_features_title">Features</string>
     <string name="dynamic_island_media_controls_title">Media controls</string>
     <string name="dynamic_island_media_controls_summary">Show playback controls and artwork in the island</string>
