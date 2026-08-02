@@ -113,6 +113,7 @@ abstract class BaseDarkModeScreen(context: Context, val isUiOnly: Boolean) :
             +DarkModeTopIntroPreference()
             +DarkModeMainSwitchPreference(darkModeStorage, isUiOnly)
             +TwilightLocationPreference()
+            +BlackThemeTogglePreference()
             if (android.view.accessibility.Flags.forceInvertColor()) {
                 +PreferenceCategory(
                     key = "dark_theme_group",
