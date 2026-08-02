@@ -10,7 +10,7 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.UserHandle;
+import android.os.UserHandle
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
@@ -88,6 +88,26 @@ class PlayIntegrityFix : SettingsPreferenceFragment() {
 
         findPreference<SwitchPreferenceCompat>("spoof_pif_photos")?.setOnPreferenceChangeListener { _, newValue ->
             killPackage(PHOTOS_PACKAGE)
+            killPackage(VENDING_PACKAGE)
+            true
+        }
+
+        findPreference<SwitchPreferenceCompat>("pif_spoof_props")?.setOnPreferenceChangeListener { _, _ ->
+            killPackage(VENDING_PACKAGE)
+            true
+        }
+
+        findPreference<SwitchPreferenceCompat>("pif_spoof_provider")?.setOnPreferenceChangeListener { _, _ ->
+            killPackage(VENDING_PACKAGE)
+            true
+        }
+
+        findPreference<SwitchPreferenceCompat>("pif_spoof_signature")?.setOnPreferenceChangeListener { _, _ ->
+            killPackage(VENDING_PACKAGE)
+            true
+        }
+
+        findPreference<SwitchPreferenceCompat>("pif_spoof_vending_build")?.setOnPreferenceChangeListener { _, _ ->
             killPackage(VENDING_PACKAGE)
             true
         }

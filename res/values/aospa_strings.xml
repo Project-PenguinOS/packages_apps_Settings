@@ -536,4 +536,12 @@
     <string name="pif_no_targets">No apps selected</string>
     <string name="pif_target_apps_count">%d apps selected</string>
     <string name="deselect_all">Deselect all</string>
+    <string name="pif_spoof_props">Spoof build properties</string>
+    <string name="pif_spoof_props_summary">Spoof build properties for Google Play Services</string>
+    <string name="pif_spoof_provider">Spoof providers</string>
+    <string name="pif_spoof_provider_summary">Spoof package provider to GMS/Vending</string>
+    <string name="pif_spoof_signature">Spoof signature</string>
+    <string name="pif_spoof_signature_summary">Spoof package signature for Google Play Services</string>
+    <string name="pif_spoof_vending_build">Spoof Play Store build properties</string>
+    <string name="pif_spoof_vending_build_summary">Spoof build properties for Google Play Store</string>
 </resources>

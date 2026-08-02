@@ -53,6 +53,30 @@
             android:summary="@string/pif_spoof_photos_summary"
             android:defaultValue="true" />
 
+        <com.android.settings.custom.preference.SecureSettingSwitchPreference
+            android:key="pif_spoof_props"
+            android:title="@string/pif_spoof_props"
+            android:summary="@string/pif_spoof_props_summary"
+            android:defaultValue="true" />
+
+        <com.android.settings.custom.preference.SecureSettingSwitchPreference
+            android:key="pif_spoof_provider"
+            android:title="@string/pif_spoof_provider"
+            android:summary="@string/pif_spoof_provider_summary"
+            android:defaultValue="true" />
+
+        <com.android.settings.custom.preference.SecureSettingSwitchPreference
+            android:key="pif_spoof_signature"
+            android:title="@string/pif_spoof_signature"
+            android:summary="@string/pif_spoof_signature_summary"
+            android:defaultValue="false" />
+
+        <com.android.settings.custom.preference.SecureSettingSwitchPreference
+            android:key="pif_spoof_vending_build"
+            android:title="@string/pif_spoof_vending_build"
+            android:summary="@string/pif_spoof_vending_build_summary"
+            android:defaultValue="true" />
+
         <Preference
             android:key="pif_manage_targets"
             android:title="@string/pif_manage_targets"
