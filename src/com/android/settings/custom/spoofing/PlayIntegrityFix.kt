@@ -125,6 +125,14 @@ class PlayIntegrityFix : SettingsPreferenceFragment() {
 
         findPreference<Preference>("pif_delete_config")?.isEnabled = exists
 
+        val targetsStr = Settings.Secure.getStringForUser(requireContext().contentResolver,
+                        "spoof_pif_targets", UserHandle.USER_CURRENT)
+        val targetCount = if (targetsStr.isNullOrEmpty()) 0
+            else targetsStr.lines().count { it.isNotBlank() }
+        findPreference<Preference>("pif_manage_targets")?.summary =
+            if (targetCount == 0) getString(R.string.pif_manage_targets_summary)
+            else getString(R.string.pif_target_apps_count, targetCount)
+
         populateConfigDetails(activeConfigData)
     }
 

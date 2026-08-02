@@ -52,6 +52,12 @@
             android:title="@string/pif_spoof_photos"
             android:summary="@string/pif_spoof_photos_summary"
             android:defaultValue="true" />
+
+        <Preference
+            android:key="pif_manage_targets"
+            android:title="@string/pif_manage_targets"
+            android:summary="@string/pif_manage_targets_summary"
+            android:fragment="com.android.settings.custom.spoofing.PifTargetApps" />
     </PreferenceCategory>
 
     <PreferenceCategory

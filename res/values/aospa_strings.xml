@@ -530,4 +530,10 @@
     <string name="spoofing_category_summary">Play Integrity Fix, TrickyStore, and game spoofing</string>
     <string name="system_spoof_title">System spoof</string>
     <string name="miscellaneous_title">Miscellaneous</string>
+    <string name="pif_manage_targets">Spoofed apps</string>
+    <string name="pif_manage_targets_summary">Select additional apps to spoof device properties for</string>
+    <string name="pif_manage_targets_title">Spoofed apps</string>
+    <string name="pif_no_targets">No apps selected</string>
+    <string name="pif_target_apps_count">%d apps selected</string>
+    <string name="deselect_all">Deselect all</string>
 </resources>
