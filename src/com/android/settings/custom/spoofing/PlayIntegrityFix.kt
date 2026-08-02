@@ -38,8 +38,6 @@ class PlayIntegrityFix : SettingsPreferenceFragment() {
 
     private var activeConfigData: Map<String, String> = emptyMap()
 
-    private enum class PifChannel { LATEST_RELEASE, CANARY }
-
     private val importLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -70,7 +68,7 @@ class PlayIntegrityFix : SettingsPreferenceFragment() {
         addPreferencesFromResource(R.xml.play_integrity_fix)
 
         findPreference<Preference>("pif_fetch_beta")?.setOnPreferenceClickListener {
-            showChannelSelectionDialog()
+            fetchRandomCanaryFingerprint()
             true
         }
 
@@ -144,7 +142,8 @@ class PlayIntegrityFix : SettingsPreferenceFragment() {
 
         val displayOrder = listOf(
             "MODEL", "MANUFACTURER", "BRAND", "PRODUCT", "DEVICE",
-            "FINGERPRINT", "SECURITY_PATCH", "ID", "RELEASE", "DEVICE_INITIAL_SDK_INT"
+            "FINGERPRINT", "SECURITY_PATCH", "VERSION.SECURITY_PATCH", "ID", "RELEASE", "VERSION.RELEASE",
+            "VERSION.INCREMENTAL", "DEVICE_INITIAL_SDK_INT", "VERSION.DEVICE_INITIAL_SDK_INT"
         )
 
         for (key in displayOrder) {
@@ -187,96 +186,145 @@ class PlayIntegrityFix : SettingsPreferenceFragment() {
             .show()
     }
 
-    private fun showChannelSelectionDialog() {
-        val channels = arrayOf(
-            getString(R.string.pif_channel_latest_release),
-            getString(R.string.pif_channel_canary_release)
-        )
-        AlertDialog.Builder(requireContext())
-            .setTitle(R.string.pif_select_channel)
-            .setItems(channels) { _, which ->
-                val channel = if (which == 0) PifChannel.LATEST_RELEASE else PifChannel.CANARY
-                fetchDevicesForChannel(channel)
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
-    }
-
-    private fun fetchDevicesForChannel(channel: PifChannel) {
+    private fun fetchRandomCanaryFingerprint() {
         val fetchPref = findPreference<Preference>("pif_fetch_beta") ?: return
         fetchPref.summary = getString(R.string.pif_fetching)
         fetchPref.isEnabled = false
 
         scope.launch {
             try {
-                val (devices, apiKey) = withContext(Dispatchers.IO) {
-                    when (channel) {
-                        PifChannel.LATEST_RELEASE -> fetchAvailableDevices() to null
-                        PifChannel.CANARY -> fetchAvailableCanaryDevices()
+                val pifJson = withContext(Dispatchers.IO) {
+                    val (devices, apiKey) = fetchAvailableCanaryDevicesAndApiKey()
+                    if (devices.isEmpty()) {
+                        throw Exception("No devices found")
+                    }
+                    if (apiKey.isNullOrEmpty()) {
+                        throw Exception("Failed to extract Flash Tool API key")
+                    }
+                    val device = devices.random()
+                    
+                    val buildsUrl = "$FLASH_API?product=${device.product}&key=$apiKey"
+                    val buildsConn = URL(buildsUrl).openConnection().apply {
+                        setRequestProperty("Referer", FLASH_URL)
+                        connectTimeout = 15000
+                        readTimeout = 15000
+                    }
+                    val stationJson = buildsConn.getInputStream().use {
+                        it.readBytes().toString(StandardCharsets.UTF_8)
+                    }
+                    
+                    var buildId: String? = null
+                    var buildInc: String? = null
+                    var canaryId: String? = null
+
+                    try {
+                        val root = JSONObject(stationJson)
+                        val buildsArray = root.optJSONArray("flashstationBuild")
+                        if (buildsArray != null && buildsArray.length() > 0) {
+                            for (i in buildsArray.length() - 1 downTo 0) {
+                                val b = buildsArray.optJSONObject(i) ?: continue
+                                val meta = b.optJSONObject("previewMetadata")
+                                val rc = b.optString("releaseCandidateName")
+                                val bid = b.optString("buildId")
+                                if (rc.isNotEmpty() && bid.isNotEmpty()) {
+                                    buildId = rc
+                                    buildInc = bid
+                                    if (meta != null) {
+                                        canaryId = meta.optString("id").takeIf { it.contains("canary-") }
+                                    }
+                                    break
+                                }
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.w(TAG, "JSON parsing of station builds failed, trying regex", e)
+                    }
+
+                    if (buildId == null || buildInc == null) {
+                        val rcMatcher = Regex(""""releaseCandidateName"\s*:\s*"([^"]+)"""").findAll(stationJson)
+                        val biMatcher = Regex(""""buildId"\s*:\s*"([^"]+)"""").findAll(stationJson)
+                        val rcList = rcMatcher.map { it.groupValues[1] }.toList()
+                        val biList = biMatcher.map { it.groupValues[1] }.toList()
+                        if (rcList.isNotEmpty() && biList.isNotEmpty()) {
+                            buildId = rcList.last()
+                            buildInc = biList.last()
+                        }
+                    }
+                    
+                    if (buildId == null || buildInc == null) {
+                        throw Exception("Failed to parse build info for ${device.model}")
+                    }
+                    
+                    val fingerprint = "google/${device.product}/${device.device}:CANARY/$buildId/$buildInc:user/release-keys"
+                    
+                    if (canaryId == null) {
+                        val canaryMatcher = Regex("""\{[^}]*"canary"\s*:\s*true[^}]*\}""", RegexOption.IGNORE_CASE)
+                        var lastCanaryObject: String? = null
+                        canaryMatcher.findAll(stationJson).forEach { match ->
+                            lastCanaryObject = match.value
+                        }
+                        if (lastCanaryObject != null) {
+                            val idMatcher = Regex(""""id"\s*:\s*"canary-([^"]+)"""").find(lastCanaryObject!!)
+                            if (idMatcher != null) {
+                                canaryId = idMatcher.groupValues[1]
+                            }
+                        }
+                    }
+                    
+                    var canaryMonth: String? = null
+                    if (canaryId != null) {
+                        val m = Regex("""(?:canary-)?(\d{4})(\d{2})""").find(canaryId!!)
+                        if (m != null) {
+                            canaryMonth = "${m.groupValues[1]}-${m.groupValues[2]}"
+                        }
+                    }
+                    
+                    var securityPatch: String? = null
+                    if (canaryMonth != null) {
+                        try {
+                            val secHtml = URL(PIXEL_BULLETIN_URL).readText(StandardCharsets.UTF_8)
+                            val sp = Regex("""<td>(${Regex.escape(canaryMonth!!)}-\d{2})</td>""", RegexOption.IGNORE_CASE)
+                            securityPatch = sp.find(secHtml)?.groupValues?.get(1)
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Could not resolve security patch from bulletin", e)
+                        }
+                        if (securityPatch == null) {
+                            securityPatch = "$canaryMonth-05"
+                        }
+                    }
+                    
+                    JSONObject().apply {
+                        put("MANUFACTURER", "Google")
+                        put("MODEL", device.model)
+                        put("FINGERPRINT", fingerprint)
+                        put("BRAND", "google")
+                        put("PRODUCT", device.product)
+                        put("DEVICE", device.device)
+                        put("VERSION.RELEASE", "16")
+                        put("ID", buildId)
+                        put("VERSION.INCREMENTAL", buildInc)
+                        put("TYPE", "user")
+                        put("TAGS", "release-keys")
+                        if (securityPatch != null) {
+                            put("VERSION.SECURITY_PATCH", securityPatch)
+                        }
+                        put("VERSION.DEVICE_INITIAL_SDK_INT", "32")
                     }
                 }
-
-                if (devices.isEmpty()) {
-                    toast(getString(R.string.pif_failed, "No devices found"))
-                    return@launch
-                }
-
-                if (channel == PifChannel.CANARY && apiKey.isNullOrEmpty()) {
-                    toast(getString(R.string.pif_failed, "Failed to extract Flash Tool API key"))
-                    return@launch
-                }
-
-                val modelNames = devices.map { it.model }.toTypedArray()
-
-                AlertDialog.Builder(requireContext())
-                    .setTitle(R.string.pif_select_device)
-                    .setItems(modelNames) { _, which ->
-                        generateAndSavePif(devices[which], channel, apiKey)
-                    }
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show()
+                
+                Settings.Secure.putString(
+                    requireContext().contentResolver,
+                    PIF_CONFIG_KEY,
+                    pifJson.toString(2)
+                )
+                killPackage(VENDING_PACKAGE)
+                toast(getString(R.string.pif_fetched_model, pifJson.getString("MODEL")))
+                refreshStatus()
             } catch (e: Exception) {
                 toast(getString(R.string.pif_failed, e.message ?: ""))
             } finally {
                 fetchPref.summary = getString(R.string.pif_fetch_pixel_beta_summary)
                 fetchPref.isEnabled = true
-            }
-        }
-    }
-
-    private fun generateAndSavePif(device: PifDevice, channel: PifChannel, apiKey: String?) {
-        val fetchPref = findPreference<Preference>("pif_fetch_beta")
-        fetchPref?.summary = getString(R.string.pif_generating)
-        fetchPref?.isEnabled = false
-
-        scope.launch {
-            try {
-                val result = withContext(Dispatchers.IO) {
-                    when (channel) {
-                        PifChannel.LATEST_RELEASE -> buildPifFromDevice(device)
-                        PifChannel.CANARY -> buildCanaryPifFromDevice(device, apiKey ?: "")
-                    }
-                }
-                when (result) {
-                    is PifFetchResult.Success -> {
-                        Settings.Secure.putString(
-                            requireContext().contentResolver,
-                            PIF_CONFIG_KEY,
-                            result.pifData.toString(2)
-                        )
-                        killPackage(VENDING_PACKAGE)
-                        toast(getString(R.string.pif_fetched_model, result.model))
-                        refreshStatus()
-                    }
-                    is PifFetchResult.Error -> {
-                        toast(getString(R.string.pif_failed, result.message))
-                    }
-                }
-            } catch (e: Exception) {
-                toast(getString(R.string.pif_failed, e.message ?: ""))
-            } finally {
-                fetchPref?.summary = getString(R.string.pif_fetch_pixel_beta_summary)
-                fetchPref?.isEnabled = true
             }
         }
     }
@@ -378,24 +426,6 @@ class PlayIntegrityFix : SettingsPreferenceFragment() {
             return json.toString(2)
         }
 
-        private fun fetchPartialUrl(url: String, maxBytes: Int): String {
-            val conn = URL(url).openConnection()
-            conn.connectTimeout = 15000
-            conn.readTimeout = 15000
-            conn.getInputStream().use { input ->
-                val buf = ByteArray(512)
-                val sb = StringBuilder()
-                var total = 0
-                while (total < maxBytes) {
-                    val read = input.read(buf)
-                    if (read == -1) break
-                    sb.append(String(buf, 0, read, StandardCharsets.ISO_8859_1))
-                    total += read
-                }
-                return sb.toString()
-            }
-        }
-
         data class PifDevice(
             val product: String,
             val device: String,
@@ -403,223 +433,59 @@ class PlayIntegrityFix : SettingsPreferenceFragment() {
             val otaUrl: String,
         )
 
-        private sealed class PifFetchResult {
-            data class Success(val model: String, val pifData: JSONObject) : PifFetchResult()
-            data class Error(val message: String) : PifFetchResult()
-        }
-
-        /**
-         * Phase 1: Scrape Google developer site to find all available beta devices.
-         */
-        private fun fetchAvailableDevices(): List<PifDevice> {
-            val versionsHtml = URL("$GOOGLE_URL/about/versions").readText(StandardCharsets.UTF_8)
-            val knownVersions = Regex("""https://developer\.android\.com/about/versions/(\d+)""")
-                .findAll(versionsHtml).map { it.groupValues[1].toInt() }.toSet().sortedDescending()
-
-            val maxVersion = knownVersions.firstOrNull() ?: return emptyList()
-            val versions = listOf(maxVersion + 1) + knownVersions
-
-            for (version in versions) {
-                try {
-                    val downloadUrl = "$GOOGLE_URL/about/versions/$version/download-ota"
-                    val otaHtml = URL(downloadUrl).readText(StandardCharsets.UTF_8)
-                    val otaList = Regex("""href="(https://dl\.google\.com/[^"]*ota/([^/"]+_beta)[^"]*?)"""")
-                        .findAll(otaHtml).map { it.groupValues[1] to it.groupValues[2] }.toList()
-                    if (otaList.isEmpty()) continue
-
-                    val devices = mutableListOf<PifDevice>()
-                    val seen = mutableSetOf<String>()
-                    for ((otaUrl, product) in otaList) {
-                        val device = product.replace("_beta", "")
-                        if (device in seen) continue
-                        seen.add(device)
-                        val model = DEVICE_MODEL_MAP[device] ?: device
-                        devices.add(PifDevice(product, device, model, otaUrl))
-                    }
-                    if (devices.isNotEmpty()) return devices
-                } catch (_: Exception) { continue }
-            }
-            return emptyList()
-        }
-
-        /**
-         * Phase 2: Fetch OTA metadata for a specific device and build pif JSON.
-         */
-        private fun buildPifFromDevice(pifDevice: PifDevice): PifFetchResult {
-            try {
-                val partial = fetchPartialUrl(pifDevice.otaUrl, 4096)
-
-                val fingerprint = Regex("""post-build=(.*)""").find(partial)?.groupValues?.get(1)?.trim()
-                    ?: return PifFetchResult.Error("Could not extract fingerprint")
-                val securityPatch = Regex("""security-patch-level=(.*)""").find(partial)?.groupValues?.get(1)?.trim()
-                    ?: return PifFetchResult.Error("Could not extract security patch")
-
-                val fpParts = fingerprint.split("/")
-                val release = fpParts.getOrNull(2)?.substringAfter(":", "") ?: ""
-                val buildId = fpParts.getOrNull(3) ?: ""
-
-                val pifJson = JSONObject().apply {
-                    put("TYPE", "user")
-                    put("TAGS", "release-keys")
-                    put("ID", buildId)
-                    put("BRAND", "google")
-                    put("DEVICE", pifDevice.device)
-                    put("FINGERPRINT", fingerprint)
-                    put("MANUFACTURER", "Google")
-                    put("MODEL", pifDevice.model)
-                    put("PRODUCT", pifDevice.product)
-                    put("RELEASE", release)
-                    put("SECURITY_PATCH", securityPatch)
-                    put("DEVICE_INITIAL_SDK_INT", "21")
-                    put("DEBUG", false)
-                    put("SDK_INT", "32")
-                }
-                return PifFetchResult.Success(pifDevice.model, pifJson)
-            } catch (e: Exception) {
-                return PifFetchResult.Error("Failed: ${e.message}")
-            }
-        }
-
-        private fun fetchAvailableCanaryDevices(): Pair<List<PifDevice>, String?> {
+        private fun fetchAvailableCanaryDevicesAndApiKey(): Pair<List<PifDevice>, String?> {
             try {
                 val versionsHtml = URL("$GOOGLE_URL/about/versions").readText(StandardCharsets.UTF_8)
-                val knownVersions = Regex("""https://developer\.android\.com/about/versions/(\d+)""")
-                    .findAll(versionsHtml).map { it.groupValues[1].toInt() }.toSet().sortedDescending()
+                val links = Regex("""https://developer\.android\.com/about/versions/\d+""")
+                    .findAll(versionsHtml).map { it.value }.toList()
+                if (links.isEmpty()) {
+                    throw Exception("Failed to get latest build URL")
+                }
+                val latestBuildUrl = links.sorted().last()
 
-                val maxVersion = knownVersions.firstOrNull() ?: return emptyList<PifDevice>() to null
-                val versions = listOf(maxVersion + 1) + knownVersions
+                val latestHtml = URL(latestBuildUrl).readText(StandardCharsets.UTF_8)
+                val factoryUrlMatch = Regex("""href="([^"]*download[^"]*)"""").find(latestHtml)
+                    ?: throw Exception("Could not find factory image download link")
+                val factoryUrl = factoryUrlMatch.groupValues[1]
+                val fullFactoryUrl = if (factoryUrl.startsWith("http")) factoryUrl else "$GOOGLE_URL$factoryUrl"
 
-                val rowPattern = Regex(
-                    """<tr id="([^"]+)">\s*<td[^>]*>([^<]+)</td>""",
-                    RegexOption.DOT_MATCHES_ALL
-                )
+                val factoryHtml = URL(fullFactoryUrl).readText(StandardCharsets.UTF_8)
 
-                for (version in versions) {
-                    try {
-                        val latestHtml = URL("$GOOGLE_URL/about/versions/$version")
-                            .readText(StandardCharsets.UTF_8)
-                        val qprPath = Regex("""href="(/about/versions/$version/qpr(\d+)/download-ota)"""")
-                            .findAll(latestHtml)
-                            .map { it.groupValues[2].toInt() to it.groupValues[1] }
-                            .maxByOrNull { it.first }
-                            ?.second ?: continue
-
-                        val fiHtml = URL("$GOOGLE_URL$qprPath").readText(StandardCharsets.UTF_8)
-
-                        val devices = mutableListOf<PifDevice>()
-                        val seen = mutableSetOf<String>()
-                        rowPattern.findAll(fiHtml).forEach { match ->
-                            val device = match.groupValues[1]
-                            if (device in seen) return@forEach
-                            seen.add(device)
-                            val model = match.groupValues[2].trim()
-                                .ifEmpty { DEVICE_MODEL_MAP[device] ?: device }
-                            devices.add(
-                                PifDevice(
-                                    product = "${device}_beta",
-                                    device = device,
-                                    model = model,
-                                    otaUrl = "",
-                                )
-                            )
-                        }
-
-                        if (devices.isEmpty()) continue
-
-                        val flashHtml = URL(FLASH_URL).readText(StandardCharsets.UTF_8)
-                        val apiKey = Regex("""AIza[0-9A-Za-z_-]{35}""").find(flashHtml)?.value
-
-                        return devices to apiKey
-                    } catch (_: Exception) { continue }
+                val devices = mutableListOf<PifDevice>()
+                val rowPattern = Regex("""<tr\s+id="([^"]+)"[^>]*>\s*<td[^>]*>([^<]+)</td>""", RegexOption.IGNORE_CASE)
+                rowPattern.findAll(factoryHtml).forEach { match ->
+                    val device = match.groupValues[1].trim()
+                    val model = match.groupValues[2].trim()
+                    devices.add(
+                        PifDevice(
+                            product = "${device}_beta",
+                            device = device,
+                            model = model,
+                            otaUrl = ""
+                        )
+                    )
                 }
 
-                return emptyList<PifDevice>() to null
+                if (devices.isEmpty()) {
+                    throw Exception("No beta devices found")
+                }
+
+                val flashHtml = URL(FLASH_URL).readText(StandardCharsets.UTF_8)
+                var apiKey = Regex("""data-client-config\s*=\s*"(?:[^,]*?,){2}\s*&quot;([^&]+)&quot;""", RegexOption.IGNORE_CASE)
+                    .find(flashHtml)?.groupValues?.get(1)
+                    ?.replace("&quot;", "\"")
+                    ?.replace("&amp;", "&")
+                    ?.replace("&lt;", "<")
+                    ?.replace("&gt;", ">")
+
+                if (apiKey.isNullOrEmpty()) {
+                    apiKey = Regex("""AIza[0-9A-Za-z_-]{35}""").find(flashHtml)?.value
+                }
+
+                return devices to apiKey
             } catch (e: Exception) {
-                Log.e(TAG, "Canary device fetch failed", e)
-                return emptyList<PifDevice>() to null
-            }
-        }
-
-        private fun buildCanaryPifFromDevice(pifDevice: PifDevice, apiKey: String): PifFetchResult {
-            try {
-                if (apiKey.isEmpty()) return PifFetchResult.Error("Flash Tool API key unavailable")
-
-                val buildsUrl = "$FLASH_API?product=${pifDevice.product}&key=$apiKey"
-                val buildsConn = URL(buildsUrl).openConnection().apply {
-                    setRequestProperty("Referer", FLASH_URL)
-                    setRequestProperty("X-Goog-Api-Key", apiKey)
-                    connectTimeout = 15000
-                    readTimeout = 15000
-                }
-                val buildsJson = buildsConn.getInputStream().use {
-                    it.readBytes().toString(StandardCharsets.UTF_8)
-                }
-
-                val root = JSONObject(buildsJson)
-                val buildsArray = root.optJSONArray("flashstationBuild")
-                    ?: return PifFetchResult.Error("No flashstationBuild array in Flash Tool response")
-
-                var id: String? = null
-                var incremental: String? = null
-                var canaryId: String? = null
-
-                for (i in buildsArray.length() - 1 downTo 0) {
-                    val b = buildsArray.optJSONObject(i) ?: continue
-                    val meta = b.optJSONObject("previewMetadata") ?: continue
-                    if (!meta.optBoolean("canary")) continue
-
-                    val rc = b.optString("releaseCandidateName")
-                    val bid = b.optString("buildId")
-                    if (rc.isEmpty() || bid.isEmpty()) continue
-
-                    id = rc
-                    incremental = bid
-                    canaryId = meta.optString("id").takeIf { it.contains("canary-") }
-                    break
-                }
-
-                if (id == null || incremental == null) {
-                    return PifFetchResult.Error("No canary build found for ${pifDevice.product}")
-                }
-
-                val fingerprint =
-                    "google/${pifDevice.product}/${pifDevice.device}:CANARY/$id/$incremental:user/release-keys"
-
-                val canaryMonth = canaryId?.let {
-                    Regex("""canary-(\d{4})(\d{2})""").find(it)?.let { m ->
-                        "${m.groupValues[1]}-${m.groupValues[2]}"
-                    }
-                } ?: return PifFetchResult.Error("Failed to derive canary month id")
-
-                val securityPatch = try {
-                    val bulletinHtml = URL(PIXEL_BULLETIN_URL).readText(StandardCharsets.UTF_8)
-                    Regex("""<td>($canaryMonth-\d{2})</td>""").find(bulletinHtml)?.groupValues?.get(1)
-                        ?: "$canaryMonth-05"
-                } catch (e: Exception) {
-                    Log.d(TAG, "Bulletin fetch failed, using estimated patch: ${e.message}")
-                    "$canaryMonth-05"
-                }
-
-                val pifJson = JSONObject().apply {
-                    put("TYPE", "user")
-                    put("TAGS", "release-keys")
-                    put("ID", id)
-                    put("BRAND", "google")
-                    put("DEVICE", pifDevice.device)
-                    put("FINGERPRINT", fingerprint)
-                    put("MANUFACTURER", "Google")
-                    put("MODEL", pifDevice.model)
-                    put("PRODUCT", pifDevice.product)
-                    put("RELEASE", "CANARY")
-                    put("SECURITY_PATCH", securityPatch)
-                    put("DEVICE_INITIAL_SDK_INT", "32")
-                    put("DEBUG", false)
-                    put("SDK_INT", "32")
-                }
-
-                return PifFetchResult.Success(pifDevice.model, pifJson)
-            } catch (e: Exception) {
-                return PifFetchResult.Error("Failed: ${e.message}")
+                Log.e(TAG, "Canary device/apikey fetch failed", e)
+                throw e
             }
         }
     }
