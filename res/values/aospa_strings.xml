@@ -526,4 +526,8 @@
     <string name="gs_config_saved">Configuration saved</string>
     <string name="gs_loading_apps">Loading apps\u2026</string>
     <string name="gs_failed">Failed: %s</string>
+    <!-- Added Spoofing & Custom Strings -->
+    <string name="spoofing_category_summary">Play Integrity Fix, TrickyStore, and game spoofing</string>
+    <string name="system_spoof_title">System spoof</string>
+    <string name="miscellaneous_title">Miscellaneous</string>
 </resources>
