@@ -131,6 +131,7 @@ android_library {
         "device-state-schema",
         "dynamiccolors",
         "com.android.text.flags-aconfig-java",
+        "custom-preference",
     ],
 
     plugins: [
