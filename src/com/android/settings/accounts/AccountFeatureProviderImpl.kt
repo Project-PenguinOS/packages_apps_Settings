@@ -17,14 +17,12 @@
 package com.android.settings.accounts
 
 import android.accounts.Account
+import android.accounts.AccountManager
 import android.content.Context
 
 class AccountFeatureProviderImpl : AccountFeatureProvider {
-    override fun getAccountType(): String? {
-        return null
-    }
+    override fun getAccountType(): String = "com.google"
 
-    override fun getAccounts(context: Context): Array<Account> {
-        return emptyArray()
-    }
+    override fun getAccounts(context: Context): Array<Account> =
+        AccountManager.get(context).getAccountsByType("com.google")
 }
