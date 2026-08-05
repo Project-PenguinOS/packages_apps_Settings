@@ -407,6 +407,16 @@
     <string name="doze_peek_summary">Show ambient display briefly when the screen turns off</string>
     <string name="doze_peek_duration_title">Peek duration</string>
 
+    <!-- AOD Shake -->
+    <string name="aod_category_shake">Shake gesture</string>
+    <string name="doze_shake_title">Shake to show AOD</string>
+    <string name="doze_shake_summary">Show always-on display briefly when shaking the device</string>
+    <string name="doze_shake_duration_title">Duration of brief AOD</string>
+    <string name="doze_shake_intensity_title">Shake intensity</string>
+    <string name="doze_shake_intensity_low">Low (gentle shake)</string>
+    <string name="doze_shake_intensity_medium">Medium (standard shake)</string>
+    <string name="doze_shake_intensity_high">High (firm/hard shake)</string>
+
     <!-- Ambient display -->
     <string name="ambient_display_category_title">Ambient display</string>
     <string name="ambient_bottom_title">AOD bottom</string>

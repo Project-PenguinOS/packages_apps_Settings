@@ -65,6 +65,9 @@ import android.provider.Settings.Secure.DOZE_ALWAYS_ON_AUTO_MODE
 import android.provider.Settings.Secure.DOZE_ON_CHARGE
 import android.provider.Settings.Secure.DOZE_PEEK
 import android.provider.Settings.Secure.DOZE_PEEK_DURATION
+import android.provider.Settings.Secure.DOZE_SHAKE_TO_SHOW
+import android.provider.Settings.Secure.DOZE_SHAKE_TO_SHOW_DURATION
+import android.provider.Settings.Secure.DOZE_SHAKE_INTENSITY
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import com.android.settingslib.datastore.SettingsSystemStore
@@ -96,6 +99,9 @@ open class AmbientDisplayAlwaysOnPreferenceScreen(context: Context) :
     private val dozeOnChargePreference = DozeOnChargePreference(context)
     private val dozePeekPreference = DozePeekPreference(context)
     private val dozePeekDurationPreference = DozePeekDurationPreference(context)
+    private val dozeShakePreference = DozeShakePreference(context)
+    private val dozeShakeDurationPreference = DozeShakeDurationPreference(context)
+    private val dozeShakeIntensityPreference = DozeShakeIntensityPreference(context)
     private val ambientShowSettingsPreference = AmbientShowSettingsPreference(context)
     private val ambientShowSettingsIconsPreference = AmbientShowSettingsIconsPreference(context)
     private lateinit var keyedObserver: KeyedObserver<String>
@@ -199,6 +205,11 @@ open class AmbientDisplayAlwaysOnPreferenceScreen(context: Context) :
             ) += {
                 +dozePeekPreference
                 +dozePeekDurationPreference
+            }
+            +Category("aod_shake_group", R.string.aod_category_shake, R.string.aod_category_shake) += {
+                +dozeShakePreference
+                +dozeShakeDurationPreference
+                +dozeShakeIntensityPreference
             }
             +Category(
                 "aod_schedule_behavior_group",
@@ -509,5 +520,158 @@ class DozePeekDurationPreference(context: Context) :
 
     companion object {
         const val KEY = DOZE_PEEK_DURATION
+    }
+}
+
+class DozeShakeStore(private val context: Context) : KeyValueStoreDelegate {
+    override val keyValueStoreDelegate: KeyValueStore
+        get() = SettingsSecureStore.get(context)
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : Any> getValue(key: String, valueType: Class<T>): T? {
+        val intVal = keyValueStoreDelegate.getInt(key) ?: 0
+        return (intVal == 1) as T
+    }
+
+    override fun <T : Any> setValue(key: String, valueType: Class<T>, value: T?) {
+        if (value == null) {
+            keyValueStoreDelegate.setInt(key, null)
+        } else if (value is Boolean) {
+            keyValueStoreDelegate.setInt(key, if (value) 1 else 0)
+        }
+    }
+}
+
+class DozeShakePreference(context: Context) :
+    SwitchPreference(
+        KEY,
+        R.string.doze_shake_title,
+        R.string.doze_shake_summary,
+    ),
+    PreferenceAvailabilityProvider {
+
+    private val dataStore = DozeShakeStore(context)
+    private val config = AmbientDisplayConfiguration(context)
+
+    override fun isAvailable(context: Context): Boolean {
+        return config.alwaysOnAvailableForUser(UserHandle.USER_CURRENT)
+    }
+
+    override fun storage(context: Context) = dataStore
+
+    companion object {
+        const val KEY = DOZE_SHAKE_TO_SHOW
+    }
+}
+
+class DozeShakeDurationPreference(context: Context) :
+    PreferenceMetadata,
+    PreferenceBinding,
+    PreferenceSummaryProvider,
+    PreferenceAvailabilityProvider {
+
+    private val dozeShakeStore = DozeShakeStore(context)
+    private val config = AmbientDisplayConfiguration(context)
+
+    override val key: String
+        get() = KEY
+
+    override val purpose: Int
+        get() = R.string.doze_shake_duration_title
+
+    override val title: Int
+        get() = R.string.doze_shake_duration_title
+
+    override fun dependencies(context: Context) = arrayOf(DOZE_SHAKE_TO_SHOW)
+
+    override fun isEnabled(context: Context): Boolean {
+        return dozeShakeStore.getValue(DOZE_SHAKE_TO_SHOW, Boolean::class.java) == true
+    }
+
+    override fun isAvailable(context: Context): Boolean {
+        return config.alwaysOnAvailableForUser(UserHandle.USER_CURRENT)
+    }
+
+    override fun getSummary(context: Context): CharSequence? {
+        val value = Settings.Secure.getIntForUser(context.contentResolver, KEY, 5, UserHandle.USER_CURRENT)
+        val entries = context.resources.getStringArray(R.array.doze_shake_duration_entries)
+        val values = context.resources.getStringArray(R.array.doze_shake_duration_values)
+        val index = values.indexOf(value.toString())
+        return if (index != -1) entries[index] else null
+    }
+
+    override fun createWidget(context: Context): Preference {
+        return ListPreference(context).apply {
+            setEntries(R.array.doze_shake_duration_entries)
+            setEntryValues(R.array.doze_shake_duration_values)
+            val currentValue = Settings.Secure.getIntForUser(context.contentResolver, KEY, 5, UserHandle.USER_CURRENT).toString()
+            value = currentValue
+            summary = "%s"
+            setOnPreferenceChangeListener { _, newValue ->
+                val strValue = newValue as String
+                Settings.Secure.putIntForUser(context.contentResolver, KEY, strValue.toInt(), UserHandle.USER_CURRENT)
+                true
+            }
+        }
+    }
+
+    companion object {
+        const val KEY = DOZE_SHAKE_TO_SHOW_DURATION
+    }
+}
+
+class DozeShakeIntensityPreference(context: Context) :
+    PreferenceMetadata,
+    PreferenceBinding,
+    PreferenceSummaryProvider,
+    PreferenceAvailabilityProvider {
+
+    private val dozeShakeStore = DozeShakeStore(context)
+    private val config = AmbientDisplayConfiguration(context)
+
+    override val key: String
+        get() = KEY
+
+    override val purpose: Int
+        get() = R.string.doze_shake_intensity_title
+
+    override val title: Int
+        get() = R.string.doze_shake_intensity_title
+
+    override fun dependencies(context: Context) = arrayOf(DOZE_SHAKE_TO_SHOW)
+
+    override fun isEnabled(context: Context): Boolean {
+        return dozeShakeStore.getValue(DOZE_SHAKE_TO_SHOW, Boolean::class.java) == true
+    }
+
+    override fun isAvailable(context: Context): Boolean {
+        return config.alwaysOnAvailableForUser(UserHandle.USER_CURRENT)
+    }
+
+    override fun getSummary(context: Context): CharSequence? {
+        val value = Settings.Secure.getIntForUser(context.contentResolver, KEY, 1, UserHandle.USER_CURRENT)
+        val entries = context.resources.getStringArray(R.array.doze_shake_intensity_entries)
+        val values = context.resources.getStringArray(R.array.doze_shake_intensity_values)
+        val index = values.indexOf(value.toString())
+        return if (index != -1) entries[index] else null
+    }
+
+    override fun createWidget(context: Context): Preference {
+        return ListPreference(context).apply {
+            setEntries(R.array.doze_shake_intensity_entries)
+            setEntryValues(R.array.doze_shake_intensity_values)
+            val currentValue = Settings.Secure.getIntForUser(context.contentResolver, KEY, 1, UserHandle.USER_CURRENT).toString()
+            value = currentValue
+            summary = "%s"
+            setOnPreferenceChangeListener { _, newValue ->
+                val strValue = newValue as String
+                Settings.Secure.putIntForUser(context.contentResolver, KEY, strValue.toInt(), UserHandle.USER_CURRENT)
+                true
+            }
+        }
+    }
+
+    companion object {
+        const val KEY = DOZE_SHAKE_INTENSITY
     }
 }
