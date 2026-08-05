@@ -18,6 +18,7 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:settings="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res/com.android.settings"
     android:key="auto_brightness_entry"
     android:title="@string/auto_brightness_title">
 
@@ -32,6 +33,16 @@
         settings:keywords="@string/keywords_display_auto_brightness"
         settings:userRestriction="no_config_brightness"
         settings:controller="com.android.settings.display.AutoBrightnessDetailPreferenceController"/>
+
+    <com.android.settings.custom.preference.GlobalSettingSeekBarPreference
+        android:key="user_min_auto_brightness"
+        android:title="@string/user_min_auto_brightness_title"
+        android:summary="@string/user_min_auto_brightness_summary"
+        android:max="100"
+        android:min="0"
+        android:defaultValue="0"
+        app:interval="5"
+        settings:units="%" />
 
     <Preference
         android:key="reset_auto_brightness_adjustment"

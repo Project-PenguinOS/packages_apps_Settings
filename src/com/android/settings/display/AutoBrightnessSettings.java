@@ -28,9 +28,14 @@ import android.provider.Settings;
 import com.android.settings.display.AutoBrightnessObserver;
 import com.android.settings.R;
 import com.android.settings.dashboard.DashboardFragment;
+import com.android.settings.display.MinAutoBrightnessPreferenceController;
 import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settings.widget.SettingsMainSwitchPreference;
+import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.search.SearchIndexable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SearchIndexable(forTarget = SearchIndexable.ALL & ~SearchIndexable.ARC)
 public class AutoBrightnessSettings extends DashboardFragment {
@@ -52,6 +57,13 @@ public class AutoBrightnessSettings extends DashboardFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         mAutoBrightnessObserver = new AutoBrightnessObserver(getContext());
+    }
+
+    @Override
+    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+        final List<AbstractPreferenceController> controllers = new ArrayList<>();
+        controllers.add(new MinAutoBrightnessPreferenceController(context));
+        return controllers;
     }
 
     @Override

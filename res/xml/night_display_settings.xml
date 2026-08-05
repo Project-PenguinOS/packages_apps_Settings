@@ -69,7 +69,7 @@
         android:defaultValue="false"
         settings:allowDividerAbove="true" />
 
-    <org.neoteric.preference.SecureSettingSeekBarPreference
+    <com.android.settings.custom.preference.SecureSettingSeekBarPreference
         android:key="ui_night_mode_dim_wall_amount"
         android:title="@string/ui_night_mode_dim_wall_amount_title"
         android:dependency="ui_night_mode_dim_wall"
