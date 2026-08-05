@@ -38,6 +38,12 @@
             android:title="@string/show_ime_space_title"
             android:summary="@string/show_ime_space_summary"
             android:defaultValue="true" />
+
+        <Preference
+            android:key="gesture_nav_custom_options"
+            android:title="@string/navbar_gesture_tweaks_pref_title"
+            android:summary="@string/navbar_gesture_tweaks_pref_summary"
+            android:fragment="com.android.settings.gestures.GestureTweaksSettings" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -91,4 +97,3 @@
         android:title="@string/back_sensitivity_dialog_message"
         settings:searchable="false"/>
 </PreferenceScreen>
-
