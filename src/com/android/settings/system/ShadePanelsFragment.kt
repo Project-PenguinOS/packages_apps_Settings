@@ -81,12 +81,12 @@ class ShadePanelsFragment : DashboardFragment(), HelpResourceProvider {
         val portraitEnabled = Settings.Secure.getInt(
             context.contentResolver,
             Settings.Secure.DUAL_SHADE,
-            1 // Default: ON (Separate)
+            0 // Default: OFF (Combined)
         ) == 1
         val landscapeEnabled = Settings.Secure.getInt(
             context.contentResolver,
             Settings.Secure.DUAL_SHADE_LANDSCAPE,
-            1 // Default: ON (Separate)
+            0 // Default: OFF (Combined)
         ) == 1
 
         updatePortraitSelectionCheckedState(portraitEnabled)
