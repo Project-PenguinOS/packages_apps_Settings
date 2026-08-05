@@ -112,4 +112,10 @@
     <!-- IME button space -->
     <string name="show_ime_space_title">Show IME button space</string>
     <string name="show_ime_space_summary">Enable the input method quick switch feature to switch input methods or hide the on-screen keyboard from the feature bar at the bottom of the screen when typing</string>
+
+    <!-- Dim wallpaper at night -->
+    <string name="ui_night_mode_dim_wall_title">Dim wallpaper</string>
+    <string name="ui_night_mode_dim_wall_summary">Dim the wallpaper when using dark theme</string>
+    <string name="ui_night_mode_dim_wall_amount_title">Dim amount</string>
+    <string name="ui_night_light_dim_wall_summary">Dim the wallpaper when using night light</string>
 </resources>
