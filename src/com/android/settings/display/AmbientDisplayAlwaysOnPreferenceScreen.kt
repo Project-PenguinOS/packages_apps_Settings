@@ -63,6 +63,8 @@ import android.provider.Settings
 import android.provider.Settings.Secure.DOZE_ALWAYS_ON
 import android.provider.Settings.Secure.DOZE_ALWAYS_ON_AUTO_MODE
 import android.provider.Settings.Secure.DOZE_ON_CHARGE
+import android.provider.Settings.Secure.DOZE_PEEK
+import android.provider.Settings.Secure.DOZE_PEEK_DURATION
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import com.android.settingslib.datastore.SettingsSystemStore
@@ -92,6 +94,8 @@ open class AmbientDisplayAlwaysOnPreferenceScreen(context: Context) :
     private val ambientWallpaperPreference = AmbientWallpaperPreference(context)
     private val alwaysOnDisplaySchedulePreference = AlwaysOnDisplaySchedulePreference(context)
     private val dozeOnChargePreference = DozeOnChargePreference(context)
+    private val dozePeekPreference = DozePeekPreference(context)
+    private val dozePeekDurationPreference = DozePeekDurationPreference(context)
     private val ambientShowSettingsPreference = AmbientShowSettingsPreference(context)
     private val ambientShowSettingsIconsPreference = AmbientShowSettingsIconsPreference(context)
     private lateinit var keyedObserver: KeyedObserver<String>
@@ -187,6 +191,14 @@ open class AmbientDisplayAlwaysOnPreferenceScreen(context: Context) :
             +AmbientDisplayMainSwitchPreference()
             if (context.isAmbientInactivityDetectionAvailable) {
                 +AmbientInactivityDetectionPreference(context)
+            }
+            +Category(
+                "aod_peek_group",
+                R.string.aod_category_peek,
+                R.string.aod_category_peek
+            ) += {
+                +dozePeekPreference
+                +dozePeekDurationPreference
             }
             +Category(
                 "aod_schedule_behavior_group",
@@ -400,5 +412,102 @@ class AmbientShowSettingsIconsPreference(context: Context) :
 
     companion object {
         const val KEY = "ambient_show_settings_icons"
+    }
+}
+
+class DozePeekStore(private val context: Context) : KeyValueStoreDelegate {
+    override val keyValueStoreDelegate: KeyValueStore
+        get() = SettingsSecureStore.get(context)
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : Any> getValue(key: String, valueType: Class<T>): T? {
+        val intVal = keyValueStoreDelegate.getInt(key) ?: 0
+        return (intVal == 1) as T
+    }
+
+    override fun <T : Any> setValue(key: String, valueType: Class<T>, value: T?) {
+        if (value == null) {
+            keyValueStoreDelegate.setInt(key, null)
+        } else if (value is Boolean) {
+            keyValueStoreDelegate.setInt(key, if (value) 1 else 0)
+        }
+    }
+}
+
+class DozePeekPreference(context: Context) :
+    SwitchPreference(
+        KEY,
+        R.string.doze_peek_title,
+        R.string.doze_peek_summary,
+    ),
+    PreferenceAvailabilityProvider {
+
+    private val dataStore = DozePeekStore(context)
+    private val config = AmbientDisplayConfiguration(context)
+
+    override fun isAvailable(context: Context): Boolean {
+        return config.alwaysOnAvailableForUser(UserHandle.USER_CURRENT)
+    }
+
+    override fun storage(context: Context) = dataStore
+
+    companion object {
+        const val KEY = DOZE_PEEK
+    }
+}
+
+class DozePeekDurationPreference(context: Context) :
+    PreferenceMetadata,
+    PreferenceBinding,
+    PreferenceSummaryProvider,
+    PreferenceAvailabilityProvider {
+
+    private val dozePeekStore = DozePeekStore(context)
+    private val config = AmbientDisplayConfiguration(context)
+
+    override val key: String
+        get() = KEY
+
+    override val purpose: Int
+        get() = R.string.doze_peek_duration_title
+
+    override val title: Int
+        get() = R.string.doze_peek_duration_title
+
+    override fun dependencies(context: Context) = arrayOf(DOZE_PEEK)
+
+    override fun isEnabled(context: Context): Boolean {
+        return dozePeekStore.getValue(DOZE_PEEK, Boolean::class.java) == true
+    }
+
+    override fun isAvailable(context: Context): Boolean {
+        return config.alwaysOnAvailableForUser(UserHandle.USER_CURRENT)
+    }
+
+    override fun getSummary(context: Context): CharSequence? {
+        val value = Settings.Secure.getIntForUser(context.contentResolver, KEY, 5, UserHandle.USER_CURRENT)
+        val entries = context.resources.getStringArray(R.array.doze_peek_duration_entries)
+        val values = context.resources.getStringArray(R.array.doze_peek_duration_values)
+        val index = values.indexOf(value.toString())
+        return if (index != -1) entries[index] else null
+    }
+
+    override fun createWidget(context: Context): Preference {
+        return ListPreference(context).apply {
+            setEntries(R.array.doze_peek_duration_entries)
+            setEntryValues(R.array.doze_peek_duration_values)
+            val currentValue = Settings.Secure.getIntForUser(context.contentResolver, KEY, 5, UserHandle.USER_CURRENT).toString()
+            value = currentValue
+            summary = "%s"
+            setOnPreferenceChangeListener { _, newValue ->
+                val strValue = newValue as String
+                Settings.Secure.putIntForUser(context.contentResolver, KEY, strValue.toInt(), UserHandle.USER_CURRENT)
+                true
+            }
+        }
+    }
+
+    companion object {
+        const val KEY = DOZE_PEEK_DURATION
     }
 }
