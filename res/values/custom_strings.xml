@@ -584,4 +584,8 @@
     <!-- App downgrade -->
     <string name="app_downgrade_title">Allow application downgrade</string>
     <string name="app_downgrade_summary">Allow downgrading system applications, which may result in crashes and data loss</string>
+    
+    <!-- Double tap to sleep -->
+    <string name="double_tap_to_sleep_title">Double tap to sleep</string>
+    <string name="double_tap_to_sleep_summary">Double tap on the status bar or lock screen to turn off the screen</string>
 </resources>
