@@ -91,8 +91,8 @@ public class BatteryDefenderTip extends BatteryTip {
         }
 
         cardPreference.setSelectable(false);
-        
         if (getHelpResource() != 0) {
+
             cardPreference.setNegativeButtonText(
                     Utils.createAccessibleSequence(
                             context.getString(R.string.learn_more),
