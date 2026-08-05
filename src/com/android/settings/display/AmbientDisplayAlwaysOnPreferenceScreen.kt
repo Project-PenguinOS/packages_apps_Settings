@@ -293,6 +293,11 @@ class AlwaysOnDisplaySchedulePreference(context: Context) :
     override val title: Int
         get() = R.string.always_on_display_schedule_title
 
+    override val availabilityDescription: String
+        get() = "Device must support always-on display"
+
+    override fun getAvailabilityStability() = PreconditionStability.UNSTABLE
+
     override fun isAvailable(context: Context): Boolean {
         return config.alwaysOnAvailableForUser(UserHandle.myUserId()) &&
             !SystemProperties.getBoolean(PROP_AWARE_AVAILABLE, false)
@@ -356,6 +361,11 @@ class DozeOnChargePreference(context: Context) :
         val aodEnabled = dozeAlwaysOnDataStore.getBoolean(DOZE_ALWAYS_ON) == true
         return !aodEnabled
     }
+
+    override val availabilityDescription: String
+        get() = "Device must support always-on display"
+
+    override fun getAvailabilityStability() = PreconditionStability.UNSTABLE
 
     override fun isAvailable(context: Context): Boolean {
         return config.alwaysOnAvailableForUser(UserHandle.USER_CURRENT)
@@ -456,6 +466,11 @@ class DozePeekPreference(context: Context) :
     private val dataStore = DozePeekStore(context)
     private val config = AmbientDisplayConfiguration(context)
 
+    override val availabilityDescription: String
+        get() = "Device must support always-on display"
+
+    override fun getAvailabilityStability() = PreconditionStability.UNSTABLE
+
     override fun isAvailable(context: Context): Boolean {
         return config.alwaysOnAvailableForUser(UserHandle.USER_CURRENT)
     }
@@ -490,6 +505,11 @@ class DozePeekDurationPreference(context: Context) :
     override fun isEnabled(context: Context): Boolean {
         return dozePeekStore.getValue(DOZE_PEEK, Boolean::class.java) == true
     }
+
+    override val availabilityDescription: String
+        get() = "Device must support always-on display"
+
+    override fun getAvailabilityStability() = PreconditionStability.UNSTABLE
 
     override fun isAvailable(context: Context): Boolean {
         return config.alwaysOnAvailableForUser(UserHandle.USER_CURRENT)
@@ -553,6 +573,11 @@ class DozeShakePreference(context: Context) :
     private val dataStore = DozeShakeStore(context)
     private val config = AmbientDisplayConfiguration(context)
 
+    override val availabilityDescription: String
+        get() = "Device must support always-on display"
+
+    override fun getAvailabilityStability() = PreconditionStability.UNSTABLE
+
     override fun isAvailable(context: Context): Boolean {
         return config.alwaysOnAvailableForUser(UserHandle.USER_CURRENT)
     }
@@ -587,6 +612,11 @@ class DozeShakeDurationPreference(context: Context) :
     override fun isEnabled(context: Context): Boolean {
         return dozeShakeStore.getValue(DOZE_SHAKE_TO_SHOW, Boolean::class.java) == true
     }
+
+    override val availabilityDescription: String
+        get() = "Device must support always-on display"
+
+    override fun getAvailabilityStability() = PreconditionStability.UNSTABLE
 
     override fun isAvailable(context: Context): Boolean {
         return config.alwaysOnAvailableForUser(UserHandle.USER_CURRENT)
@@ -643,6 +673,11 @@ class DozeShakeIntensityPreference(context: Context) :
     override fun isEnabled(context: Context): Boolean {
         return dozeShakeStore.getValue(DOZE_SHAKE_TO_SHOW, Boolean::class.java) == true
     }
+
+    override val availabilityDescription: String
+        get() = "Device must support always-on display"
+
+    override fun getAvailabilityStability() = PreconditionStability.UNSTABLE
 
     override fun isAvailable(context: Context): Boolean {
         return config.alwaysOnAvailableForUser(UserHandle.USER_CURRENT)
