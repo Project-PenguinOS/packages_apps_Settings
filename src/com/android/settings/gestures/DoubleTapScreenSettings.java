@@ -26,9 +26,13 @@ import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.dashboard.suggestions.SuggestionFeatureProvider;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.search.BaseSearchIndexProvider;
+import com.android.settingslib.core.AbstractPreferenceController;
+import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.search.SearchIndexable;
 
-// LINT.IfChange
+import java.util.ArrayList;
+import java.util.List;
+
 @SearchIndexable
 public class DoubleTapScreenSettings extends DashboardFragment {
 
@@ -44,9 +48,18 @@ public class DoubleTapScreenSettings extends DashboardFragment {
                 FeatureFactory.getFeatureFactory().getSuggestionFeatureProvider();
         SharedPreferences prefs = suggestionFeatureProvider.getSharedPrefs(context);
         prefs.edit().putBoolean(PREF_KEY_SUGGESTION_COMPLETE, true).apply();
+    }
 
-        use(DoubleTapScreenPreferenceController.class)
-                .setConfig(new AmbientDisplayConfiguration(context));
+    @Override
+    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+        return buildPreferenceControllers(context, getSettingsLifecycle());
+    }
+
+    private static List<AbstractPreferenceController> buildPreferenceControllers(Context context,
+            Lifecycle lifecycle) {
+        List<AbstractPreferenceController> controllers = new ArrayList<>();
+        controllers.add(new DoubleTapPreferenceController(context));
+        return controllers;
     }
 
     @Override
@@ -70,6 +83,12 @@ public class DoubleTapScreenSettings extends DashboardFragment {
     }
 
     public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
-            new BaseSearchIndexProvider(R.xml.double_tap_screen_settings);
+            new BaseSearchIndexProvider(R.xml.double_tap_screen_settings) {
+                @Override
+                protected boolean isPageSearchEnabled(Context context) {
+                    DoubleTapScreenPreferenceController controller =
+                            new DoubleTapScreenPreferenceController(context, "gesture_double_tap_screen");
+                    return controller.isAvailable();
+                }
+            };
 }
-// LINT.ThenChange(DoubleTapApiScreen.kt)
