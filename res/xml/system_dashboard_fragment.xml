@@ -189,5 +189,12 @@
             android:icon="@drawable/ic_font_download"
             android:fragment="com.android.settings.custom.font.FontSettings"/>
 
+        <Preference
+            android:key="monet_settings"
+            android:title="@string/monet_settings_title"
+            android:summary="@string/monet_settings_summary"
+            android:icon="@drawable/ic_monet_settings"
+            android:fragment="com.android.settings.custom.monet.MonetSettings"/>
+
     </PreferenceCategory>
 </PreferenceScreen>
