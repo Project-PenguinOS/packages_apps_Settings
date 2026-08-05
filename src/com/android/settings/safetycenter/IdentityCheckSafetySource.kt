@@ -193,7 +193,7 @@ class IdentityCheckSafetySource : BroadcastReceiver() {
             Settings.Secure.getInt(
                 context.contentResolver,
                 Settings.Secure.IDENTITY_CHECK_PROMO_CARD_SHOWN,
-                0, /* def */
+                1, /* def */
             ) == 1
 
         private fun hasWatchPromoCardBeenShown(context: Context): Boolean =
