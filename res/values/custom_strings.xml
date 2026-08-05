@@ -290,4 +290,8 @@
 
     <!-- setting status_bar_shade_split_percentage -->
     <string name="status_bar_shade_split_percentage_title">Shade split ratio</string>
+
+    <!-- Dual shade orientation customization -->
+    <string name="shade_panels_portrait_title">Portrait layout</string>
+    <string name="shade_panels_landscape_title">Landscape layout</string>
 </resources>
