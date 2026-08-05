@@ -235,4 +235,7 @@
     <!-- Power off alarm -->
     <string name="poweroff_alarm_title">Power off alarm</string>
     <string name="poweroff_alarm_summary">Turn on the device automatically when an alarm is scheduled</string>
+
+    <!-- Screenshot shutter -->
+    <string name="screenshot_shutter_sound_title">Screenshot sound</string>
 </resources>
