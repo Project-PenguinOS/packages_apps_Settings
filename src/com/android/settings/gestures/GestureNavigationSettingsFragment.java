@@ -63,12 +63,16 @@ public class GestureNavigationSettingsFragment extends DashboardFragment {
 
     private static final String NEXUSLAUNCHER_PACKAGE_NAME = "com.google.android.apps.nexuslauncher";
     private static final String NOGESTUREHINT_OVERLAY = "com.google.android.apps.nexuslauncher.overlay.nogesturehint";
+    private static final String GESTURE_BACK_HEIGHT_KEY = "gesture_back_height";
 
     private WindowManager mWindowManager;
     private BackGestureIndicatorView mIndicatorView;
 
     private float[] mBackGestureInsetScales;
     private float mDefaultBackGestureInset;
+    private float[] mBackGestureHeightScales = { 0f, 1f, 2f, 3f };
+    private int mCurrentRightWidth;
+    private int mCurrentLeftWidth;
 
     public GestureNavigationSettingsFragment() {
         super();
@@ -94,6 +98,7 @@ public class GestureNavigationSettingsFragment extends DashboardFragment {
 
         initSliderPreference(LEFT_EDGE_SEEKBAR_KEY);
         initSliderPreference(RIGHT_EDGE_SEEKBAR_KEY);
+        initSliderPreference(GESTURE_BACK_HEIGHT_KEY);
         initTutorialButton();
 
         SecureSettingSwitchPreference gestureHintPref =
@@ -172,17 +177,44 @@ public class GestureNavigationSettingsFragment extends DashboardFragment {
         pref.setHapticFeedbackMode(SeekBarPreference.HAPTIC_FEEDBACK_MODE_ON_TICKS);
         pref.setSliderIncrement(1);
 
-        final String settingsKey = key == LEFT_EDGE_SEEKBAR_KEY
-                ? Settings.Secure.BACK_GESTURE_INSET_SCALE_LEFT
-                : Settings.Secure.BACK_GESTURE_INSET_SCALE_RIGHT;
-        final float initScale = Settings.Secure.getFloat(
-                getContext().getContentResolver(), settingsKey, 1.0f);
+        String settingsKey;
+        float initScale = 0;
+        float[] scales = mBackGestureInsetScales;
+
+        switch(key) {
+            case LEFT_EDGE_SEEKBAR_KEY:
+                settingsKey = Settings.Secure.BACK_GESTURE_INSET_SCALE_LEFT;
+                initScale = Settings.Secure.getFloat(
+                        getContext().getContentResolver(), settingsKey, 1.0f);
+                break;
+            case RIGHT_EDGE_SEEKBAR_KEY:
+                settingsKey = Settings.Secure.BACK_GESTURE_INSET_SCALE_RIGHT;
+                initScale = Settings.Secure.getFloat(
+                        getContext().getContentResolver(), settingsKey, 1.0f);
+                break;
+            case GESTURE_BACK_HEIGHT_KEY:
+                settingsKey = Settings.System.BACK_GESTURE_HEIGHT;
+                scales = mBackGestureHeightScales;
+                initScale = Settings.System.getInt(
+                        getContext().getContentResolver(), settingsKey, 0);
+                break;
+            default:
+                settingsKey = "";
+                break;
+        }
+
+        float currentWidthScale = Settings.Secure.getFloat(
+                getContext().getContentResolver(), Settings.Secure.BACK_GESTURE_INSET_SCALE_RIGHT, 1.0f);
+        mCurrentRightWidth = (int) (mDefaultBackGestureInset * currentWidthScale);
+        currentWidthScale = Settings.Secure.getFloat(
+                getContext().getContentResolver(), Settings.Secure.BACK_GESTURE_INSET_SCALE_LEFT, 1.0f);
+        mCurrentLeftWidth = (int) (mDefaultBackGestureInset * currentWidthScale);
 
         // Find the closest value to initScale
         float minDistance = Float.MAX_VALUE;
         int minDistanceIndex = -1;
-        for (int i = 0; i < mBackGestureInsetScales.length; i++) {
-            float d = Math.abs(mBackGestureInsetScales[i] - initScale);
+        for (int i = 0; i < scales.length; i++) {
+            float d = Math.abs(scales[i] - initScale);
             if (d < minDistance) {
                 minDistance = d;
                 minDistanceIndex = i;
@@ -190,11 +222,32 @@ public class GestureNavigationSettingsFragment extends DashboardFragment {
         }
         pref.setValue(minDistanceIndex);
         pref.setSliderStateDescription(formatStateDescription(pref, minDistanceIndex));
+
+        final float[] finalScales = scales;
+        final String finalSettingsKey = settingsKey;
+
         pref.setOnPreferenceChangeListener((p, v) -> {
-            final int width = (int) (mDefaultBackGestureInset * mBackGestureInsetScales[(int) v]);
-            mIndicatorView.setIndicatorWidth(width, key == LEFT_EDGE_SEEKBAR_KEY);
-            final float scale = mBackGestureInsetScales[(int) v];
-            Settings.Secure.putFloat(getContext().getContentResolver(), settingsKey, scale);
+            if (key != GESTURE_BACK_HEIGHT_KEY) {
+                final int width = (int) (mDefaultBackGestureInset * finalScales[(int) v]);
+                mIndicatorView.setIndicatorWidth(width, key == LEFT_EDGE_SEEKBAR_KEY);
+                if (key == LEFT_EDGE_SEEKBAR_KEY) {
+                    mCurrentLeftWidth = width;
+                } else {
+                    mCurrentRightWidth = width;
+                }
+                final float scale = finalScales[(int) v];
+                Settings.Secure.putFloat(getContext().getContentResolver(), finalSettingsKey, scale);
+            } else {
+                final int heightScale = (int) (finalScales[(int) v]);
+                mIndicatorView.setIndicatorHeightScale(heightScale);
+                mWindowManager.removeView(mIndicatorView);
+                mWindowManager.addView(mIndicatorView, mIndicatorView.getLayoutParams(
+                        getActivity().getWindow().getAttributes()));
+                mIndicatorView.setIndicatorWidth(mCurrentRightWidth, false);
+                mIndicatorView.setIndicatorWidth(mCurrentLeftWidth, true);
+                Settings.System.putInt(getContext().getContentResolver(), finalSettingsKey, heightScale);
+            }
+
             pref.setSliderStateDescription(formatStateDescription(pref, (int) v));
             return true;
         });

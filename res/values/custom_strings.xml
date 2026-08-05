@@ -188,6 +188,12 @@
     <string name="back_gesture_haptic_title">Back gesture haptic</string>
     <string name="back_gesture_haptic_summary">Vibrate when performing a back gesture</string>
 
+    <!-- Back gesture height -->
+    <string name="back_height_low_label">Full</string>
+    <string name="back_height_high_label">Bottom</string>
+    <string name="back_height_title">Back gesture height</string>
+    <string name="back_height_summary">Screen height valid for back gesture</string>
+
     <string name="swipe_app_select_summary">Select an app or long-press to select an activity</string>
     <string name="left_swipe_actions_title">Long left swipe action</string>
     <string name="left_swipe_app_action_title">Select long left swipe app</string>
