@@ -578,4 +578,8 @@
     <string name="reset_default_title">Reset fonts</string>
     <string name="reset_default_message">This will reset fonts to system default. A reboot is required to finish. Proceed?</string>
     <string name="systemui_restart_message">Restarting SystemUI to apply font changes...</string>
+
+    <!-- App downgrade -->
+    <string name="app_downgrade_title">Allow application downgrade</string>
+    <string name="app_downgrade_summary">Allow downgrading system applications, which may result in crashes and data loss</string>
 </resources>
