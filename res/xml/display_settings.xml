@@ -240,6 +240,12 @@
             android:defaultValue="@*android:bool/config_unplugTurnsOnScreen"
             settings:requiresConfig="@bool/config_show_top_level_battery" />    
 
+        <Preference
+            android:key="statusbar_padding"
+            android:title="@string/statusbar_padding_title"
+            android:summary="@string/statusbar_padding_summary"
+            android:fragment="com.android.settings.display.StatusbarPaddingSettings" />
+
         <ListPreference
             android:key="theme"
             android:title="@string/device_theme"
