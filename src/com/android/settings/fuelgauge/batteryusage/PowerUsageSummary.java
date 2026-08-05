@@ -21,11 +21,14 @@ import static com.android.settingslib.Utils.KEY_WIRELESS_INCOMPATIBLE_CHARGING_S
 
 import android.app.Activity;
 import android.app.settings.SettingsEnums;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.UserHandle;
+import android.provider.Settings;
 import android.provider.Settings.Global;
 
 import androidx.annotation.NonNull;
@@ -34,6 +37,8 @@ import androidx.annotation.VisibleForTesting;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.preference.Preference;
+
+import com.android.settings.custom.preference.SystemSettingListPreference;
 
 import com.android.internal.annotations.Initializer;
 import com.android.settings.R;
@@ -58,7 +63,8 @@ import java.util.List;
  */
 @SearchIndexable(forTarget = SearchIndexable.ALL & ~SearchIndexable.ARC)
 public class PowerUsageSummary extends PowerUsageBase
-        implements BatteryTipPreferenceController.BatteryTipListener {
+        implements BatteryTipPreferenceController.BatteryTipListener,
+        Preference.OnPreferenceChangeListener {
 
     static final String TAG = "PowerUsageSummary";
 
@@ -75,6 +81,12 @@ public class PowerUsageSummary extends PowerUsageBase
     @VisibleForTesting boolean mNeedUpdateBatteryTip;
     @VisibleForTesting Preference mHelpPreference;
     @VisibleForTesting Preference mBatteryUsagePreference;
+
+    private static final String KEY_BATTERY_STYLE = "status_bar_battery_style";
+    private static final String KEY_BATTERY_PERCENT = "status_bar_show_battery_percent";
+
+    private SystemSettingListPreference mBatteryStyle;
+    private SystemSettingListPreference mBatteryPercent;
 
     @VisibleForTesting
     final ContentObserver mSettingsObserver =
@@ -135,6 +147,23 @@ public class PowerUsageSummary extends PowerUsageBase
         }
         mBatteryTipPreferenceController.restoreInstanceState(icicle);
         updateBatteryTipFlag(icicle);
+
+        mBatteryStyle = (SystemSettingListPreference) findPreference(KEY_BATTERY_STYLE);
+        mBatteryPercent = (SystemSettingListPreference) findPreference(KEY_BATTERY_PERCENT);
+
+        if (mBatteryStyle != null) {
+            mBatteryStyle.setOnPreferenceChangeListener(this);
+            int currentStyle = Settings.System.getIntForUser(
+                    getActivity().getContentResolver(),
+                    Settings.System.STATUS_BAR_BATTERY_STYLE,
+                    0,
+                    UserHandle.USER_CURRENT);
+            enableStatusBarBatteryDependents(currentStyle);
+        }
+
+        if (mBatteryPercent != null) {
+            mBatteryPercent.setOnPreferenceChangeListener(this);
+        }
     }
 
     @Override
@@ -261,6 +290,24 @@ public class PowerUsageSummary extends PowerUsageBase
     @Override
     public void onBatteryTipHandled(BatteryTip batteryTip) {
         restartBatteryTipLoader();
+    }
+
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        if (preference == mBatteryStyle) {
+            int value = Integer.parseInt(newValue.toString());
+            enableStatusBarBatteryDependents(value);
+            return true;
+        }
+        return true;
+    }
+
+    private void enableStatusBarBatteryDependents(int style) {
+        if (mBatteryPercent == null) {
+            return;
+        }
+        boolean enablePercent = style != 2;
+        mBatteryPercent.setEnabled(enablePercent);
     }
 
     public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
