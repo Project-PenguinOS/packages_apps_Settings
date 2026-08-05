@@ -118,4 +118,9 @@
     <string name="ui_night_mode_dim_wall_summary">Dim the wallpaper when using dark theme</string>
     <string name="ui_night_mode_dim_wall_amount_title">Dim amount</string>
     <string name="ui_night_light_dim_wall_summary">Dim the wallpaper when using night light</string>
+
+    <!-- Reset auto brightness adjustment -->
+    <string name="reset_auto_brightness_adjustment_title">Reset preference</string>
+    <string name="reset_auto_brightness_adjustment_summary">Let the system forget your brightness preference and reset it to the default one</string>
+    <string name="reset_auto_brightness_adjustment_done">Auto brightness preference has been reset</string>
 </resources>
