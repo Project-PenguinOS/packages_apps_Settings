@@ -59,6 +59,16 @@ import com.android.settingslib.metadata.SensitivityLevel
 import com.android.settingslib.metadata.preferenceHierarchy
 import com.android.systemui.shared.Flags.aodInactivityDetection
 import kotlinx.coroutines.CoroutineScope
+import android.provider.Settings
+import android.provider.Settings.Secure.DOZE_ALWAYS_ON
+import android.provider.Settings.Secure.DOZE_ALWAYS_ON_AUTO_MODE
+import android.provider.Settings.Secure.DOZE_ON_CHARGE
+import androidx.preference.ListPreference
+import androidx.preference.Preference
+import com.android.settingslib.datastore.SettingsSystemStore
+import com.android.settingslib.datastore.KeyValueStoreDelegate
+import com.android.settingslib.metadata.SwitchPreference
+import com.android.settingslib.preference.PreferenceBinding
 import com.android.settingslib.metadata.preferencesapi.PreferencesApiScreen.Companion.APP_FUNCTION_UNCATEGORIZED
 
 // LINT.IfChange
@@ -80,6 +90,10 @@ open class AmbientDisplayAlwaysOnPreferenceScreen(context: Context) :
 
 
     private val ambientWallpaperPreference = AmbientWallpaperPreference(context)
+    private val alwaysOnDisplaySchedulePreference = AlwaysOnDisplaySchedulePreference(context)
+    private val dozeOnChargePreference = DozeOnChargePreference(context)
+    private val ambientShowSettingsPreference = AmbientShowSettingsPreference(context)
+    private val ambientShowSettingsIconsPreference = AmbientShowSettingsIconsPreference(context)
     private lateinit var keyedObserver: KeyedObserver<String>
 
     override val title: Int
@@ -174,14 +188,24 @@ open class AmbientDisplayAlwaysOnPreferenceScreen(context: Context) :
             if (context.isAmbientInactivityDetectionAvailable) {
                 +AmbientInactivityDetectionPreference(context)
             }
-            if (context.isAmbientWallpaperOptionsAvailable) {
-                +Category(
-                    "ambient_wallpaperGroup",
-                    R.string.ambient_wallpaper_group_purpose,
-                    R.string.doze_always_on_wallpaper_options
-                ) += {
+            +Category(
+                "aod_schedule_behavior_group",
+                R.string.aod_category_schedule_behavior_purpose,
+                R.string.aod_category_schedule_behavior
+            ) += {
+                +alwaysOnDisplaySchedulePreference
+                +dozeOnChargePreference
+            }
+            +Category(
+                "aod_customization_group",
+                R.string.aod_category_customization_purpose,
+                R.string.aod_category_customization
+            ) += {
+                if (context.isAmbientWallpaperOptionsAvailable) {
                     +ambientWallpaperPreference
                 }
+                +ambientShowSettingsPreference
+                +ambientShowSettingsIconsPreference
             }
         }
 
@@ -226,5 +250,155 @@ class AmbientDisplayAlwaysOnActivity :
 class AmbientPreferenceFragment : CatalystFragment() {
     override fun getPreferenceScreenBindingKey(context: Context): String {
         return AmbientDisplayAlwaysOnPreferenceScreen.KEY
+    }
+}
+
+class AlwaysOnDisplaySchedulePreference(context: Context) :
+    PreferenceMetadata,
+    PreferenceBinding,
+    PreferenceSummaryProvider,
+    PreferenceAvailabilityProvider {
+
+    private val config = AmbientDisplayConfiguration(context)
+
+    override val key: String
+        get() = KEY
+
+    override val purpose: Int
+        get() = R.string.always_on_display_schedule_title
+
+    override val title: Int
+        get() = R.string.always_on_display_schedule_title
+
+    override fun isAvailable(context: Context): Boolean {
+        return config.alwaysOnAvailableForUser(UserHandle.myUserId()) &&
+            !SystemProperties.getBoolean(PROP_AWARE_AVAILABLE, false)
+    }
+
+    override fun getSummary(context: Context): CharSequence? {
+        val mode = Settings.Secure.getIntForUser(context.contentResolver,
+            Settings.Secure.DOZE_ALWAYS_ON_AUTO_MODE, 0, UserHandle.USER_CURRENT)
+        return when (mode) {
+            AODSchedulePreferenceController.MODE_NIGHT -> context.getString(R.string.night_display_auto_mode_twilight)
+            AODSchedulePreferenceController.MODE_TIME -> context.getString(R.string.night_display_auto_mode_custom)
+            AODSchedulePreferenceController.MODE_MIXED_SUNSET -> context.getString(R.string.always_on_display_schedule_mixed_sunset)
+            AODSchedulePreferenceController.MODE_MIXED_SUNRISE -> context.getString(R.string.always_on_display_schedule_mixed_sunrise)
+            else -> context.getString(R.string.string_disabled)
+        }
+    }
+
+    override fun bind(preference: Preference, metadata: PreferenceMetadata) {
+        super.bind(preference, metadata)
+        preference.fragment = "com.android.settings.display.AODSchedule"
+    }
+
+    companion object {
+        const val KEY = "always_on_display_schedule"
+        private const val PROP_AWARE_AVAILABLE = "ro.vendor.aware_available"
+    }
+}
+
+class DozeOnChargeStore(private val context: Context) : KeyValueStoreDelegate {
+    override val keyValueStoreDelegate: KeyValueStore
+        get() = SettingsSecureStore.get(context)
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : Any> getValue(key: String, valueType: Class<T>): T? {
+        val intVal = keyValueStoreDelegate.getInt(key) ?: 0
+        return (intVal == 1) as T
+    }
+
+    override fun <T : Any> setValue(key: String, valueType: Class<T>, value: T?) {
+        if (value == null) {
+            keyValueStoreDelegate.setInt(key, null)
+        } else if (value is Boolean) {
+            keyValueStoreDelegate.setInt(key, if (value) 1 else 0)
+        }
+    }
+}
+
+class DozeOnChargePreference(context: Context) :
+    SwitchPreference(
+        KEY,
+        R.string.doze_on_charge_title,
+        R.string.doze_on_charge_summary,
+    ),
+    PreferenceAvailabilityProvider {
+
+    private val dataStore = DozeOnChargeStore(context)
+    private val dozeAlwaysOnDataStore = AmbientDisplayStorage(context)
+    private val config = AmbientDisplayConfiguration(context)
+
+    override fun isEnabled(context: Context): Boolean {
+        val aodEnabled = dozeAlwaysOnDataStore.getBoolean(DOZE_ALWAYS_ON) == true
+        return !aodEnabled
+    }
+
+    override fun isAvailable(context: Context): Boolean {
+        return config.alwaysOnAvailableForUser(UserHandle.USER_CURRENT)
+    }
+
+    override fun storage(context: Context) = dataStore
+
+    companion object {
+        const val KEY = Settings.Secure.DOZE_ON_CHARGE
+    }
+}
+
+class AmbientShowSettingsPreference(context: Context) :
+    PreferenceMetadata,
+    PreferenceBinding,
+    PreferenceSummaryProvider {
+
+    override val key: String
+        get() = KEY
+
+    override val purpose: Int
+        get() = R.string.ambient_bottom_title
+
+    override val title: Int
+        get() = R.string.ambient_bottom_title
+
+    override fun getSummary(context: Context): CharSequence? {
+        val value = Settings.System.getInt(context.contentResolver, KEY, 1)
+        val entries = context.resources.getStringArray(R.array.ambient_bottom_entries)
+        val values = context.resources.getStringArray(R.array.ambient_bottom_values)
+        val index = values.indexOf(value.toString())
+        return if (index != -1) entries[index] else null
+    }
+
+    override fun createWidget(context: Context): Preference {
+        return ListPreference(context).apply {
+            setEntries(R.array.ambient_bottom_entries)
+            setEntryValues(R.array.ambient_bottom_values)
+            val currentValue = Settings.System.getInt(context.contentResolver, KEY, 1).toString()
+            value = currentValue
+            summary = "%s"
+            setOnPreferenceChangeListener { _, newValue ->
+                val strValue = newValue as String
+                Settings.System.putInt(context.contentResolver, KEY, strValue.toInt())
+                true
+            }
+        }
+    }
+
+    companion object {
+        const val KEY = "ambient_show_settings"
+    }
+}
+
+class AmbientShowSettingsIconsPreference(context: Context) :
+    SwitchPreference(
+        KEY,
+        R.string.display_icon_title,
+        R.string.display_icon_summary,
+    ) {
+
+    private val dataStore = SettingsSystemStore.get(context).apply { setDefaultValue(KEY, false) }
+
+    override fun storage(context: Context) = dataStore
+
+    companion object {
+        const val KEY = "ambient_show_settings_icons"
     }
 }
