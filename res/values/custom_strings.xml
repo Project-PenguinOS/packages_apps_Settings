@@ -287,4 +287,7 @@
     <string name="network_traffic_display_style_title">Display style</string>
     <string name="network_traffic_display_style_combined">Combined (total)</string>
     <string name="network_traffic_display_style_separate">Separate (upload/download)</string>
+
+    <!-- setting status_bar_shade_split_percentage -->
+    <string name="status_bar_shade_split_percentage_title">Shade split ratio</string>
 </resources>
