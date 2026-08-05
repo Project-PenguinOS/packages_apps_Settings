@@ -427,4 +427,8 @@
     <string name="ambient_user_name_title">User name</string>
     <string name="display_icon_title">Icons</string>
     <string name="display_icon_summary">Display icons along with level &amp; temperature</string>
+
+    <!-- Pocket mode -->
+    <string name="pocket_judge_title">Pocket detection</string>
+    <string name="pocket_judge_summary">Block screen and button inputs when device is in pocket</string>
 </resources>
