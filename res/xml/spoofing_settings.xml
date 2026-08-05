@@ -35,6 +35,13 @@
     <PreferenceCategory
         android:key="miscellaneous_category"
         android:title="@string/miscellaneous_title">
+
+        <!-- App Spoofing -->
+        <Preference
+            android:key="user_selectable_app_spoofing"
+            android:title="@string/user_selectable_app_spoofing_title"
+            android:summary="@string/user_selectable_app_spoofing_summary"
+            android:fragment="com.android.settings.system.spoofing.UserSelectedAppSpoofSettings" />
     </PreferenceCategory>
 
 </PreferenceScreen>
