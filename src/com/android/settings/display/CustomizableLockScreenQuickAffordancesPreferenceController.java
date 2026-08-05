@@ -16,9 +16,11 @@
 
 package com.android.settings.display;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
@@ -56,9 +58,17 @@ public class CustomizableLockScreenQuickAffordancesPreferenceController extends
                         mContext.getString(R.string.config_wallpaper_picker_package);
                 if (!TextUtils.isEmpty(packageName)) {
                     intent.setPackage(packageName);
+                    if (intent.resolveActivity(mContext.getPackageManager()) == null) {
+                        intent.setPackage(null);
+                    }
                 }
                 intent.putExtra("destination", "quick_affordances");
-                mContext.startActivity(intent);
+                try {
+                    mContext.startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    Log.e("CustomizableLockScreenQuickAffordancesPreferenceController",
+                            "No Activity found to handle Intent: " + intent, e);
+                }
                 return true;
             });
             refreshSummary(preference);
