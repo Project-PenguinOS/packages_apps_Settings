@@ -21,6 +21,26 @@
     android:title="@string/lockscreen_settings_title">
 
     <PreferenceCategory
+        android:key="ambient_display_category"
+        android:title="@string/ambient_display_category_title">
+
+        <com.android.settings.custom.preference.SystemSettingListPreference
+            android:key="ambient_show_settings"
+            android:title="@string/ambient_bottom_title"
+            android:entries="@array/ambient_bottom_entries"
+            android:entryValues="@array/ambient_bottom_values"
+            android:summary="%s"
+            android:defaultValue="1" />
+
+        <com.android.settings.custom.preference.SystemSettingSwitchPreference
+            android:key="ambient_show_settings_icons"
+            android:title="@string/display_icon_title"
+            android:summary="@string/display_icon_summary"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>    
+
+    <PreferenceCategory
         android:key="lockscreen_what_to_show"
         android:title="@string/lockscreen_settings_what_to_show_category">
         <com.android.settings.RestrictedListPreference
