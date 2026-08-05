@@ -20,17 +20,16 @@ import android.content.Context;
 import android.hardware.display.ColorDisplayManager;
 import android.text.TextUtils;
 
-import androidx.preference.PreferenceScreen;
-import androidx.preference.SeekBarPreference;
+import androidx.preference.Preference;
 
-import com.android.settings.core.SliderPreferenceController;
+import com.android.settings.core.BasePreferenceController;
+import com.android.settings.custom.preference.CustomSeekBarPreference;
 
-public class ColorBalancePreferenceController extends SliderPreferenceController {
+public class ColorBalancePreferenceController extends BasePreferenceController implements
+        Preference.OnPreferenceChangeListener {
 
     private final ColorDisplayManager mColorDisplayManager;
     private final int mChannel;
-
-    private SeekBarPreference mPreference;
 
     public ColorBalancePreferenceController(Context context, String key) {
         super(context, key);
@@ -55,37 +54,14 @@ public class ColorBalancePreferenceController extends SliderPreferenceController
     }
 
     @Override
-    public void displayPreference(PreferenceScreen screen) {
-        super.displayPreference(screen);
-        mPreference = screen.findPreference(getPreferenceKey());
-        mPreference.setUpdatesContinuously(true);
-        mPreference.setMax(getMax());
-        mPreference.setMin(getMin());
-        mPreference.setValue(getSliderPosition());
-        mPreference.setSummary(Integer.toString(getSliderPosition()));
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        return mColorDisplayManager.setColorBalanceChannel(mChannel, (int) newValue);
     }
 
     @Override
-    public int getSliderPosition() {
-        return mColorDisplayManager.getColorBalanceChannel(mChannel);
-    }
-
-    @Override
-    public boolean setSliderPosition(int position) {
-        mPreference.setSummary(Integer.toString(position));
-        return mColorDisplayManager.setColorBalanceChannel(mChannel, position);
-    }
-
-    @Override
-    public int getMax() {
-        // 8-bpc linear sRGB
-        return 255;
-    }
-
-    @Override
-    public int getMin() {
-        // Users shouldn't be able to (accidentally) make their display black. Limit it to 10%.
-        return 25;
+    public void updateState(Preference preference) {
+        ((CustomSeekBarPreference) preference).setValue(
+                mColorDisplayManager.getColorBalanceChannel(mChannel));
     }
 
     private static int keyToChannel(String key) {
