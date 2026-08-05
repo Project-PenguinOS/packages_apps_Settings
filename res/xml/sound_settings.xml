@@ -106,6 +106,14 @@
             android:order="-130"
             settings:userRestriction="no_adjust_volume"
             settings:controller="com.android.settings.notification.AssistantVolumePreferenceController"/>
+
+        <!-- Power off alarm -->
+        <com.android.settings.custom.preference.SecureSettingSwitchPreference
+            android:key="power_off_alarm_enabled"
+            android:title="@string/poweroff_alarm_title"
+            android:summary="@string/poweroff_alarm_summary"
+            android:defaultValue="@*android:bool/config_powerOffAlarmEnabled"
+            android:order="-120"/>
     </com.android.settingslib.widget.UntitledPreferenceCategory>
 
     <!-- Vibrations and haptics category -->

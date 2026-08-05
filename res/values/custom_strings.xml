@@ -231,4 +231,8 @@
     <!-- Wake on plug -->
     <string name="wake_when_plugged_or_unplugged_title">Wake on plug</string>
     <string name="wake_when_plugged_or_unplugged_summary">Turn the screen on when connecting or disconnecting a power source</string>
+
+    <!-- Power off alarm -->
+    <string name="poweroff_alarm_title">Power off alarm</string>
+    <string name="poweroff_alarm_summary">Turn on the device automatically when an alarm is scheduled</string>
 </resources>
