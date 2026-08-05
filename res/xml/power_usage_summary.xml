@@ -61,6 +61,12 @@
             settings:controller="com.android.settings.fuelgauge.BatterySaverController" />
 
         <Preference
+            android:fragment="com.android.settings.fuelgauge.IdleManagerSettings"
+            android:key="idle_manager"
+            android:title="@string/idle_manager_title"
+            android:summary="@string/idle_manager_summary" />    
+
+        <Preference
             android:fragment="com.android.settings.fuelgauge.SmartBatterySettings"
             android:key="smart_battery_manager"
             android:title="@string/smart_battery_manager_title"
