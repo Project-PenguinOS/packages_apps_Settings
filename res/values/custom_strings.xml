@@ -556,4 +556,26 @@
     <string name="night_display_activation_on_custom">Turn on until <xliff:g name="time" example="6 AM">%1$s</xliff:g></string>
     <!-- Display settings screen, deactivation button action for custom schedule [CHAR LIMIT=40] -->
     <string name="night_display_activation_off_custom">Turn off until <xliff:g name="time" example="10 PM">%1$s</xliff:g></string>
+
+    <!-- Font picker -->
+    <string name="theme_customization_category_title">Theme customization</string>
+    <string name="font_settings_title">Font</string>
+    <string name="font_settings_summary">Customize the system typeface</string>
+    
+    <!-- Custom Font Installer & Picker -->
+    <string name="toast_invalid_font_file">Invalid font file selected</string>
+    <string name="toast_failed_apply_font">Failed to apply font</string>
+    <string name="reset">Reset</string>
+    <string name="font_preview_text">The quick brown fox jumps over the lazy dog.</string>
+    <string name="applied">Applied</string>
+    <string name="add_custom_font">Add custom font</string>
+    <string name="font_preview_dialog_title">Font Preview</string>
+    <string name="add_font">Add font</string>
+    <string name="reboot_required_title">Reboot Required</string>
+    <string name="reboot_required_custom_font_title">Applying a custom font requires a reboot to apply system-wide. Reboot now?</string>
+    <string name="reboot_now">Reboot now</string>
+    <string name="later">Later</string>
+    <string name="reset_default_title">Reset fonts</string>
+    <string name="reset_default_message">This will reset fonts to system default. A reboot is required to finish. Proceed?</string>
+    <string name="systemui_restart_message">Restarting SystemUI to apply font changes...</string>
 </resources>
