@@ -245,6 +245,13 @@
     <string name="fp_error_vibrate_title">Fingerprint error vibration</string>
     <string name="fp_error_vibrate_summary">Vibrate when fingerprint authentication fails</string>
 
+    <!-- Status bar - Padding -->
+    <string name="statusbar_padding_title">Status bar padding</string>
+    <string name="statusbar_padding_summary">Adjust status bar extra padding</string>
+    <string name="statusbar_padding_start_title">Start padding</string>
+    <string name="statusbar_padding_top_title">Top padding</string>
+    <string name="statusbar_padding_end_title">End padding</string>
+
     <!-- Status bar - Network Traffic -->
     <string name="network_traffic_settings_title">Network traffic monitor</string>
     <string name="network_traffic_settings_summary">Show current network traffic levels in the status bar</string>
