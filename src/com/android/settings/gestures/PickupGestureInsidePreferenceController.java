@@ -36,11 +36,13 @@ public class PickupGestureInsidePreferenceController extends AbstractPreferenceC
 
     private static final String KEY = "gesture_pick_up";
     private static final String AMBIENT_KEY = "doze_pick_up_gesture_ambient";
+    private static final String VIBRATE_KEY = "doze_pick_up_gesture_vibrate";
 
     private final boolean mDefault;
     private final Context mContext;
     private MainSwitchPreference mSwitch;
     private SecureSettingSwitchPreference mAmbientPref;
+    private SecureSettingSwitchPreference mVibratePref;
 
     public PickupGestureInsidePreferenceController(Context context) {
         super(context);
@@ -58,6 +60,7 @@ public class PickupGestureInsidePreferenceController extends AbstractPreferenceC
     public void displayPreference(PreferenceScreen screen) {
         super.displayPreference(screen);
         mAmbientPref = screen.findPreference(AMBIENT_KEY);
+        mVibratePref = screen.findPreference(VIBRATE_KEY);
         mSwitch = screen.findPreference(getPreferenceKey());
         mSwitch.setOnPreferenceClickListener(preference -> {
             final boolean enabled = Settings.Secure.getInt(mContext.getContentResolver(),
@@ -99,7 +102,11 @@ public class PickupGestureInsidePreferenceController extends AbstractPreferenceC
     }
 
     private void updateAmbientEnablement(boolean enabled) {
-        if (mAmbientPref == null) return;
-        mAmbientPref.setEnabled(enabled);
+        if (mAmbientPref != null) {
+            mAmbientPref.setEnabled(enabled);
+        }
+        if (mVibratePref != null) {
+            mVibratePref.setEnabled(enabled);
+        }
     }
 }
