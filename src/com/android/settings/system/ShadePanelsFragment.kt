@@ -77,6 +77,31 @@ class ShadePanelsFragment : RadioButtonPickerFragment(), HelpResourceProvider {
 
     override fun addStaticPreferences(screen: PreferenceScreen) {
         val context = requireContext()
+        if (getDefaultKey() == KEY_DUAL_SHADE_PREFERENCE) {
+            val seekBarPref = com.android.settings.widget.SeekBarPreference(context).apply {
+                key = android.provider.Settings.System.STATUS_BAR_SHADE_SPLIT_PERCENTAGE
+                title = context.getString(R.string.status_bar_shade_split_percentage_title)
+                max = 90
+                min = 10
+                setHapticFeedbackMode(com.android.settings.widget.SeekBarPreference.HAPTIC_FEEDBACK_MODE_ON_TICKS)
+                val currentValue = android.provider.Settings.System.getInt(
+                    context.contentResolver,
+                    android.provider.Settings.System.STATUS_BAR_SHADE_SPLIT_PERCENTAGE,
+                    50
+                )
+                progress = currentValue
+                onPreferenceChangeListener = androidx.preference.Preference.OnPreferenceChangeListener { _, newValue ->
+                    val percentage = newValue as Int
+                    android.provider.Settings.System.putInt(
+                        context.contentResolver,
+                        android.provider.Settings.System.STATUS_BAR_SHADE_SPLIT_PERCENTAGE,
+                        percentage
+                    )
+                    true
+                }
+            }
+            screen.addPreference(seekBarPref)
+        }
         if (isDeviceFoldable(context)) {
             screen.addPreference(
                 FooterPreference(context).apply {
