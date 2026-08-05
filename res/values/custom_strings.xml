@@ -588,4 +588,10 @@
     <!-- Double tap to sleep -->
     <string name="double_tap_to_sleep_title">Double tap to sleep</string>
     <string name="double_tap_to_sleep_summary">Double tap on the status bar or lock screen to turn off the screen</string>
+
+    <!-- StatusBar_Brightness_Control -->
+    <string name="status_bar_brightness_control_title">Brightness control</string>
+    <string name="status_bar_brightness_control_summary">Slide horizontally on the status bar to adjust brightness</string>
+    <string name="status_bar_brightness_control_lockscreen_title">Allow on lock screen</string>
+    <string name="status_bar_brightness_control_lockscreen_summary">Also adjust brightness from the status bar when the device is locked</string>
 </resources>
