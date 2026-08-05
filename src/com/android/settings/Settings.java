@@ -871,4 +871,7 @@ public class Settings extends SettingsActivity {
 
     /** private DNS  */
     public static class PrivateDnsSettingsActivity extends SettingsActivity { /* empty */ }
+
+    // SleepMode
+    public static class SleepModeActivity extends SettingsActivity {}
 }
