@@ -155,4 +155,40 @@
     <string name="color_hue_title">Hue</string>
     <string name="color_contrast_title">Contrast</string>
     <string name="color_picture_brightness_title">Picture brightness</string>
+
+    <!-- Custom actions -->
+    <string name="action_nothing">No action</string>
+    <string name="action_voice_search">Voice search</string>
+    <string name="action_launch_camera">Camera</string>
+    <string name="action_flashlight">Flashlight</string>
+    <string name="action_clear_notifications">Clear notifications</string>
+    <string name="action_volume_panel">Volume panel</string>
+    <string name="action_screen_off">Screen off</string>
+    <string name="action_notifications">Notifications</string>
+    <string name="action_screenshot">Screenshot</string>
+    <string name="action_qs_panel">QS panel</string>
+    <string name="action_app_action">Application</string>
+    <string name="action_ringer_modes">Ringer modes</string>
+    <string name="kill_app">Kill foreground app</string>
+    <string name="recent_app_toggle">Switch recent app</string>
+    <string name="show_powermenu">Show Power menu</string>
+    <string name="action_app_switch">Recents</string>
+    <string name="action_forward">Go forward</string>
+    <string name="action_menu">Menu</string>
+
+    <!-- Advanced gesture options -->
+    <string name="navbar_gesture_tweaks_pref_title">Advanced gesture options</string>
+    <string name="navbar_gesture_tweaks_pref_summary">Customize gesture navigation actions</string>
+    <string name="swipe_app_select_summary">Select an app or long-press to select an activity</string>
+    <string name="left_swipe_actions_title">Long left swipe action</string>
+    <string name="left_swipe_app_action_title">Select long left swipe app</string>
+    <string name="right_swipe_actions_title">Long right swipe action</string>
+    <string name="right_swipe_app_action_title">Select long right swipe app</string>
+    <string name="left_vertical_swipe_actions_title">Vertical left L-swipe action</string>
+    <string name="left_vertical_swipe_app_action_title">Select vertical left swipe app</string>
+    <string name="right_vertical_swipe_actions_title">Vertical right L-swipe action</string>
+    <string name="right_vertical_swipe_app_action_title">Select vertical right swipe app</string>
+    <string name="gesture_nav_tweaks_footer_info">Long-press an app in the picker to choose a specific activity.\n\nIf launcher is showing, perform the swipe at the very bottom of the screen to trigger the action.</string>
+    <string name="back_swipe_extended_title">Extended swipe action</string>
+    <string name="back_swipe_extended_summary">Trigger actions with a wide swipe or vertical L-swipe instead of waiting for the timeout</string>
 </resources>
