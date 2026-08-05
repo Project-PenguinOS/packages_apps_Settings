@@ -238,11 +238,29 @@
             android:defaultValue="1"
             android:order="-28" />
 
+        <!-- Fingerprint success vibration -->
+        <com.android.settings.custom.preference.SystemSettingSwitchPreference
+            android:key="fp_success_vibrate"
+            android:title="@string/fp_success_vibrate_title"
+            android:summary="@string/fp_success_vibrate_summary"
+            android:defaultValue="1"
+            settings:requiresFeature="android.hardware.fingerprint"
+            android:order="-27" />
+
+        <!-- Fingerprint error vibration -->
+        <com.android.settings.custom.preference.SystemSettingSwitchPreference
+            android:key="fp_error_vibrate"
+            android:title="@string/fp_error_vibrate_title"
+            android:summary="@string/fp_error_vibrate_summary"
+            android:defaultValue="1"
+            settings:requiresFeature="android.hardware.fingerprint"
+            android:order="-26" />
+
         <!-- Show vibrate icon in status bar -->
         <SwitchPreferenceCompat
             android:key="vibrate_icon"
             android:title="@string/vibrate_icon_title"
-            android:order="-27"/>
+            android:order="-25"/>
 
         <!-- Dock speaker plays -->
         <DropDownPreference
