@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 The Android Open Source Project
+ * Copyright (C) 2023 The PixelDust Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
 
 package com.android.settings.gestures;
 
-import static android.provider.Settings.System.TORCH_POWER_BUTTON_GESTURE;
+import static android.provider.Settings.Secure.TORCH_DOUBLE_TAP_POWER_GESTURE_ENABLED;
+import static android.provider.Settings.Secure.TORCH_LONG_PRESS_POWER;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.SharedPreferences;
+import android.os.UserHandle;
 import android.provider.Settings;
 import android.text.TextUtils;
 
@@ -30,6 +31,7 @@ public class PowerButtonTorchGesturePreferenceController extends GesturePreferen
     private final int OFF = 0;
 
     private final String PREF_KEY_VIDEO = "gesture_quick_torch_video";
+    private final String PREF_KEY_TORCH = "power_button_torch_toggle";
 
     public PowerButtonTorchGesturePreferenceController(Context context, String key) {
         super(context, key);
@@ -44,7 +46,7 @@ public class PowerButtonTorchGesturePreferenceController extends GesturePreferen
 
     @Override
     public boolean isSliceable() {
-        return TextUtils.equals(getPreferenceKey(), "power_button_torch");
+        return TextUtils.equals(getPreferenceKey(), PREF_KEY_TORCH);
     }
 
     @Override
@@ -53,13 +55,22 @@ public class PowerButtonTorchGesturePreferenceController extends GesturePreferen
     }
 
     @Override
-    public boolean setChecked(boolean isChecked) {
-        return Settings.System.putInt(mContext.getContentResolver(), TORCH_POWER_BUTTON_GESTURE,
-                isChecked ? ON : OFF);
+    public boolean isChecked() {
+        return PowerMenuSettingsUtils.isDoubleTapPowerForTorchEnabled(mContext) ||
+                PowerMenuSettingsUtils.isLongPressPowerForTorchEnabled(mContext);
     }
 
     @Override
-    public boolean isChecked() {
-        return Settings.System.getInt(mContext.getContentResolver(), TORCH_POWER_BUTTON_GESTURE, OFF) != OFF;
+    public boolean setChecked(boolean isChecked) {
+        if (isChecked) {
+            return Settings.Secure.putIntForUser(mContext.getContentResolver(), TORCH_LONG_PRESS_POWER,
+                    ON, UserHandle.USER_CURRENT);
+        } else {
+            Settings.Secure.putIntForUser(mContext.getContentResolver(), TORCH_LONG_PRESS_POWER,
+                    OFF, UserHandle.USER_CURRENT);
+            Settings.Secure.putIntForUser(mContext.getContentResolver(), TORCH_DOUBLE_TAP_POWER_GESTURE_ENABLED,
+                    OFF, UserHandle.USER_CURRENT);
+            return true;
+        }
     }
 }
