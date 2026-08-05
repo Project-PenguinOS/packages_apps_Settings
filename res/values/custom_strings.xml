@@ -225,8 +225,8 @@
     <string name="prevent_ringing_option_cycle_summary">On (cycle through modes)</string>
 
     <!-- Ignore window secure -->
-    <string name="ignore_window_secure_title">Ignore window secure flags</string>
-    <string name="ignore_window_secure_summary">Remove screenshot and screenrecord limits for all apps. This can be convenient in some cases but may lead to privacy leaks.</string>
+    <string name="ignore_window_secure_title">Bypass screenshot protection</string>
+    <string name="ignore_window_secure_summary">Allow screenshots and screen recording in apps that normally block them ,use with caution as it may expose sensitive content.</string>
     
     <!-- Wake on plug -->
     <string name="wake_when_plugged_or_unplugged_title">Wake on plug</string>
