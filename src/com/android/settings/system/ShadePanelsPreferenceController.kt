@@ -37,13 +37,27 @@ class ShadePanelsPreferenceController(context: Context, key: String) :
         if (getAvailabilityStatus() != AVAILABLE) {
             return null
         }
-        return mContext.getText(
-            if (mContext.contentResolver.isDualShadeEnabled()) {
-                R.string.shade_panels_separate_title
-            } else {
-                R.string.shade_panels_combined_title
+        val portrait = mContext.contentResolver.isDualShadeEnabled()
+        val landscape = Settings.Secure.getInt(
+            mContext.contentResolver,
+            Settings.Secure.DUAL_SHADE_LANDSCAPE,
+            1
+        ) == 1
+
+        val separateText = mContext.getString(R.string.shade_panels_separate_title)
+        val combinedText = mContext.getString(R.string.shade_panels_combined_title)
+        val portraitText = mContext.getString(R.string.shade_panels_portrait_title)
+        val landscapeText = mContext.getString(R.string.shade_panels_landscape_title)
+
+        return when {
+            portrait && landscape -> separateText
+            !portrait && !landscape -> combinedText
+            else -> {
+                val pStatus = if (portrait) separateText else combinedText
+                val lStatus = if (landscape) separateText else combinedText
+                "$portraitText: $pStatus, $landscapeText: $lStatus"
             }
-        )
+        }
     }
 
     companion object {

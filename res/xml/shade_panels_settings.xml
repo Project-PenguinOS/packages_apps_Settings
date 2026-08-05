@@ -19,4 +19,42 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:settings="http://schemas.android.com/apk/res-auto"
     android:title="@string/shade_panels_title"
-    settings:keywords="@string/keywords_shade_panels"/>
+    settings:keywords="@string/keywords_shade_panels">
+
+    <com.android.settingslib.widget.IllustrationPreference
+        android:key="shade_panels_illustration"
+        settings:searchable="false" />
+
+    <PreferenceCategory
+        android:key="shade_panels_portrait_category"
+        android:title="@string/shade_panels_portrait_title">
+
+        <com.android.settingslib.widget.SelectorWithWidgetPreference
+            android:key="shade_panels_portrait_separate"
+            android:title="@string/shade_panels_separate_title"
+            android:summary="@string/shade_panels_separate_summary" />
+
+        <com.android.settingslib.widget.SelectorWithWidgetPreference
+            android:key="shade_panels_portrait_combined"
+            android:title="@string/shade_panels_combined_title"
+            android:summary="@string/shade_panels_combined_summary" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="shade_panels_landscape_category"
+        android:title="@string/shade_panels_landscape_title">
+
+        <com.android.settingslib.widget.SelectorWithWidgetPreference
+            android:key="shade_panels_landscape_separate"
+            android:title="@string/shade_panels_separate_title"
+            android:summary="@string/shade_panels_separate_summary" />
+
+        <com.android.settingslib.widget.SelectorWithWidgetPreference
+            android:key="shade_panels_landscape_combined"
+            android:title="@string/shade_panels_combined_title"
+            android:summary="@string/shade_panels_combined_summary" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
