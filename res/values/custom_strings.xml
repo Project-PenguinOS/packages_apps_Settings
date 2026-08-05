@@ -311,4 +311,8 @@
     <string name="obscura_apps_title">App Control</string>
     <string name="obscura_manage_apps_title">Manage apps</string>
     <string name="obscura_manage_apps_summary">Configure hiding, sandbox and spoof settings per app</string>
+
+    <!-- Enforce DNS for VPN -->
+    <string name="vpn_enforce_dns_title">Disable for VPN</string>
+    <string name="vpn_enforce_dns_summary">Disable the private DNS when connected to a VPN\nWill restore upon disconnecting</string>
 </resources>
