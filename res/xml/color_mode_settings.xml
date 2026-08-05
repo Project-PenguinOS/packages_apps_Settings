@@ -57,6 +57,7 @@
             settings:units="%"
             settings:showSign="true"
             settings:continuousUpdates="true"
+            settings:showButtons="false"
             settings:controller="com.android.settings.display.ColorSaturationPreferenceController" />
 
         <com.android.settings.custom.preference.CustomSeekBarPreference
@@ -70,6 +71,7 @@
             settings:units="K"
             settings:showSign="true"
             settings:continuousUpdates="true"
+            settings:showButtons="false"
             settings:textStart="@string/color_temperature_start_label"
             settings:textEnd="@string/color_temperature_end_label"
             settings:keywords="@string/keywords_color_temperature"
