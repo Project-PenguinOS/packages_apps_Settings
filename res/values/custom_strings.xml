@@ -939,9 +939,9 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="volume_panel_location_right">Right (default)</string>
     <string name="volume_panel_location_left">Left</string>
 
-    <!-- Theme Settings -->
-    <string name="theme_settings_title">Theme</string>
-    <string name="theme_settings_summary">Wallpaper, font, and custom styles</string>
+    <!-- Theme / Wallpaper & Effects Settings -->
+    <string name="theme_settings_title">Wallpaper &amp; effects</string>
+    <string name="theme_settings_summary">Lock Glymps, visual effects, and video wallpapers</string>
 
     <!-- General -->
     <string name="enable">Enable</string>
