@@ -178,6 +178,11 @@ SPDX-License-Identifier: BSD-3-Clause-Clear -->
     <uses-permission android:name="android.permission.MANAGE_COMPANION_DEVICES" />
     <uses-permission android:name="android.permission.CONTROL_SIM_AUTO_PIN_MANAGEMENT" />
     <uses-permission android:name="android.permission.MANAGE_COMPUTER_CONTROL_CONSENT" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER_HINTS" />
+    <uses-permission android:name="android.permission.BIND_WALLPAPER" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
             android:name=".SettingsApplication"
@@ -5555,6 +5560,20 @@ SPDX-License-Identifier: BSD-3-Clause-Clear -->
             </intent-filter>
             <meta-data android:name="android.service.quicksettings.TOGGLEABLE_TILE"
                        android:value="true"/>
+        </service>
+
+        <service
+            android:name="com.android.settings.themes.VideoWallpaperService"
+            android:enabled="true"
+            android:exported="true"
+            android:label="Video Wallpaper"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@layout/video_wallpaper" />
         </service>
 
         <activity
