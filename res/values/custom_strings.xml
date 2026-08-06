@@ -1161,6 +1161,10 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="depthwall_footer_text">
         The depth wallpaper feature, inspired by iOS\'s Wallpaper Subject Segmentation, enables overlaying of a subject above the lockscreen clock to show a wallpaper depth effect.\n\nTo setup Depth Wallpaper Feature:\n1. Set a wallpaper with the subject or a background you want the subject to be above of.\n2. Select a subject image to track, this image will be overlaid above the lockscreen clock.\n3. Modify the offsets and opacity according to your needs.
     </string>
+
+    <!-- Smart 5G -->
+    <string name="smart_5g_title">Smart 5G</string>
+    <string name="smart_5g_summary">Automatically switch between 5G and 4G to reduce battery consumption</string>
 </resources>
 
 
