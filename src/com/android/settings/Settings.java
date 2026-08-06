@@ -758,6 +758,7 @@ public class Settings extends SettingsActivity {
             super(ColorModeScreen.KEY, ColorModePreferenceFragment.class);
         }
     }
+    public static class ColorModeAdvancedSettingsActivity extends SettingsActivity { /* empty */ }
 
     public static class SafetyCenterActivity extends SettingsActivity {
 
