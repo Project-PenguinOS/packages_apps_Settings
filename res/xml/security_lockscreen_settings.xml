@@ -40,7 +40,13 @@
             android:key="lockscreen_media_art"
             android:title="@string/ls_media_art_title"
             android:summary="@string/ls_media_art_summary"
-            android:fragment="com.android.settings.display.MediaArtSettings" />    
+            android:fragment="com.android.settings.display.MediaArtSettings" />
+            
+        <Preference
+            android:key="lockscreen_pulse"
+            android:title="@string/pulse_settings_title"
+            android:summary="@string/pulse_settings_summary"
+            android:fragment="com.android.settings.display.PulseSettings" />        
     </PreferenceCategory>
 
     <PreferenceCategory
