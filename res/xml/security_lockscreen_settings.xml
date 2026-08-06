@@ -46,7 +46,13 @@
             android:key="lockscreen_pulse"
             android:title="@string/pulse_settings_title"
             android:summary="@string/pulse_settings_summary"
-            android:fragment="com.android.settings.display.PulseSettings" />        
+            android:fragment="com.android.settings.display.PulseSettings" />
+
+        <com.android.settings.custom.preference.SystemSettingSwitchPreference
+            android:key="ls_clock_hide"
+            android:title="@string/ls_clock_hide_title"
+            android:summary="@string/ls_clock_hide_summary"
+            android:defaultValue="false" />
     </PreferenceCategory>
 
     <PreferenceCategory
