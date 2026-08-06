@@ -879,6 +879,17 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="qs_show_data_usage_window_daily">Daily</string>
     <string name="qs_show_data_usage_window_weekly">Weekly</string>
 
+    <!-- App Lock settings -->
+    <string name="app_lock_title">App lock</string>
+    <string name="app_lock_summary">Protect apps using your device credential</string>
+    <string name="app_lock_search_placeholder">Search apps…</string>
+    <string name="app_lock_show_system">Show system apps</string>
+    <string name="app_lock_dashboard_card_title">App Lock</string>
+    <string name="app_lock_dashboard_card_summary_none">No apps protected</string>
+    <string name="app_lock_dashboard_card_summary_multiple"><xliff:g id="count" example="3">%d</xliff:g> apps protected</string>
+    <string name="app_lock_not_secure_title">Set a screen lock</string>
+    <string name="app_lock_not_secure_summary">To use App Lock, you need to first set a secure screen lock (PIN, pattern, or password) in Settings.</string>
+    <string name="app_lock_not_secure_button">Set screen lock</string>
 </resources>
 
 
