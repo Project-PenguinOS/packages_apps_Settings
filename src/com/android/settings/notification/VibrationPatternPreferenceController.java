@@ -60,11 +60,11 @@ public class VibrationPatternPreferenceController extends AbstractPreferenceCont
             .build();
 
     private static final long[] SIMPLE_VIBRATION_PATTERN = {
-        0, 800, 800,
+        0, 1000, 1000, 1000, 1000,
     };
 
     private static final long[] DZZZ_DA_VIBRATION_PATTERN = {
-        0, 500, 200, 20, 720,
+        0, 500, 200, 70, 720,
     };
 
     private static final long[] MM_MM_MM_VIBRATION_PATTERN = {
@@ -72,15 +72,11 @@ public class VibrationPatternPreferenceController extends AbstractPreferenceCont
     };
 
     private static final long[] DA_DA_DZZZ_VIBRATION_PATTERN = {
-        0, 30, 80, 30, 80, 50, 180, 600, 1050,
+        0, 70, 80, 70, 180, 600, 1050,
     };
 
     private static final long[] DA_DZZZ_DA_VIBRATION_PATTERN = {
         0, 80, 200, 600, 150, 60, 1050,
-    };
-
-    private static final int[] NINE_ELEMENTS_VIBRATION_AMPLITUDE = {
-        0, 255, 0, 255, 0, 255, 0, 255, 0,
     };
 
     private static final int[] SEVEN_ELEMENTS_VIBRATION_AMPLITUDE = {
@@ -89,10 +85,6 @@ public class VibrationPatternPreferenceController extends AbstractPreferenceCont
 
     private static final int[] FIVE_ELEMENTS_VIBRATION_AMPLITUDE = {
         0, 255, 0, 255, 0,
-    };
-
-    private static final int[] SIMPLE_VIBRATION_AMPLITUDE = {
-        0, 255, 0,
     };
 
     public VibrationPatternPreferenceController(Context context) {
@@ -207,7 +199,7 @@ public class VibrationPatternPreferenceController extends AbstractPreferenceCont
                 break;
             case 3:
                 effect = vibrationEffectProxy.createWaveform(DA_DA_DZZZ_VIBRATION_PATTERN,
-                        NINE_ELEMENTS_VIBRATION_AMPLITUDE, -1);
+                        SEVEN_ELEMENTS_VIBRATION_AMPLITUDE, -1);
                 break;
             case 4:
                 effect = vibrationEffectProxy.createWaveform(DA_DZZZ_DA_VIBRATION_PATTERN,
@@ -231,7 +223,7 @@ public class VibrationPatternPreferenceController extends AbstractPreferenceCont
                 break;
             default:
                 effect = vibrationEffectProxy.createWaveform(SIMPLE_VIBRATION_PATTERN,
-                        SIMPLE_VIBRATION_AMPLITUDE, -1);
+                        FIVE_ELEMENTS_VIBRATION_AMPLITUDE, -1);
                 break;
         }
         vibrator.vibrate(effect, VIBRATION_ATTRIBUTES);
