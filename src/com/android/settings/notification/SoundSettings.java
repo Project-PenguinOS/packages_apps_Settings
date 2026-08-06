@@ -33,6 +33,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 
 import com.android.settings.R;
@@ -51,6 +52,8 @@ import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.preference.UtilsKt;
 import com.android.settingslib.search.SearchIndexable;
 
+import java.util.Set;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -59,15 +62,65 @@ import java.util.List;
 
 @SearchIndexable
 public class SoundSettings extends DashboardFragment implements OnActivityResultListener {
+
     private static final String TAG = "SoundSettings";
 
+    private static final String KEY_NOW_PLAYING = "dashboard_tile_pref_com.google.intelligence.sense.ambientmusic.AmbientMusicSettingsActivity";
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateAmbientMusicPref();
+    }
+
+    @Override
+    public void onCategoriesChanged(Set<String> categories) {
+        super.onCategoriesChanged(categories);
+        updateAmbientMusicPref();
+    }
+
+    @Override
+    public void updatePreferenceStates() {
+        super.updatePreferenceStates();
+        updateAmbientMusicPref();
+    }
+
+    private void updateAmbientMusicPref() {
+        final PreferenceScreen screen = getPreferenceScreen();
+        if (screen == null) {
+            return;
+        }
+        if (!getContext().getResources().getBoolean(R.bool.config_show_now_playing)) {
+            removeNowPlayingRecursively(screen);
+        }
+    }
+
+    private void removeNowPlayingRecursively(PreferenceGroup group) {
+        if (group == null) {
+            return;
+        }
+        for (int i = group.getPreferenceCount() - 1; i >= 0; i--) {
+            final Preference pref = group.getPreference(i);
+            if (pref == null) {
+                continue;
+            }
+            final String key = pref.getKey();
+            if (key != null && (key.equals(KEY_NOW_PLAYING)
+                    || key.contains("AmbientMusic")
+                    || key.contains("ambientmusic")
+                    || key.contains("now_playing"))) {
+                group.removePreference(pref);
+            } else if (pref instanceof PreferenceGroup) {
+                removeNowPlayingRecursively((PreferenceGroup) pref);
+            }
+        }
+    }
     private static final String SELECTED_PREFERENCE_KEY = "selected_preference";
     private static final int REQUEST_CODE = 200;
     private static final int SAMPLE_CUTOFF = 2000;  // manually cap sample playback at 2 seconds
 
     private static final String EXTRA_OPEN_PHONE_RINGTONE_PICKER =
             "EXTRA_OPEN_PHONE_RINGTONE_PICKER";
-    private static final String KEY_NOW_PLAYING = "dashboard_tile_pref_com.google.intelligence.sense.ambientmusic.AmbientMusicSettingsActivity";
 
     @VisibleForTesting
     static final int STOP_SAMPLE = 1;
@@ -127,18 +180,6 @@ public class SoundSettings extends DashboardFragment implements OnActivityResult
             return null;
         });
         updateAmbientMusicPref();
-    }
-
-    private void updateAmbientMusicPref() {
-        final PreferenceScreen screen = getPreferenceScreen();
-        if (getContext().getResources().getBoolean(R.bool.config_show_now_playing) || screen == null) {
-            return;
-        }
-
-        final Preference preference = screen.findPreference(KEY_NOW_PLAYING);
-        if (preference != null) {
-            screen.removePreference(preference);
-        }
     }
 
     @Override

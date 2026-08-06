@@ -33,6 +33,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 
 import com.android.settings.R;
@@ -49,6 +50,7 @@ import com.android.settingslib.search.SearchIndexable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Settings screen for lock screen preference
@@ -95,17 +97,54 @@ public class LockscreenDashboardFragment extends DashboardFragment
                 R.string.locked_work_profile_notification_title);
         replaceEnterpriseStringTitle("security_setting_lock_screen_notif_work_header",
                 WORK_PROFILE_NOTIFICATIONS_SECTION_HEADER, R.string.profile_section_header);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateAmbientMusicPref();
+    }
+
+    @Override
+    public void onCategoriesChanged(Set<String> categories) {
+        super.onCategoriesChanged(categories);
+        updateAmbientMusicPref();
+    }
+
+    @Override
+    public void updatePreferenceStates() {
+        super.updatePreferenceStates();
         updateAmbientMusicPref();
     }
 
     private void updateAmbientMusicPref() {
         final PreferenceScreen screen = getPreferenceScreen();
-        if (getContext().getResources().getBoolean(R.bool.config_show_now_playing) || screen == null) {
+        if (screen == null) {
             return;
         }
-        final Preference preference = screen.findPreference(KEY_NOW_PLAYING);
-        if (preference != null) {
-            screen.removePreference(preference);
+        if (!getContext().getResources().getBoolean(R.bool.config_show_now_playing)) {
+            removeNowPlayingRecursively(screen);
+        }
+    }
+
+    private void removeNowPlayingRecursively(PreferenceGroup group) {
+        if (group == null) {
+            return;
+        }
+        for (int i = group.getPreferenceCount() - 1; i >= 0; i--) {
+            final Preference pref = group.getPreference(i);
+            if (pref == null) {
+                continue;
+            }
+            final String key = pref.getKey();
+            if (key != null && (key.equals(KEY_NOW_PLAYING)
+                    || key.contains("AmbientMusic")
+                    || key.contains("ambientmusic")
+                    || key.contains("now_playing"))) {
+                group.removePreference(pref);
+            } else if (pref instanceof PreferenceGroup) {
+                removeNowPlayingRecursively((PreferenceGroup) pref);
+            }
         }
     }
 
