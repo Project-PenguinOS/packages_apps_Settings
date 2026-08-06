@@ -833,6 +833,10 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="pulse_height_multiplier_title">Pulse height</string>
     <string name="pulse_height_multiplier_summary">Adjust the visualization height</string>
 
+    <!-- Lockscreen clock hide -->
+    <string name="ls_clock_hide_title">Hide clock</string>
+    <string name="ls_clock_hide_summary">Hide the classic clock on the lock screen entirely, Helpful when using a custom apps for lockscreen customization like kwgt or others</string>
+
 </resources>
 
 
