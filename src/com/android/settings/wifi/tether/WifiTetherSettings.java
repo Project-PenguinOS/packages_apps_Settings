@@ -98,6 +98,8 @@ public class WifiTetherSettings extends RestrictedDashboardFragment
     static final String KEY_WIFI_HOTSPOT_SPEED = "wifi_hotspot_speed";
     @VisibleForTesting
     static final String KEY_INSTANT_HOTSPOT = "wifi_hotspot_instant";
+    @VisibleForTesting
+    static final String KEY_HOTSPOT_DATA_LIMIT = "hotspot_data_limit";
 
     @VisibleForTesting
     SettingsMainSwitchBar mMainSwitchBar;
@@ -326,7 +328,7 @@ public class WifiTetherSettings extends RestrictedDashboardFragment
 // QTI_END: 2021-05-18: WLAN: Revert "Smart Router settings UI changes"
         controllers.add(
                 new WifiTetherAutoOffPreferenceController(context, KEY_WIFI_TETHER_AUTO_OFF));
-
+        controllers.add(new HotspotDataLimitEntryPreferenceController(context, KEY_HOTSPOT_DATA_LIMIT));
         return controllers;
     }
 
