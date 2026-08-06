@@ -75,12 +75,6 @@ public class WallpaperDepth extends SettingsPreferenceFragment
         mExtractNowPref = findPreference("depth_wallpaper_extract_now");
         mClearSubjectPref = findPreference("depth_wallpaper_clear_subject");
 
-        Settings.System.putIntForUser(
-            getContext().getContentResolver(),
-            "depth_wallpaper_auto_subject",
-            1,
-            UserHandle.USER_CURRENT);
-
         updateClearSubjectState();
     }
 

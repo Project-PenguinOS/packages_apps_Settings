@@ -65,22 +65,39 @@ class WallpaperSubjectExtractorService : Service() {
     private var lastScreenW = 0
     private var lastScreenH = 0
 
+    private val delayedExtractRunnable = Runnable {
+        if (isAutoSubjectEnabled() && isDepthEnabled()) {
+            scheduleExtraction(force = true)
+        }
+    }
+
+    private fun scheduleDelayedExtraction() {
+        handler.removeCallbacks(delayedExtractRunnable)
+        handler.postDelayed(delayedExtractRunnable, 2000) // 2-second grace period after wallpaper change
+    }
+
     private val colorsListener =
         WallpaperManager.OnColorsChangedListener { _, which ->
             if (which and (WallpaperManager.FLAG_SYSTEM or WallpaperManager.FLAG_LOCK) != 0) {
-                if (isAutoSubjectEnabled()) scheduleExtraction()
+                if (isAutoSubjectEnabled() && isDepthEnabled()) {
+                    scheduleDelayedExtraction()
+                }
             }
         }
 
     private val depthEnabledObserver = object : ContentObserver(handler) {
         override fun onChange(selfChange: Boolean, uri: Uri?) {
-            if (isAutoSubjectEnabled() && isDepthEnabled()) scheduleExtraction()
+            if (isAutoSubjectEnabled() && isDepthEnabled()) {
+                scheduleDelayedExtraction()
+            }
         }
     }
 
     private val autoSubjectObserver = object : ContentObserver(handler) {
         override fun onChange(selfChange: Boolean, uri: Uri?) {
-            if (isAutoSubjectEnabled() && isDepthEnabled()) scheduleExtraction()
+            if (isAutoSubjectEnabled() && isDepthEnabled()) {
+                scheduleDelayedExtraction()
+            }
         }
     }
 
@@ -115,6 +132,7 @@ class WallpaperSubjectExtractorService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onDestroy() {
+        handler.removeCallbacks(delayedExtractRunnable)
         WallpaperManager.getInstance(this).removeOnColorsChangedListener(colorsListener)
         contentResolver.unregisterContentObserver(depthEnabledObserver)
         contentResolver.unregisterContentObserver(autoSubjectObserver)
