@@ -5449,8 +5449,12 @@ SPDX-License-Identifier: BSD-3-Clause-Clear -->
 
         <service
             android:name="com.android.settings.lockscreen.WallpaperSubjectExtractorService"
-            android:exported="false"
-            android:permission="android.permission.MANAGE_USERS" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.settings.action.EXTRACT_DEPTH_SUBJECT_NOW" />
+                <action android:name="android.intent.action.WALLPAPER_CHANGED" />
+            </intent-filter>
+        </service>
 
         <!-- Quick Settings tiles for Developer Options -->
         <service

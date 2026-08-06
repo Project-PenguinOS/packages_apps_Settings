@@ -18,7 +18,10 @@ package com.android.settings.lockscreen
 
 import android.app.Service
 import android.app.WallpaperManager
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.res.Configuration
 import android.database.ContentObserver
 import android.graphics.Bitmap
@@ -71,16 +74,27 @@ class WallpaperSubjectExtractorService : Service() {
         }
     }
 
-    private fun scheduleDelayedExtraction() {
+    private fun scheduleDelayedExtraction(delayMs: Long = 300) {
         handler.removeCallbacks(delayedExtractRunnable)
-        handler.postDelayed(delayedExtractRunnable, 2000) // 2-second grace period after wallpaper change
+        handler.postDelayed(delayedExtractRunnable, delayMs)
+    }
+
+    private val wallpaperReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == Intent.ACTION_WALLPAPER_CHANGED) {
+                Log.d(TAG, "ACTION_WALLPAPER_CHANGED received")
+                if (isAutoSubjectEnabled() && isDepthEnabled()) {
+                    scheduleDelayedExtraction(300)
+                }
+            }
+        }
     }
 
     private val colorsListener =
         WallpaperManager.OnColorsChangedListener { _, which ->
             if (which and (WallpaperManager.FLAG_SYSTEM or WallpaperManager.FLAG_LOCK) != 0) {
                 if (isAutoSubjectEnabled() && isDepthEnabled()) {
-                    scheduleDelayedExtraction()
+                    scheduleDelayedExtraction(300)
                 }
             }
         }
@@ -88,7 +102,7 @@ class WallpaperSubjectExtractorService : Service() {
     private val depthEnabledObserver = object : ContentObserver(handler) {
         override fun onChange(selfChange: Boolean, uri: Uri?) {
             if (isAutoSubjectEnabled() && isDepthEnabled()) {
-                scheduleDelayedExtraction()
+                scheduleDelayedExtraction(300)
             }
         }
     }
@@ -96,7 +110,7 @@ class WallpaperSubjectExtractorService : Service() {
     private val autoSubjectObserver = object : ContentObserver(handler) {
         override fun onChange(selfChange: Boolean, uri: Uri?) {
             if (isAutoSubjectEnabled() && isDepthEnabled()) {
-                scheduleDelayedExtraction()
+                scheduleDelayedExtraction(300)
             }
         }
     }
@@ -110,6 +124,13 @@ class WallpaperSubjectExtractorService : Service() {
             Settings.System.getUriFor(SETTING_DEPTH_ENABLED), false, depthEnabledObserver)
         contentResolver.registerContentObserver(
             Settings.System.getUriFor(SETTING_AUTO_SUBJECT), false, autoSubjectObserver)
+
+        try {
+            val filter = IntentFilter(Intent.ACTION_WALLPAPER_CHANGED)
+            registerReceiver(wallpaperReceiver, filter, Context.RECEIVER_EXPORTED)
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to register wallpaperReceiver", e)
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -123,8 +144,13 @@ class WallpaperSubjectExtractorService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent?.action == ACTION_EXTRACT_NOW) {
+        val action = intent?.action
+        if (action == ACTION_EXTRACT_NOW) {
             scheduleExtraction(force = true)
+        } else if (action == Intent.ACTION_WALLPAPER_CHANGED) {
+            if (isAutoSubjectEnabled() && isDepthEnabled()) {
+                scheduleDelayedExtraction(300)
+            }
         }
         return START_STICKY
     }
@@ -133,6 +159,11 @@ class WallpaperSubjectExtractorService : Service() {
 
     override fun onDestroy() {
         handler.removeCallbacks(delayedExtractRunnable)
+        try {
+            unregisterReceiver(wallpaperReceiver)
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to unregister wallpaperReceiver", e)
+        }
         WallpaperManager.getInstance(this).removeOnColorsChangedListener(colorsListener)
         contentResolver.unregisterContentObserver(depthEnabledObserver)
         contentResolver.unregisterContentObserver(autoSubjectObserver)
