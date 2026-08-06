@@ -170,17 +170,22 @@ public class ContextualCardManager implements ContextualCardLoader.CardContentLo
 
     @VisibleForTesting
     List<ContextualCard> sortCards(List<ContextualCard> cards) {
-        final boolean showNowPlaying = mContext.getResources().getBoolean(R.bool.config_show_now_playing);
-        // take mContextualCards as the source and do the ranking based on the rule.
+        // Filter out Now Playing / Ambient Music suggestions unconditionally
         final List<ContextualCard> result = cards.stream()
                 .filter(c -> {
-                    if (showNowPlaying) {
-                        return true;
-                    }
-                    final String name = c.getName() != null ? c.getName() : "";
-                    final String sliceUri = c.getSliceUri() != null ? c.getSliceUri().toString() : "";
-                    return !(name.contains("now_playing") || name.contains("ambientmusic") || name.contains("AmbientMusic")
-                            || sliceUri.contains("now_playing") || sliceUri.contains("ambientmusic") || sliceUri.contains("AmbientMusic"));
+                    final String name = c.getName() != null ? c.getName().toLowerCase() : "";
+                    final String sliceUri = c.getSliceUri() != null ? c.getSliceUri().toString().toLowerCase() : "";
+                    final String title = c.getTitleText() != null ? c.getTitleText().toLowerCase() : "";
+                    final String summary = c.getSummaryText() != null ? c.getSummaryText().toLowerCase() : "";
+                    final String pkg = c.getPackageName() != null ? c.getPackageName().toLowerCase() : "";
+
+                    boolean isNowPlaying = name.contains("now_playing") || name.contains("ambientmusic") || name.contains("ambient_music")
+                            || sliceUri.contains("now_playing") || sliceUri.contains("ambientmusic") || sliceUri.contains("ambient_music")
+                            || pkg.contains("ambientmusic") || pkg.contains("sense.ambientmusic")
+                            || title.contains("now playing") || title.contains("identify music") || title.contains("ambient music")
+                            || summary.contains("now playing") || summary.contains("nearby songs");
+
+                    return !isNowPlaying;
                 })
                 .sorted((c1, c2) -> Double.compare(c2.getRankingScore(), c1.getRankingScore()))
                 .collect(Collectors.toList());

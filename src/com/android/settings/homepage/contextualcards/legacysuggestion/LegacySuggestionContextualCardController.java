@@ -148,6 +148,14 @@ public class LegacySuggestionContextualCardController implements ContextualCardC
             if (suggestions != null) {
                 // Convert suggestion to ContextualCard
                 for (Suggestion suggestion : suggestions) {
+                    final String title = suggestion.getTitle() != null ? suggestion.getTitle().toString().toLowerCase() : "";
+                    final String summary = suggestion.getSummary() != null ? suggestion.getSummary().toString().toLowerCase() : "";
+                    final String id = suggestion.getId() != null ? suggestion.getId().toLowerCase() : "";
+                    if (title.contains("identify music") || title.contains("now playing") || title.contains("ambient music")
+                            || summary.contains("now playing") || summary.contains("nearby songs")
+                            || id.contains("now_playing") || id.contains("ambientmusic") || id.contains("ambient_music")) {
+                        continue;
+                    }
                     final LegacySuggestionContextualCard.Builder cardBuilder =
                             new LegacySuggestionContextualCard.Builder();
                     if (suggestion.getIcon() != null) {
