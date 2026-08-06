@@ -741,6 +741,9 @@ public class Settings extends SettingsActivity {
     /** Activity for QS Data Usage Settings. */
     public static class QsDataUsageSettingsActivity extends SettingsActivity { /* empty */ }
 
+    /** Activity for Preferred Network Tile mode settings. */
+    public static class PreferredNetworkSettingsActivity extends SettingsActivity { /* empty */ }
+
     /** Activity for Adaptive Connectivity Settings. */
     public static class AdaptiveConnectivitySettingsActivity extends CatalystSettingsActivity {
         public AdaptiveConnectivitySettingsActivity() {

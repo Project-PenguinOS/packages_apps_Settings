@@ -6379,6 +6379,20 @@ SPDX-License-Identifier: BSD-3-Clause-Clear -->
                        android:value="@string/menu_key_network"/>
         </activity>
 
+        <activity
+            android:name="Settings$PreferredNetworkSettingsActivity"
+            android:label="@string/preferred_network_tile_settings_title"
+            android:exported="true">
+            <intent-filter android:priority="1">
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
+                       android:value="com.android.settings.network.PreferredNetworkSettings"/>
+            <meta-data android:name="com.android.settings.HIGHLIGHT_MENU_KEY"
+                       android:value="@string/menu_key_network"/>
+        </activity>
+
         <activity android:name="com.android.settings.biometrics.IdentityCheckPromoCardActivity"
             android:enabled="true"
             android:launchMode="singleTask"
