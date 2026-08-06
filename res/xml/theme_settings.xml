@@ -14,4 +14,9 @@
         android:title="@string/font_picker_title"
         android:fragment="com.android.settings.system.FontPickerPreviewFragment"/>
 
+    <Preference
+        android:key="lock_glymps_settings"
+        android:title="@string/lock_glymps_title"
+        android:summary="@string/lock_glymps_enable_summary"
+        android:fragment="com.android.settings.themes.LockGlympsSettings" />    
 </PreferenceScreen>
