@@ -710,6 +710,10 @@ When the screen is off, the torch can be enabled with one of the following key c
     <!-- Disable QS on secure lockscreen -->
     <string name="quick_settings_secure_lock_screen_title">Disable QS pull on secure lock screen</string>
 
+    <!-- QSTile requires unlocking before being accessible -->
+    <string name="qstile_requires_unlocking_title">Secure QS tiles require unlocking</string>
+    <string name="qstile_requires_unlocking_summary">The following QS tiles require unlocking before you can access them from the lock screen:\nAirplane, Cellular, NFC, Hotspot, USB tethering and Location</string>
+
     <!-- Lock screen interface category -->
     <string name="lockscreen_interface_category_title">Interface</string>
 
