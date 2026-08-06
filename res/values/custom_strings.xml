@@ -943,11 +943,20 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="theme_settings_title">Theme</string>
     <string name="theme_settings_summary">Wallpaper, font, and custom styles</string>
 
-    <!-- Lock Glymps -->
-    <string name="lock_glymps_title">Lock Glymps</string>
-    <string name="lock_glymps_enable_title">Enable Lock Glymps</string>
-    <string name="lock_glymps_enable_summary">Change lockscreen wallpaper every time screen lights up</string>
-    
+    <!-- General -->
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
+    <string name="boot_animation_applied">Boot animation applied</string>
+    <string name="top">Top</string>
+    <string name="bottom">Bottom</string>
+    <string name="delete_message">Remove selected item?</string>
+    <string name="choose_app">Choose app</string>
+
+    <!-- Wallpaper Glymps -->
+    <string name="lock_glymps_title">Wallpaper Glymps</string>
+    <string name="lock_glymps_enable_title">Enable Wallpaper Glymps</string>
+    <string name="lock_glymps_enable_summary">Change wallpaper every time screen lights up</string>
+    <string name="lock_glymps_wallpaper_target_title">Wallpaper apply to</string>    
     <string name="lock_glymps_source_category">Wallpaper Source</string>
     <string name="lock_glymps_source_title">Wallpaper source</string>
     <string name="lock_glymps_source_summary">Choose where to get wallpapers from</string>
@@ -971,14 +980,14 @@ When the screen is off, the torch can be enabled with one of the following key c
 
     <string name="lock_glymps_behavior_category">Behavior</string>
     <string name="lock_glymps_change_on_title">Change wallpaper on</string>
-    <string name="lock_glymps_change_on_summary">When to change the lock screen wallpaper</string>
+    <string name="lock_glymps_change_on_summary">When to change the screen wallpaper</string>
 
     <string name="lock_glymps_timer_interval_title">Timer interval</string>
     <string name="lock_glymps_timer_interval_summary">How often to change wallpaper automatically</string>
     
     <!-- Footer -->
     <string name="lock_glymps_footer_title">Important Information</string>
-    <string name="lock_glymps_footer_text">📁 Local folder: /sdcard/LockGlymps\n\n⚠️ Low-end devices may experience slight lag\n\n🎨 Tip: Use Custom Accent in Monet Settings for stable colors</string>
+    <string name="lock_glymps_footer_text">📁 Local folder: /sdcard/Glymps\n\n⚠️ Low-end devices may experience slight lag\n\n🎨 Tip: Use Custom Accent in Monet Settings for stable colors</string>
 </resources>
 
 
