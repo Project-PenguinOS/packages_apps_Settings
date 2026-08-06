@@ -42,6 +42,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -232,6 +233,8 @@ public class ColorModePreferenceFragment extends RadioButtonPickerFragment {
 
     private static final String KEY_DISPLAY_ENGINE_CATEGORY = "display_engine_category";
 
+    private static final String KEY_COLOR_MODE_ADVANCED_SETTINGS = "color_mode_advanced_settings";
+
     @Override
     public void updateCandidates() {
         super.updateCandidates();
@@ -243,24 +246,14 @@ public class ColorModePreferenceFragment extends RadioButtonPickerFragment {
                     screen.getContext(), R.xml.display_engine_settings, screen);
         }
 
-        getPreferenceManager().inflateFromResource(screen.getContext(), R.xml.color_mode_settings,
-                screen);
-
-        final List<BasePreferenceController> preferenceControllers = PreferenceControllerListHelper
-                .getPreferenceControllersFromXml(getContext(), getPreferenceScreenResId());
-        for (var controller : preferenceControllers) {
-            if (controller instanceof ColorBalancePreferenceController) {
-                // this is handled separately below
-                continue;
-            }
-            controller.updateState(findPreference(controller.getPreferenceKey()));
-            controller.displayPreference(screen);
+        if (screen.findPreference(KEY_COLOR_MODE_ADVANCED_SETTINGS) == null) {
+            getPreferenceManager().inflateFromResource(screen.getContext(), R.xml.color_mode_settings,
+                    screen);
         }
 
-        for (int channel = 0; channel < 3; channel++) {
-            ColorBalancePreferenceController controller = new ColorBalancePreferenceController(
-                    screen.getContext(), ColorBalancePreferenceController.channelToKey(channel));
-            controller.displayPreference(screen);
+        Preference advancedPref = screen.findPreference(KEY_COLOR_MODE_ADVANCED_SETTINGS);
+        if (advancedPref != null) {
+            advancedPref.setVisible(ColorDisplayManager.isColorTransformAccelerated(screen.getContext()));
         }
     }
 

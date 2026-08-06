@@ -628,6 +628,16 @@ SPDX-License-Identifier: BSD-3-Clause-Clear -->
         </activity>
 
         <activity
+            android:name="Settings$ColorModeAdvancedSettingsActivity"
+            android:label="@string/color_mode_advanced_category"
+            android:exported="true">
+            <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
+                android:value="com.android.settings.display.ColorModeAdvancedSettings"/>
+            <meta-data android:name="com.android.settings.HIGHLIGHT_MENU_KEY"
+                android:value="@string/menu_key_display"/>
+        </activity>
+
+        <activity
             android:name=".display.AmbientDisplayAlwaysOnActivity"
             android:exported="true">
             <meta-data

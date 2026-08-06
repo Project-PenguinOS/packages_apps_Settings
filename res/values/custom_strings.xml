@@ -135,6 +135,7 @@
 
     <!-- Display settings screen, color balance category title [CHAR LIMIT=30] -->
     <string name="color_mode_advanced_category">Advanced controls</string>
+    <string name="color_mode_advanced_summary">Adjust color balance, saturation, temperature, hue, contrast, and brightness</string>
     <!-- Display settings screen, red color balance setting slider [CHAR LIMIT=NONE] -->
     <string name="color_mode_balance_red">Red strength</string>
     <!-- Display settings screen, green color balance setting slider [CHAR LIMIT=NONE] -->
