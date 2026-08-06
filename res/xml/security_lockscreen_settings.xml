@@ -152,6 +152,12 @@
             android:key="enable_lockscreen_quick_settings"
             android:title="@string/quick_settings_secure_lock_screen_title"
             android:defaultValue="true" />
+
+        <com.android.settings.custom.preference.SecureSettingSwitchPreference
+            android:key="qstile_requires_unlocking"
+            android:title="@string/qstile_requires_unlocking_title"
+            android:summary="@string/qstile_requires_unlocking_summary"
+            android:defaultValue="true" />
     </PreferenceCategory>
 
     <PreferenceCategory
