@@ -18,6 +18,10 @@ package com.android.settings.notification;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.media.AudioAttributes;
+import android.net.Uri;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.provider.Settings;
 
 import androidx.preference.ListPreference;
@@ -43,6 +47,53 @@ public class VibrationPatternPreferenceController extends AbstractPreferenceCont
     private CustomSeekBarPreference mCustomVib1;
     private CustomSeekBarPreference mCustomVib2;
     private CustomSeekBarPreference mCustomVib3;
+
+    private static class VibrationEffectProxy {
+        public VibrationEffect createWaveform(long[] timings, int[] amplitudes, int repeat) {
+            return VibrationEffect.createWaveform(timings, amplitudes, repeat);
+        }
+    }
+
+    private static final AudioAttributes VIBRATION_ATTRIBUTES = new AudioAttributes.Builder()
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+            .build();
+
+    private static final long[] SIMPLE_VIBRATION_PATTERN = {
+        0, 800, 800,
+    };
+
+    private static final long[] DZZZ_DA_VIBRATION_PATTERN = {
+        0, 500, 200, 20, 720,
+    };
+
+    private static final long[] MM_MM_MM_VIBRATION_PATTERN = {
+        0, 300, 400, 300, 400, 300, 1400,
+    };
+
+    private static final long[] DA_DA_DZZZ_VIBRATION_PATTERN = {
+        0, 30, 80, 30, 80, 50, 180, 600, 1050,
+    };
+
+    private static final long[] DA_DZZZ_DA_VIBRATION_PATTERN = {
+        0, 80, 200, 600, 150, 60, 1050,
+    };
+
+    private static final int[] NINE_ELEMENTS_VIBRATION_AMPLITUDE = {
+        0, 255, 0, 255, 0, 255, 0, 255, 0,
+    };
+
+    private static final int[] SEVEN_ELEMENTS_VIBRATION_AMPLITUDE = {
+        0, 255, 0, 255, 0, 255, 0,
+    };
+
+    private static final int[] FIVE_ELEMENTS_VIBRATION_AMPLITUDE = {
+        0, 255, 0, 255, 0,
+    };
+
+    private static final int[] SIMPLE_VIBRATION_AMPLITUDE = {
+        0, 255, 0,
+    };
 
     public VibrationPatternPreferenceController(Context context) {
         super(context);
@@ -82,7 +133,9 @@ public class VibrationPatternPreferenceController extends AbstractPreferenceCont
             Settings.System.putInt(mContext.getContentResolver(),
                     Settings.System.RINGTONE_VIBRATION_PATTERN, vibPattern);
             mVibPattern.setSummary(mVibPattern.getEntries()[vibPattern]);
-            updateCustomVibVisibility(vibPattern == 5);
+            boolean isCustom = vibPattern == 5;
+            updateCustomVibVisibility(isCustom);
+            if (!isCustom) previewPattern();
             return true;
         } else if (preference == mCustomVib1) {
             updateCustomVib(0, (Integer) newValue);
@@ -134,5 +187,53 @@ public class VibrationPatternPreferenceController extends AbstractPreferenceCont
         Settings.System.putString(mContext.getContentResolver(),
                 Settings.System.CUSTOM_RINGTONE_VIBRATION_PATTERN, String.join(
                 ",", customPattern[0], customPattern[1], customPattern[2]));
+        previewPattern();
+    }
+
+    private void previewPattern() {
+        Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+        VibrationEffect effect;
+        VibrationEffectProxy vibrationEffectProxy = new VibrationEffectProxy();
+        int vibPattern = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.RINGTONE_VIBRATION_PATTERN, 0);
+        switch (vibPattern) {
+            case 1:
+                effect = vibrationEffectProxy.createWaveform(DZZZ_DA_VIBRATION_PATTERN,
+                        FIVE_ELEMENTS_VIBRATION_AMPLITUDE, -1);
+                break;
+            case 2:
+                effect = vibrationEffectProxy.createWaveform(MM_MM_MM_VIBRATION_PATTERN,
+                        SEVEN_ELEMENTS_VIBRATION_AMPLITUDE, -1);
+                break;
+            case 3:
+                effect = vibrationEffectProxy.createWaveform(DA_DA_DZZZ_VIBRATION_PATTERN,
+                        NINE_ELEMENTS_VIBRATION_AMPLITUDE, -1);
+                break;
+            case 4:
+                effect = vibrationEffectProxy.createWaveform(DA_DZZZ_DA_VIBRATION_PATTERN,
+                        SEVEN_ELEMENTS_VIBRATION_AMPLITUDE, -1);
+                break;
+            case 5:
+                String[] customVib = Settings.System.getString(
+                        mContext.getContentResolver(),
+                        Settings.System.CUSTOM_RINGTONE_VIBRATION_PATTERN).split(",", 3);
+                long[] customVibPattern = {
+                    0,
+                    Long.parseLong(customVib[0]),
+                    400,
+                    Long.parseLong(customVib[1]),
+                    400,
+                    Long.parseLong(customVib[2]),
+                    400,
+                };
+                effect = vibrationEffectProxy.createWaveform(customVibPattern,
+                        SEVEN_ELEMENTS_VIBRATION_AMPLITUDE, -1);
+                break;
+            default:
+                effect = vibrationEffectProxy.createWaveform(SIMPLE_VIBRATION_PATTERN,
+                        SIMPLE_VIBRATION_AMPLITUDE, -1);
+                break;
+        }
+        vibrator.vibrate(effect, VIBRATION_ATTRIBUTES);
     }
 }
