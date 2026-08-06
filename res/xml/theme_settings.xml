@@ -24,5 +24,11 @@
         android:key="wallpaper_settings"
         android:title="@string/wallpaper_settings_title"
         android:summary="@string/wallpaper_settings_summary"
-        android:fragment="com.android.settings.themes.Wallpaper" />        
+        android:fragment="com.android.settings.themes.Wallpaper" /> 
+
+    <Preference
+        android:key="video_wallpaper"
+        android:title="@string/video_wallpaper_category_title"
+        android:summary="@string/video_wallpaper_category_summary"
+        android:fragment="com.android.settings.themes.VideoWallpaperFragment" />          
 </PreferenceScreen>
