@@ -511,7 +511,7 @@ private fun applyFont(
 
         val fontName = if (pkgName == "android") "" else pkgName.substringAfterLast(".")
         SystemProperties.set("persist.sys.font", fontName)
-        Toast.makeText(context, R.string.systemui_restart_message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, R.string.systemui_restart_font_message, Toast.LENGTH_SHORT).show()
         
         val handler = android.os.Handler(android.os.Looper.getMainLooper())
         handler.postDelayed({ 
