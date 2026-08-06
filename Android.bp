@@ -68,6 +68,7 @@ android_library {
         "res-export", // for external usage
         "res-product",
     ],
+    asset_dirs: ["assets"],
     optional_uses_libs: ["com.android.extensions.appfunctions"],
     static_libs: [
         // External dependencies
@@ -133,6 +134,10 @@ android_library {
         "com.android.text.flags-aconfig-java",
         "custom-preference",
         "co.aospa.framework",
+        "tensorflowlite_java",
+        "tflite_support_java",
+        "tensorflow-lite-gpu",
+        "tensorflow-lite-gpu-api",
     ],
 
     plugins: [
@@ -224,6 +229,13 @@ android_app {
         "extphonelib"
     ],
 // QTI_END: 2021-06-08: Telephony: Add 5G network mode preference in Developer Options menu.
+    jni_libs: [
+        "libtensorflowlite_jni",
+        "libtensorflowlite_gpu_jni",
+    ],
+    aaptflags: [
+        "-0 .tflite",
+    ],
     flags_packages: [
         "android.app.flags-aconfig",
     ],
