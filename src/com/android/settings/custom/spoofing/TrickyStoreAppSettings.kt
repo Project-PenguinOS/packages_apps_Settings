@@ -106,8 +106,32 @@ class TrickyStoreAppSettings : SettingsPreferenceFragment() {
     companion object {
         const val TARGET_KEY = "spoof_trickystore_target"
         val DEFAULT_TARGETS = setOf(
-            "com.google.android.gms",
+            "android",
             "com.android.vending",
+            "com.google.android.gsf",
+            "com.google.android.gms",
+            "com.google.android.contactkeys",
+            "com.google.android.ims",
+            "com.google.android.safetycore",
+            "com.google.android.apps.walletnfcrel",
+            "com.google.android.apps.nbu.paisa.user",
+        )
+        val DEFAULT_TARGET_MODES = mapOf(
+            "com.revolut.revolut" to TargetMode.CERT_GEN,
+            "io.github.qwq233.keyattestation" to TargetMode.LEAF_HACK,
+            "io.github.vvb2060.keyattestation" to TargetMode.LEAF_HACK,
+            "io.github.vvb2060.mahoshojo" to TargetMode.LEAF_HACK,
+            "icu.nullptr.nativetest" to TargetMode.LEAF_HACK,
+            "com.reveny.nativecheck" to TargetMode.LEAF_HACK,
+            "com.zhenxi.hunter" to TargetMode.LEAF_HACK,
+            "com.android.nativetest" to TargetMode.LEAF_HACK,
+            "io.liankong.riskdetector" to TargetMode.LEAF_HACK,
+            "luna.safe.luna" to TargetMode.LEAF_HACK,
+            "com.eltavine.duckdetector" to TargetMode.LEAF_HACK,
+            "com.rem01gaming.disclosure" to TargetMode.LEAF_HACK,
+            "wu.keyChain.test" to TargetMode.LEAF_HACK,
+            "com.kikyps.crackme" to TargetMode.LEAF_HACK,
+            "com.chunqiunativecheck" to TargetMode.LEAF_HACK,
         )
     }
 
@@ -185,6 +209,21 @@ private fun TrickyStoreAppSettingsContent(
     LaunchedEffect(showSystemApps) {
         isLoading = true
         withContext(Dispatchers.IO) {
+            val existing = Settings.Secure.getString(
+                context.contentResolver, TrickyStoreAppSettings.TARGET_KEY
+            )
+            if (existing.isNullOrEmpty()) {
+                val seed = TrickyStoreAppSettings.DEFAULT_TARGETS.map { it } +
+                    TrickyStoreAppSettings.DEFAULT_TARGET_MODES.map { (pkg, mode) ->
+                        pkg + mode.symbol
+                    }
+                Settings.Secure.putString(
+                    context.contentResolver,
+                    TrickyStoreAppSettings.TARGET_KEY,
+                    seed.joinToString("\n")
+                )
+            }
+
             val pm = context.packageManager
             val targetMap = loadTargetMap()
             val installed = pm.getInstalledApplications(PackageManager.GET_META_DATA)
@@ -196,23 +235,41 @@ private fun TrickyStoreAppSettingsContent(
                         return@filter false
                     true
                 }
+
+            // Prune stale entries (uninstalled apps), keeping protected defaults
+            val installedPackages = installed.map { it.packageName }.toSet()
+            val cleanedTargetMap = targetMap.filterKeys {
+                it in installedPackages || it in TrickyStoreAppSettings.DEFAULT_TARGETS
+            }
+            if (cleanedTargetMap.size != targetMap.size) {
+                val lines = cleanedTargetMap.map { (pkg, mode) -> pkg + mode.symbol }
+                Settings.Secure.putString(
+                    context.contentResolver,
+                    TrickyStoreAppSettings.TARGET_KEY,
+                    lines.joinToString("\n")
+                )
+            }
+
+            val mappedApps = installed
                 .sortedWith(compareBy(
-                    { !targetMap.containsKey(it.packageName) },
+                    { !cleanedTargetMap.containsKey(it.packageName) },
                     { pm.getApplicationLabel(it).toString().lowercase() }
                 ))
                 .map { app ->
+                    val defaultMode = TrickyStoreAppSettings.DEFAULT_TARGET_MODES[app.packageName] ?: TargetMode.AUTO
                     AppEntry(
                         packageName = app.packageName,
                         label       = pm.getApplicationLabel(app).toString(),
                         icon        = runCatching { pm.getApplicationIcon(app) }.getOrNull(),
                         isSystem    = app.flags and ApplicationInfo.FLAG_SYSTEM != 0,
-                        targetMode  = targetMap[app.packageName] ?: TargetMode.AUTO,
-                        isInTarget  = targetMap.containsKey(app.packageName),
+                        targetMode  = cleanedTargetMap[app.packageName] ?: defaultMode,
+                        isInTarget  = cleanedTargetMap.containsKey(app.packageName),
                     )
                 }
+
             withContext(Dispatchers.Main) {
                 allApps.clear()
-                allApps.addAll(installed)
+                allApps.addAll(mappedApps)
                 isLoading = false
             }
         }
@@ -339,14 +396,14 @@ private fun TrickyStoreAppSettingsContent(
                 OutlinedButton(
                     onClick  = {
                         allApps.indices.forEach { i ->
+                            val pkg = allApps[i].packageName
+                            val isDefault = pkg in TrickyStoreAppSettings.DEFAULT_TARGETS ||
+                                pkg in TrickyStoreAppSettings.DEFAULT_TARGET_MODES
+                            val mode = TrickyStoreAppSettings.DEFAULT_TARGET_MODES[pkg] ?: TargetMode.AUTO
                             allApps[i] = allApps[i].copy(
-                                isInTarget = false,
-                                targetMode = TargetMode.AUTO,
+                                isInTarget = isDefault,
+                                targetMode = mode,
                             )
-                        }
-                        TrickyStoreAppSettings.DEFAULT_TARGETS.forEach { pkg ->
-                            val i = allApps.indexOfFirst { it.packageName == pkg }
-                            if (i >= 0) allApps[i] = allApps[i].copy(isInTarget = true)
                         }
                         scope.launch(Dispatchers.IO) { saveTargets() }
                     },
