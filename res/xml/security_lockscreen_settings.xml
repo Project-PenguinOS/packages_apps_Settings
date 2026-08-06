@@ -59,7 +59,13 @@
             android:key="lockscreen_custom_clock_style"
             android:title="@string/lockscreen_custom_clock_style_title"
             android:summary="@string/lockscreen_custom_clock_style_summary"
-            android:fragment="com.android.settings.lockscreen.CustomClockPreview" />        
+            android:fragment="com.android.settings.lockscreen.CustomClockPreview" />
+
+        <Preference
+            android:key="depth_wallpaper"
+            android:title="@string/dw_wallpaper_enabled_title"
+            android:summary="@string/dw_wallpaper_enabled_summary"
+            android:fragment="com.android.settings.lockscreen.WallpaperDepth" />              
     </PreferenceCategory>
 
     <PreferenceCategory
