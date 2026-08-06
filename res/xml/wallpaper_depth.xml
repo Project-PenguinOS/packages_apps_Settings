@@ -26,11 +26,25 @@
         android:defaultValue="false" />
 
     <Preference
+        android:key="depth_wallpaper_extract_now"
+        android:dependency="depth_wallpaper_enabled"
+        android:title="@string/depthwall_extract_now_title"
+        android:summary="@string/depthwall_extract_now_summary"
+        android:persistent="false" />
+
+    <Preference
         android:key="depth_wallpaper_subject_image_uri"
         android:dependency="depth_wallpaper_enabled"
         android:title="@string/depthwall_file_header_select_title"
         android:summary="@string/depthwall_file_header_select_summary"
         android:persistent="false" />
+
+    <Preference
+        android:key="depth_wallpaper_clear_subject"
+        android:dependency="depth_wallpaper_enabled"
+        android:title="@string/depthwall_clear_subject_title"
+        android:summary="@string/depthwall_clear_subject_summary"
+        android:persistent="false" />    
 
     <com.android.settings.custom.preference.SystemSettingSeekBarPreference
         android:key="depth_wallpaper_opacity"
