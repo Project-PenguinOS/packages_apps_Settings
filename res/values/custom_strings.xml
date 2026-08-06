@@ -699,6 +699,10 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="lockscreen_battery_info_title">Lockscreen charging info</string>
     <string name="lockscreen_battery_info_summary">Show charging current, voltage, wattage and battery temperature on lockscreen while charging</string>
 
+    <!-- Disable QS on secure lockscreen -->
+    <string name="disable_qs_title">Hide QS in secure lockscreen</string>
+    <string name="disable_qs_summary">Hides QS if device is locked. Does not disable notification shade</string>
+
     <!-- Lock screen interface category -->
     <string name="lockscreen_interface_category_title">Interface</string>
 </resources>
