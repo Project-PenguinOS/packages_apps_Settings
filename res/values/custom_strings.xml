@@ -690,6 +690,13 @@ When the screen is off, the torch can be enabled with one of the following key c
     <!-- Notch: Full screen apps -->
     <string name="display_cutout_force_fullscreen_title">Full screen apps</string>
     <string name="display_cutout_force_fullscreen_summary">Force apps to ignore notch space</string>
+
+    <!-- Fingerprint Ripple Effect -->
+    <string name="enable_fingerprint_ripple_effect_title">Ripple effect</string>
+    <string name="enable_fingerprint_ripple_effect_summary">Show ripple effect on unlock with fingerprint</string>
+
+    <!-- Lock screen interface category -->
+    <string name="lockscreen_interface_category_title">Interface</string>
 </resources>
 
 
