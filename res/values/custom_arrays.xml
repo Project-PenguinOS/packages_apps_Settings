@@ -445,5 +445,16 @@
         <item>6</item>
     </string-array>
 
+    <!-- Volume Panel Orientation -->
+    <string-array name="volume_panel_location_entries">
+        <item>@string/volume_panel_location_right</item>
+        <item>@string/volume_panel_location_left</item>
+    </string-array>
+
+    <string-array name="volume_panel_location_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
 </resources>
 

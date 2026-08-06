@@ -114,6 +114,17 @@
             android:summary="@string/poweroff_alarm_summary"
             android:defaultValue="@*android:bool/config_powerOffAlarmEnabled"
             android:order="-120"/>
+
+        <!-- Volume panel orientation -->
+        <com.android.settings.custom.preference.SecureSettingListPreference
+            android:key="volume_panel_on_left"
+            android:title="@string/volume_panel_location_title"
+            android:dialogTitle="@string/volume_panel_location_title"
+            android:entries="@array/volume_panel_location_entries"
+            android:entryValues="@array/volume_panel_location_values"
+            android:summary="%s"
+            android:defaultValue="0"
+            android:order="-115"/>
     </com.android.settingslib.widget.UntitledPreferenceCategory>
 
     <!-- Vibrations and haptics category -->
