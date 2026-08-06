@@ -596,6 +596,10 @@
     <string name="status_bar_brightness_control_lockscreen_title">Allow on lock screen</string>
     <string name="status_bar_brightness_control_lockscreen_summary">Also adjust brightness from the status bar when the device is locked</string>
 
+    <!-- QS auto brightness toggle -->
+    <string name="status_bar_brightness_slider_auto_title">Auto brightness</string>
+    <string name="status_bar_brightness_slider_auto_summary">Show toggle for adaptive brightness near the slider</string>
+
     <!-- Monet settings -->
     <string name="monet_settings_title">Theming settings</string>
     <string name="monet_settings_summary">A few extra settings to customize monet engine</string>
