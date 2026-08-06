@@ -898,6 +898,29 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="app_lock_timeout_1m">1 minute</string>
     <string name="app_lock_timeout_5m">5 minutes</string>
     <string name="app_lock_timeout_screen_lock">Only when screen locks</string>
+
+    <!-- App Lock custom credential settings strings -->
+    <string name="app_lock_settings_title">App lock settings</string>
+    <string name="app_lock_settings_summary">Configure lock timeout and credential authentication method</string>
+    <string name="app_lock_method_title">App lock method</string>
+    <string name="app_lock_method_device_lock">Device Lock</string>
+    <string name="app_lock_method_device_lock_summary">Use system screen lock PIN/Pattern/Password &amp; Biometrics</string>
+    <string name="app_lock_method_pin">PIN</string>
+    <string name="app_lock_method_pin_summary">4-digit code</string>
+    <string name="app_lock_method_password">Password</string>
+    <string name="app_lock_method_password_summary">Alphanumeric password</string>
+    <string name="app_lock_method_pattern">Pattern</string>
+    <string name="app_lock_method_pattern_summary">Draw pattern to unlock</string>
+    <string name="app_lock_setup_pin_title">Set App Lock PIN</string>
+    <string name="app_lock_confirm_pin_title">Confirm App Lock PIN</string>
+    <string name="app_lock_setup_password_title">Set App Lock Password</string>
+    <string name="app_lock_confirm_password_title">Confirm App Lock Password</string>
+    <string name="app_lock_setup_pattern_title">Draw App Lock Pattern</string>
+    <string name="app_lock_confirm_pattern_title">Confirm App Lock Pattern</string>
+    <string name="app_lock_credential_mismatch">Credentials do not match. Try again.</string>
+    <string name="app_lock_credential_incorrect">Incorrect PIN, Password, or Pattern.</string>
+    <string name="app_lock_biometrics_title">Allow Biometrics</string>
+    <string name="app_lock_biometrics_summary">Unlock locked apps using fingerprint or face unlock when custom lock is enabled</string>
 </resources>
 
 
