@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: 2026 kenway214
+     SPDX-License-Identifier: Apache-2.0
+-->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:settings="http://schemas.android.com/apk/res-auto"
+    android:title="@string/preferred_network_tile_settings_title">
+
+    <com.android.settingslib.widget.FooterPreference
+        android:key="preferred_network_tile_footer"
+        android:title="@string/preferred_network_tile_settings_summary"
+        android:selectable="false"
+        settings:searchable="false" />
+
+    <com.android.settings.custom.preference.SystemSettingSwitchPreference
+        android:key="preferred_network_tile_mode_2g"
+        android:title="@string/preferred_network_mode_2g"
+        android:defaultValue="true" />
+
+    <com.android.settings.custom.preference.SystemSettingSwitchPreference
+        android:key="preferred_network_tile_mode_3g"
+        android:title="@string/preferred_network_mode_3g"
+        android:defaultValue="true" />
+
+    <com.android.settings.custom.preference.SystemSettingSwitchPreference
+        android:key="preferred_network_tile_mode_4g"
+        android:title="@string/preferred_network_mode_4g"
+        android:defaultValue="true" />
+
+    <com.android.settings.custom.preference.SystemSettingSwitchPreference
+        android:key="preferred_network_tile_mode_5g"
+        android:title="@string/preferred_network_mode_5g"
+        android:defaultValue="true" />
+
+</PreferenceScreen>

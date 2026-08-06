@@ -158,6 +158,7 @@ import com.android.settings.network.MobileNetworkListFragment;
 import com.android.settings.network.NetworkDashboardFragment;
 import com.android.settings.network.NetworkProviderSettings;
 import com.android.settings.network.PrivateDnsSettings;
+import com.android.settings.network.PreferredNetworkSettings;
 import com.android.settings.network.apn.ApnEditor;
 import com.android.settings.network.apn.ApnSettings;
 import com.android.settings.network.telephony.CellularSecuritySettingsFragment;
@@ -411,6 +412,7 @@ public class SettingsGateway {
             MediaControlsSettings.class.getName(),
             NetworkProviderSettings.class.getName(),
             NetworkSelectSettings.class.getName(),
+            PreferredNetworkSettings.class.getName(),
             AlarmsAndRemindersDetails.class.getName(),
             MediaManagementAppsDetails.class.getName(),
             AutoBrightnessSettings.class.getName(),

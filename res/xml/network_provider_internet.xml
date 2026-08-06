@@ -132,6 +132,14 @@
         android:order="26" />
 
     <Preference
+        android:key="preferred_network_tile_settings"
+        android:icon="@drawable/ic_network_cell"
+        android:title="@string/preferred_network_tile_settings_title"
+        android:summary="@string/preferred_network_tile_settings_summary"
+        android:fragment="com.android.settings.network.PreferredNetworkSettings"
+        android:order="27" />
+
+    <Preference
         android:fragment="com.android.settings.network.AdaptiveConnectivitySettings"
         android:key="adaptive_connectivity"
         android:title="@string/adaptive_connectivity_title"
