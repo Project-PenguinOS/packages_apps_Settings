@@ -109,6 +109,7 @@ import com.android.settings.deviceinfo.firmwareversion.FirmwareVersionSettings;
 import com.android.settings.deviceinfo.legal.ModuleLicensesDashboard;
 import com.android.settings.display.AutoBrightnessSettings;
 import com.android.settings.display.ColorContrastFragment;
+import com.android.settings.display.MediaArtSettings;
 import com.android.settings.display.NightDisplaySettings;
 import com.android.settings.display.ScreenTimeoutSettings;
 import com.android.settings.display.RefreshRateSettings;
@@ -265,6 +266,7 @@ public class SettingsGateway {
             UserDictionaryList.class.getName(),
             UserDictionarySettings.class.getName(),
             DisplaySettings.class.getName(),
+            MediaArtSettings.class.getName(),
             MyDeviceInfoFragment.class.getName(),
             ModuleLicensesDashboard.class.getName(),
             ManageApplications.class.getName(),
