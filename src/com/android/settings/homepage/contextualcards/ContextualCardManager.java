@@ -170,8 +170,18 @@ public class ContextualCardManager implements ContextualCardLoader.CardContentLo
 
     @VisibleForTesting
     List<ContextualCard> sortCards(List<ContextualCard> cards) {
+        final boolean showNowPlaying = mContext.getResources().getBoolean(R.bool.config_show_now_playing);
         // take mContextualCards as the source and do the ranking based on the rule.
         final List<ContextualCard> result = cards.stream()
+                .filter(c -> {
+                    if (showNowPlaying) {
+                        return true;
+                    }
+                    final String name = c.getName() != null ? c.getName() : "";
+                    final String sliceUri = c.getSliceUri() != null ? c.getSliceUri().toString() : "";
+                    return !(name.contains("now_playing") || name.contains("ambientmusic") || name.contains("AmbientMusic")
+                            || sliceUri.contains("now_playing") || sliceUri.contains("ambientmusic") || sliceUri.contains("AmbientMusic"));
+                })
                 .sorted((c1, c2) -> Double.compare(c2.getRankingScore(), c1.getRankingScore()))
                 .collect(Collectors.toList());
         final List<ContextualCard> stickyCards = result.stream()
