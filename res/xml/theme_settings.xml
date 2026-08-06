@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: 2026 kenway214
+     SPDX-License-Identifier: Apache-2.0
+-->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:settings="http://schemas.android.com/apk/res-auto"
+    android:key="theme_settings_screen"
+    android:title="@string/theme_settings_title">
+
+    <Preference
+        android:key="system_font"
+        android:title="@string/font_picker_title"
+        android:fragment="com.android.settings.system.FontPickerPreviewFragment"/>
+
+</PreferenceScreen>

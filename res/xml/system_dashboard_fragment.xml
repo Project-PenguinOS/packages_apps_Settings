@@ -189,6 +189,13 @@
         android:title="@string/theme_customization_category_title"
         android:order="-315">
 
+    <Preference
+        android:key="theme_settings"
+        android:title="@string/theme_settings_title"
+        android:summary="@string/theme_settings_summary"
+        android:icon="@drawable/ic_theme"
+        android:fragment="com.android.settings.system.ThemeSettingsFragment" />
+
         <Preference
             android:key="font_settings"
             android:title="@string/font_settings_title"
