@@ -6365,6 +6365,20 @@ SPDX-License-Identifier: BSD-3-Clause-Clear -->
                        android:value="true"/>
         </activity>
 
+        <activity
+            android:name="Settings$QsDataUsageSettingsActivity"
+            android:label="@string/qs_show_data_usage_title"
+            android:exported="true">
+            <intent-filter android:priority="1">
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
+                       android:value="com.android.settings.network.QsDataUsageSettings"/>
+            <meta-data android:name="com.android.settings.HIGHLIGHT_MENU_KEY"
+                       android:value="@string/menu_key_network"/>
+        </activity>
+
         <activity android:name="com.android.settings.biometrics.IdentityCheckPromoCardActivity"
             android:enabled="true"
             android:launchMode="singleTask"
