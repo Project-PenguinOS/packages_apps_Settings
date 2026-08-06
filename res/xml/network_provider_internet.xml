@@ -123,12 +123,28 @@
         android:fragment="com.android.settings.custom.networktraffic.NetworkTrafficSettings"
         android:defaultValue="false" />
 
+    <com.android.settings.custom.preference.SystemSettingSwitchPreference
+        android:key="qs_show_data_usage"
+        android:icon="@drawable/ic_settings_data_usage"
+        android:title="@string/qs_show_data_usage_title"
+        android:summary="@string/qs_show_data_usage_summary"
+        android:order="26" />
+
+    <com.android.settings.custom.preference.SystemSettingListPreference
+        android:key="qs_show_data_usage_window"
+        android:title="@string/qs_show_data_usage_window_title"
+        android:entries="@array/qs_show_data_usage_window_entries"
+        android:entryValues="@array/qs_show_data_usage_window_values"
+        android:defaultValue="0"
+        android:dependency="qs_show_data_usage"
+        android:order="27" />
+
     <Preference
         android:fragment="com.android.settings.network.AdaptiveConnectivitySettings"
         android:key="adaptive_connectivity"
         android:title="@string/adaptive_connectivity_title"
         android:summary="@string/summary_placeholder"
-        android:order="27"
+        android:order="28"
         settings:controller="com.android.settings.network.AdaptiveConnectivityPreferenceController"/>
 
     <Preference
