@@ -48,13 +48,18 @@ public class ContactSearchPreferenceController extends TogglePreferenceControlle
         ManagedProfileQuietModeEnabler.QuietModeChangeListener {
 
     private final ManagedProfileQuietModeEnabler mQuietModeEnabler;
-    private final UserHandle mManagedUser;
+    private UserHandle mManagedProfile;
     private Preference mPreference;
 
     public ContactSearchPreferenceController(Context context, String key) {
         super(context, key);
-        mManagedUser = Utils.getManagedProfile(context.getSystemService(UserManager.class));
+        mManagedProfile = Utils.getManagedProfile(context.getSystemService(UserManager.class));
         mQuietModeEnabler = new ManagedProfileQuietModeEnabler(context, this);
+    }
+
+    public void setManagedProfile(UserHandle managedProfile) {
+        mManagedProfile = managedProfile;
+        mQuietModeEnabler.setManagedProfile(managedProfile);
     }
 
     @Override
@@ -69,7 +74,7 @@ public class ContactSearchPreferenceController extends TogglePreferenceControlle
             final RestrictedSwitchPreference pref = (RestrictedSwitchPreference) preference;
             pref.setChecked(isChecked());
             pref.setEnabled(!mQuietModeEnabler.isQuietModeEnabled());
-            if (mManagedUser != null) {
+            if (mManagedProfile != null) {
                 if (android.app.admin.flags.Flags.policyTransparencyRefactorEnabled()) {
                     DevicePolicyManager dpm = mContext.getSystemService(DevicePolicyManager.class);
                     if (dpm == null) {
@@ -79,10 +84,10 @@ public class ContactSearchPreferenceController extends TogglePreferenceControlle
                     // both.
                     List<EnforcingAdmin> contactAccessAdmins = dpm.getEnforcingAdminsForPolicy(
                             DevicePolicyIdentifiers.MANAGED_PROFILE_CONTACTS_ACCESS_POLICY,
-                            mManagedUser.getIdentifier()).getAllAdmins();
+                           mManagedProfile.getIdentifier()).getAllAdmins();
                     List<EnforcingAdmin> callerIdAccessAdmins = dpm.getEnforcingAdminsForPolicy(
                             DevicePolicyIdentifiers.MANAGED_PROFILE_CALLER_ID_ACCESS_POLICY,
-                            mManagedUser.getIdentifier()).getAllAdmins();
+                           mManagedProfile.getIdentifier()).getAllAdmins();
                     // Combined list may contain duplicate elements, but it's not important here.
                     List<EnforcingAdmin> combinedAdmins = new ArrayList<>(contactAccessAdmins);
                     combinedAdmins.addAll(callerIdAccessAdmins);
@@ -99,7 +104,7 @@ public class ContactSearchPreferenceController extends TogglePreferenceControlle
                     //  only call-site is here.
                     final RestrictedLockUtils.EnforcedAdmin enforcedAdmin =
                             RestrictedLockUtilsInternal.checkIfRemoteContactSearchDisallowed(
-                                    mContext, mManagedUser.getIdentifier());
+                                    mContext, mManagedProfile.getIdentifier());
                     pref.setDisabledByAdmin(enforcedAdmin);
                 }
             }
@@ -125,21 +130,21 @@ public class ContactSearchPreferenceController extends TogglePreferenceControlle
 
     @Override
     public boolean isChecked() {
-        if (mManagedUser == null || mQuietModeEnabler.isQuietModeEnabled()) {
+        if (mManagedProfile == null || mQuietModeEnabler.isQuietModeEnabled()) {
             return false;
         }
         return 0 != Settings.Secure.getIntForUser(mContext.getContentResolver(),
-                MANAGED_PROFILE_CONTACT_REMOTE_SEARCH, 0, mManagedUser.getIdentifier());
+                MANAGED_PROFILE_CONTACT_REMOTE_SEARCH, 0, mManagedProfile.getIdentifier());
     }
 
     @Override
     public boolean setChecked(boolean isChecked) {
-        if (mManagedUser == null || mQuietModeEnabler.isQuietModeEnabled()) {
+        if (mManagedProfile == null || mQuietModeEnabler.isQuietModeEnabled()) {
             return false;
         }
         final int value = isChecked ? 1 : 0;
         Settings.Secure.putIntForUser(mContext.getContentResolver(),
-                MANAGED_PROFILE_CONTACT_REMOTE_SEARCH, value, mManagedUser.getIdentifier());
+                MANAGED_PROFILE_CONTACT_REMOTE_SEARCH, value, mManagedProfile.getIdentifier());
         return true;
     }
 
