@@ -115,14 +115,52 @@ class ExternalFontInstaller(private val context: Context) {
                 FontStyle()
             ).build()
 
-            val familyRegular = FontFamilyUpdateRequest.FontFamily.Builder(
-                DEFAULT_FONT_FAMILY,
-                listOf(fontRegular)
-            ).build()
+            val familiesToReplace = listOf(
+                "google-sans-flex",
+                "google-sans-flex-clock",
+                "variable-display-large",
+                "variable-display-medium",
+                "variable-display-small",
+                "variable-headline-large",
+                "variable-headline-medium",
+                "variable-headline-small",
+                "variable-title-large",
+                "variable-title-medium",
+                "variable-title-small",
+                "variable-body-large",
+                "variable-body-medium",
+                "variable-body-small",
+                "variable-label-large",
+                "variable-label-medium",
+                "variable-label-small",
+                "variable-display-large-emphasized",
+                "variable-display-medium-emphasized",
+                "variable-display-small-emphasized",
+                "variable-headline-large-emphasized",
+                "variable-headline-medium-emphasized",
+                "variable-headline-small-emphasized",
+                "variable-title-large-emphasized",
+                "variable-title-medium-emphasized",
+                "variable-title-small-emphasized",
+                "variable-body-large-emphasized",
+                "variable-body-medium-emphasized",
+                "variable-body-small-emphasized",
+                "variable-label-large-emphasized",
+                "variable-label-medium-emphasized",
+                "variable-label-small-emphasized",
+            )
 
             val updateRequest = FontFamilyUpdateRequest.Builder()
                 .addFontFileUpdateRequest(fontFileUpdateRequest)
-                .addFontFamily(familyRegular)
+                .apply {
+                    familiesToReplace.forEach { name ->
+                        addFontFamily(
+                            FontFamilyUpdateRequest.FontFamily.Builder(
+                                name, listOf(fontRegular)
+                            ).build()
+                        )
+                    }
+                }
                 .build()
 
             val result = fontManager.updateFontFamily(
