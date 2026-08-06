@@ -25,6 +25,13 @@
         android:summary="@string/depthwall_wallpaper_enabled_summary"
         android:defaultValue="false" />
 
+    <com.android.settings.custom.preference.SystemSettingSwitchPreference
+        android:key="depth_wallpaper_auto_subject"
+        android:dependency="depth_wallpaper_enabled"
+        android:title="@string/depthwall_auto_subject_title"
+        android:summary="@string/depthwall_auto_subject_summary"
+        android:defaultValue="false" />
+
     <Preference
         android:key="depth_wallpaper_extract_now"
         android:dependency="depth_wallpaper_enabled"
