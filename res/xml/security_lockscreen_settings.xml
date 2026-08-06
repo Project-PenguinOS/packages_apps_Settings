@@ -53,6 +53,13 @@
             android:title="@string/ls_clock_hide_title"
             android:summary="@string/ls_clock_hide_summary"
             android:defaultValue="false" />
+
+        <!-- Custom clock style -->
+        <Preference
+            android:key="lockscreen_custom_clock_style"
+            android:title="@string/lockscreen_custom_clock_style_title"
+            android:summary="@string/lockscreen_custom_clock_style_summary"
+            android:fragment="com.android.settings.lockscreen.CustomClockPreview" />        
     </PreferenceCategory>
 
     <PreferenceCategory
