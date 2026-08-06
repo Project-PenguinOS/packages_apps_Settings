@@ -125,6 +125,7 @@ public class WallpaperDepth extends SettingsPreferenceFragment
                             path,
                             UserHandle.USER_CURRENT);
                     updateClearSubjectState();
+                    SystemUtilsNew.restartSystemUI(getContext());
                 }
             }
         }
@@ -231,6 +232,7 @@ public class WallpaperDepth extends SettingsPreferenceFragment
 
         Toast.makeText(ctx, R.string.depthwall_clear_subject_done_toast, Toast.LENGTH_SHORT).show();
         updateClearSubjectState();
+        SystemUtilsNew.restartSystemUI(ctx);
     }
 
     private void updateClearSubjectState() {

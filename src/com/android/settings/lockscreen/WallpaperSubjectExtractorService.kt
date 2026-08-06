@@ -194,6 +194,10 @@ class WallpaperSubjectExtractorService : Service() {
                 savedPath,
                 UserHandle.USER_CURRENT,
             )
+
+            handler.post {
+                SystemUtilsNew.restartSystemUI(this@WallpaperSubjectExtractorService)
+            }
         } finally {
             segmenter.release()
             if (!cropped.isRecycled) cropped.recycle()
