@@ -58,10 +58,9 @@
         android:summary="@string/lockscreen_enable_power_menu_summary"
         android:defaultValue="true" />
 
-    <com.android.settings.custom.preference.SystemSettingSwitchPreference
-        android:key="secure_lockscreen_qs_disabled"
-        android:title="@string/disable_qs_title"
-        android:summary="@string/disable_qs_summary"
-        android:defaultValue="false" />
+    <com.android.settings.custom.preference.SecureSettingSwitchPreference
+        android:key="enable_lockscreen_quick_settings"
+        android:title="@string/quick_settings_secure_lock_screen_title"
+        android:defaultValue="true" />
 
 </PreferenceScreen>
