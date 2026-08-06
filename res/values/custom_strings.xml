@@ -921,6 +921,18 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="app_lock_credential_incorrect">Incorrect PIN, Password, or Pattern.</string>
     <string name="app_lock_biometrics_title">Allow Biometrics</string>
     <string name="app_lock_biometrics_summary">Unlock locked apps using fingerprint or face unlock when custom lock is enabled</string>
+
+    <!-- Reality Display Engine -->
+    <string name="display_engine_category">Display engine</string>
+    <string name="display_engine_mode_title">Reality display engine</string>
+    <string name="x_reality_engine_mode_title">X-Reality engine</string>
+    <string name="vivid_engine_mode_title">Vivid display</string>
+    <string name="triluminous_engine_mode_title">Triluminous display</string>
+    <string name="natural_engine_mode_title">Natural display</string>
+    <string name="cinema_engine_mode_title">Cinema display</string>
+    <string name="reading_engine_mode_title">Comfort display (Reading mode)</string>
+    <string name="display_engine_default">Default</string>
+    <string name="display_engine_mode_footer_text">Inspired by Sony\'s Bravia/X-Reality engine, the Display Engine features Vivid mode for enhanced brightness and color saturation, X-Reality mode for improved detail and color accuracy, and Triluminous mode for a wider color range.</string>
 </resources>
 
 
