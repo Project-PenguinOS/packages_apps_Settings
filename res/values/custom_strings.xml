@@ -890,6 +890,14 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="app_lock_not_secure_title">Set a screen lock</string>
     <string name="app_lock_not_secure_summary">To use App Lock, you need to first set a secure screen lock (PIN, pattern, or password) in Settings.</string>
     <string name="app_lock_not_secure_button">Set screen lock</string>
+    <string name="app_lock_timeout_title">Lock timeout</string>
+    <string name="app_lock_timeout_summary">Choose when to lock protected apps</string>
+    <string name="app_lock_timeout_immediately">Immediately</string>
+    <string name="app_lock_timeout_5s">5 seconds (Default)</string>
+    <string name="app_lock_timeout_30s">30 seconds</string>
+    <string name="app_lock_timeout_1m">1 minute</string>
+    <string name="app_lock_timeout_5m">5 minutes</string>
+    <string name="app_lock_timeout_screen_lock">Only when screen locks</string>
 </resources>
 
 
