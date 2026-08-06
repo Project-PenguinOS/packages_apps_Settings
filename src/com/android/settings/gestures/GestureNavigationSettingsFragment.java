@@ -63,6 +63,8 @@ public class GestureNavigationSettingsFragment extends DashboardFragment {
 
     private static final String NEXUSLAUNCHER_PACKAGE_NAME = "com.google.android.apps.nexuslauncher";
     private static final String NOGESTUREHINT_OVERLAY = "com.google.android.apps.nexuslauncher.overlay.nogesturehint";
+    private static final String LAUNCHER3_PACKAGE_NAME = "com.android.launcher3";
+    private static final String LAUNCHER3_NOGESTUREHINT_OVERLAY = "com.android.launcher3.overlay.nogesturehint";
     private static final String GESTURE_BACK_HEIGHT_KEY = "gesture_back_height";
 
     private WindowManager mWindowManager;
@@ -108,6 +110,10 @@ public class GestureNavigationSettingsFragment extends DashboardFragment {
             if (CustomUtils.isPackageInstalled(getContext(), NEXUSLAUNCHER_PACKAGE_NAME)) {
                 CustomUtils.toggleOverlay(getContext(), NOGESTUREHINT_OVERLAY, !(Boolean) newValue);
                 CustomUtils.restartApp(NEXUSLAUNCHER_PACKAGE_NAME, getContext());
+            }
+            if (CustomUtils.isPackageInstalled(getContext(), LAUNCHER3_PACKAGE_NAME)) {
+                CustomUtils.toggleOverlay(getContext(), LAUNCHER3_NOGESTUREHINT_OVERLAY, !(Boolean) newValue);
+                CustomUtils.restartApp(LAUNCHER3_PACKAGE_NAME, getContext());
             }
 
             return true;
