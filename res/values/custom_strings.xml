@@ -1359,6 +1359,13 @@ When the screen is off, the torch can be enabled with one of the following key c
     <!-- Connected devices screen, setting option summary to change bluetooth timeout -->
     <string name="bluetooth_timeout_summary">Bluetooth will turn off after <xliff:g id="timeout_description">%1$s</xliff:g> if no devices connected</string>
     <string name="bluetooth_timeout_summary2">Do not automatically turn off Bluetooth</string>
+
+    <!-- Window blur settings -->
+    <string name="window_blurs">Allow window-level blurs</string>
+    <string name="blur_intensity_title">Blur intensity</string>
+    <string name="blur_intensity_value">%1$d%%</string>
+    <string name="blur_settings_summary_on">On (%1$d%%)</string>
+    <string name="blur_settings_summary_off">Off</string>
 </resources>
 
 
