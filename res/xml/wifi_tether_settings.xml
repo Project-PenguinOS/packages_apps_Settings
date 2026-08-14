@@ -69,7 +69,7 @@
     <Preference
         android:key="wifi_tether_client_manager"
         android:title="@string/wifi_hotspot_client_manager_title"
-        android:fragment="con.android.settings.wifi.tether.WifiTetherClientManager" />
+        android:fragment="com.android.settings.wifi.tether.WifiTetherClientManager" />
         
     <Preference
         android:key="hotspot_data_limit"
