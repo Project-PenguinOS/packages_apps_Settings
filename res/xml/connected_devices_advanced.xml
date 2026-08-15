@@ -97,6 +97,13 @@
         android:order="99"
         settings:controller="com.android.settings.connecteddevice.virtual.VirtualDeviceListController" />
 
+    <com.android.settings.custom.preference.SystemSettingSwitchPreference
+        android:key="dual_audio_enabled"
+        android:order="98"
+        android:title="@string/dual_audio_title"
+        android:summary="@string/dual_audio_summary"
+        android:defaultValue="false" />
+
     <PreferenceCategory
         android:key="dashboard_tile_placeholder"
         android:order="-8" />

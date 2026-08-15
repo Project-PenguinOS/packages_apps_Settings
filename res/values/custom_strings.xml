@@ -70,6 +70,14 @@
     <string name="three_finger_gesture">Swipe to screenshot</string>
     <string name="three_finger_gesture_summary">Swipe down with three fingers to take a screenshot</string>
 
+    <!-- Dual audio -->
+    <string name="dual_audio_title">Dual audio</string>
+    <string name="dual_audio_summary">Play media on a Bluetooth device and a wired headset at the same time. Both need to be connected, and the Bluetooth side lags slightly behind.</string>
+
+    <!-- Screenshot to clipboard only -->
+    <string name="screenshot_clipboard_only_title">Screenshot to clipboard</string>
+    <string name="screenshot_clipboard_only_summary">Copy screenshots to the clipboard instead of saving them. Tap Save to storage in the screenshot preview to keep a copy.</string>
+
     <!-- App Spoofing -->
     <string name="user_selectable_app_spoofing_title">App Spoofing</string>
     <string name="user_selectable_app_spoofing_summary">Choose which apps to spoof device properties for</string>

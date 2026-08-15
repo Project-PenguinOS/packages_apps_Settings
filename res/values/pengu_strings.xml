@@ -33,4 +33,20 @@
      <string name="system_black_theme_title">Use Black theme</string>
      <string name="system_black_theme_summary">Force black background colors</string>
 
+     <!-- QS panel style -->
+     <string name="qs_panel_style_title">Quick Settings style</string>
+     <string name="qs_panel_style_default">Default</string>
+     <string name="qs_panel_style_penguin">Penguin</string>
+
+     <!-- Power menu style -->
+     <string name="power_menu_style_title">Power menu style</string>
+     <string name="power_menu_style_penguin">Penguin</string>
+     <string name="power_menu_style_ios">iOS</string>
+
+     <!-- Volume panel style -->
+     <string name="volume_panel_style_title">Volume panel style</string>
+     <string name="volume_panel_style_default">Default</string>
+     <string name="volume_panel_style_expandable">Expandable</string>
+     <string name="volume_panel_style_oneui">One UI</string>
+
 </resources>
