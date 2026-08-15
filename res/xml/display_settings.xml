@@ -50,6 +50,15 @@
             settings:keywords="@string/keywords_display_hdr_brightness"
             settings:controller="com.android.settings.display.HdrBrightnessPreferenceController"/>
 
+        <com.android.settings.custom.preference.SecureSettingListPreference
+            android:key="qs_panel_style"
+            android:title="@string/qs_panel_style_title"
+            android:dialogTitle="@string/qs_panel_style_title"
+            android:entries="@array/qs_panel_style_entries"
+            android:entryValues="@array/qs_panel_style_values"
+            android:defaultValue="1"
+            android:summary="%s" />
+
         <com.android.settings.custom.preference.SecureSettingSwitchPreference
             android:key="qs_show_auto_brightness"
             android:title="@string/status_bar_brightness_slider_auto_title"
