@@ -229,6 +229,17 @@
         settings:layout="@layout/pengu_card_top" />
 
     <com.android.settings.widget.HomepagePreference
+        android:fragment="com.android.settings.backup.AccountsAndBackupDashboardFragment"
+        android:icon="@drawable/ic_homepage_accounts_and_backup"
+        android:key="top_level_accounts_and_backup"
+        android:order="-5"
+        android:title="@string/accounts_and_backup_title"
+        android:summary="@string/accounts_and_backup_summary"
+        settings:highlightableMenuKey="@string/menu_key_accounts_and_backup"
+        settings:controller="com.android.settings.backup.TopLevelAccountsAndBackupEntryPreferenceController"
+        settings:layout="@layout/pengu_card_mid" />
+
+    <com.android.settings.widget.HomepagePreference
         android:fragment="com.android.settings.system.SystemDashboardFragment"
         android:icon="@drawable/ic_homepage_system_dashboard"
         android:key="top_level_system"
