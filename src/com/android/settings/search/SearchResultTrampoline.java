@@ -22,6 +22,7 @@ import static com.android.settings.activityembedding.EmbeddedDeepLinkUtils.getTr
 import static com.android.settings.activityembedding.EmbeddedDeepLinkUtils.getTrampolineIntentForSearchResult;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -98,12 +99,15 @@ public class SearchResultTrampoline extends Activity {
             try {
                 intent = Intent.parseUri(intentUriString, Intent.URI_INTENT_SCHEME);
                 intent.setData(data);
+                fixPermissionControllerIntent(intent);
             } catch (URISyntaxException e) {
                 Log.e(TAG, "Failed to parse deep link intent: " + e);
                 finish();
                 return;
             }
         }
+
+        fixPermissionControllerIntent(intent);
 
         intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
 
@@ -145,5 +149,27 @@ public class SearchResultTrampoline extends Activity {
                 callerPackage,
                 FeatureFactory.getFeatureFactory().getSearchFeatureProvider()
                         .getSettingsIntelligencePkgName(this));
+    }
+
+    private void fixPermissionControllerIntent(Intent intent) {
+        if (intent == null) {
+            return;
+        }
+        try {
+            String currentPermissionController = getPackageManager().getPermissionControllerPackageName();
+            if (TextUtils.isEmpty(currentPermissionController)
+                    || "com.android.permissioncontroller".equals(currentPermissionController)) {
+                return;
+            }
+            if ("com.android.permissioncontroller".equals(intent.getPackage())) {
+                intent.setPackage(currentPermissionController);
+            }
+            ComponentName component = intent.getComponent();
+            if (component != null && "com.android.permissioncontroller".equals(component.getPackageName())) {
+                intent.setComponent(new ComponentName(currentPermissionController, component.getClassName()));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to fix PermissionController intent", e);
+        }
     }
 }

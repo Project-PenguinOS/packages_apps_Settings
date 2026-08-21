@@ -707,6 +707,7 @@ public class SettingsHomepageActivity extends FragmentActivity implements
         final Intent targetIntent;
         try {
             targetIntent = Intent.parseUri(intentUriString, Intent.URI_INTENT_SCHEME);
+            fixPermissionControllerIntent(targetIntent);
         } catch (URISyntaxException e) {
             Log.e(TAG, "Failed to parse deep link intent: " + e);
             finish();
@@ -1028,6 +1029,28 @@ public class SettingsHomepageActivity extends FragmentActivity implements
                 mIsSplitUpdatedUI = true;
                 mActivity.updateHomepageUI();
             }
+        }
+    }
+
+    private void fixPermissionControllerIntent(Intent intent) {
+        if (intent == null) {
+            return;
+        }
+        try {
+            String currentPermissionController = getPackageManager().getPermissionControllerPackageName();
+            if (TextUtils.isEmpty(currentPermissionController)
+                    || "com.android.permissioncontroller".equals(currentPermissionController)) {
+                return;
+            }
+            if ("com.android.permissioncontroller".equals(intent.getPackage())) {
+                intent.setPackage(currentPermissionController);
+            }
+            ComponentName component = intent.getComponent();
+            if (component != null && "com.android.permissioncontroller".equals(component.getPackageName())) {
+                intent.setComponent(new ComponentName(currentPermissionController, component.getClassName()));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to fix PermissionController intent", e);
         }
     }
 }
