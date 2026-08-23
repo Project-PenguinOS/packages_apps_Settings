@@ -18,8 +18,8 @@
 
     <!-- Cards -->
     <dimen name="pengu_cardview_padding">16dp</dimen>
-    <dimen name="pengu_top_icn">30dp</dimen>
-    <dimen name="pengu_top_icn_max">38dp</dimen>
+    <dimen name="pengu_top_icn">24dp</dimen>
+    <dimen name="pengu_top_icn_max">24dp</dimen>
     <dimen name="pengu_cardview_margin_list">12dip</dimen>
     <dimen name="pengu_pref_vert">3.5dp</dimen>
     <dimen name="pengu_card_radius">24dp</dimen>

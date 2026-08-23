@@ -14,13 +14,11 @@
 
     <ImageView
         android:id="@android:id/icon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="@dimen/pengu_top_icn"
+        android:layout_height="@dimen/pengu_top_icn"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="12dp"
-        android:background="@drawable/adaptive_icon_shape"
-        android:padding="6dp"
         android:tint="?android:attr/colorAccent" />
 
     <LinearLayout
