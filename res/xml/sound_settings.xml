@@ -251,6 +251,13 @@
             android:defaultValue="false"
             android:order="-108"/>
 
+        <com.android.settings.custom.preference.SystemSettingSwitchPreference
+            android:key="bt_wired_coplay_enabled"
+            android:title="@string/bt_wired_coplay_title"
+            android:summary="@string/bt_wired_coplay_summary"
+            android:defaultValue="false"
+            android:order="-109"/>
+
 
         <!-- Spatial audio -->
         <Preference
