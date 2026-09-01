@@ -10,6 +10,13 @@
         android:key="system_spoof_category"
         android:title="@string/system_spoof_title">
 
+        <!-- Play Integrity Fix -->
+        <Preference
+            android:key="play_integrity_fix"
+            android:title="@string/play_integrity_fix_title"
+            android:summary="@string/play_integrity_fix_summary"
+            android:fragment="com.android.settings.custom.spoofing.PlayIntegrityFix" />
+
         <!-- TEE Simulator -->
         <Preference
             android:key="tee_simulator"
@@ -25,9 +32,22 @@
             android:fragment="com.android.settings.system.spoofing.UserSelectedAppSpoofSettings" />
     </PreferenceCategory>
 
+    <!-- Miscellaneous Category -->
     <PreferenceCategory
         android:key="miscellaneous_category"
         android:title="@string/miscellaneous_title">
+
+        <SwitchPreferenceCompat
+            android:key="gphotos_spoof"
+            android:title="@string/gphotos_spoof_title"
+            android:summary="@string/gphotos_spoof_summary"
+            android:defaultValue="true" />
+
+        <SwitchPreferenceCompat
+            android:key="pi_tensor_spoof"
+            android:title="@string/pi_tensor_spoof_title"
+            android:summary="@string/pi_tensor_spoof_summary"
+            android:defaultValue="false" />
 
         <com.android.settings.custom.preference.GlobalSettingSwitchPreference
             android:key="window_ignore_secure"

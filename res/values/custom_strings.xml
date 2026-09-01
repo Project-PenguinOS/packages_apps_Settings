@@ -1222,6 +1222,40 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="tee_simulator_mode_cert">Cert</string>
     <string name="tee_simulator_info_title">About TEE Simulator</string>
     <string name="tee_simulator_info_summary">Intercepts attestation requests in Keystore2 at the native Binder KeyMint boundary to serve authentic attestation chains signed by your Keybox.</string>
+
+    <!-- Play Integrity Fix -->
+    <string name="pif_category_title">Play Integrity Fix</string>
+    <string name="pif_master_switch_title">Disable Play Integrity Fix</string>
+    <string name="pif_master_switch_summary">Disable all prop imitation for Google Play Services</string>
+    <string name="pif_data_title">Select PIF JSON to spoof</string>
+    <string name="pif_data_summary">Select PIF JSON used for prop attestation spoofing for Google Mobile Services and Play Store. Click the delete button to reset the PIF data props and use dynamic PIF props which are used by default.</string>
+    <string name="pif_data_loaded_summary">Loaded %1$d props (%2$s)</string>
+    <string name="pif_delete_content_description">Clear PIF data</string>
+    <string name="pif_toast_invalid_file_selected">Not a JSON file. Choose a valid PIF JSON.</string>
+    <string name="pif_toast_file_loaded">PIF JSON loaded</string>
+    <string name="pif_toast_file_cleared">PIF JSON cleared</string>
+    <string name="pif_props_category_title">Current spoofed model</string>
+    <string name="pif_props_title">Play Integrity current spoofed model</string>
+    <string name="pif_props_summary">Show all currently active PIF properties</string>
+    <string name="auto_update_pif_title">Automatic PIF update</string>
+    <string name="auto_update_pif_summary">Periodically check and update Play Integrity fix in the background</string>
+    <string name="pif_update_category_title">Fetch updates</string>
+    <string name="pif_update_title">Fetch PIF (Neoteric server)</string>
+    <string name="pif_update_summary">Fetch updated PIF from Neoteric server. This will replace any custom PIF.</string>
+    <string name="pif_update_random_title">Fetch PIF (Random)</string>
+    <string name="pif_update_random_summary">Get random spoofing device from Google list (Requires internet connection)</string>
+    <string name="pif_random_fetching_title">Please wait</string>
+    <string name="pif_random_fetching_message">Fetching PIF properties...</string>
+    <string name="pif_update_success">Successfully spoofed as %1$s for Play Integrity.</string>
+    <string name="pif_update_failed">Failed to fetch random PIF properties</string>
+
+    <!-- Force Tensor features -->
+    <string name="pi_tensor_spoof_title">Force Tensor features</string>
+    <string name="pi_tensor_spoof_summary">Enable Pixel Tensor-exclusive features (may cause issues)</string>
+
+    <!-- Google Photos Spoofing -->
+    <string name="gphotos_spoof_title">Google Photos spoof</string>
+    <string name="gphotos_spoof_summary">Spoof Google Photos as Pixel XL for unlimited original quality backup</string>
 </resources>
 
 
