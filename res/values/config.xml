@@ -770,10 +770,10 @@
     <bool name="config_posturing_supported">false</bool>
 
     <!-- Whether to show the "glanceable hub" settings. -->
-    <bool name="config_show_glanceable_hub_toggle_setting">false</bool>
+    <bool name="config_show_glanceable_hub_toggle_setting">true</bool>
 
     <!-- Whether to show the "glanceable hub" settings on mobile. -->
-    <bool name="config_show_glanceable_hub_toggle_setting_mobile">false</bool>
+    <bool name="config_show_glanceable_hub_toggle_setting_mobile">true</bool>
 
 
 
