@@ -32,6 +32,20 @@
             android:fragment="com.android.settings.system.spoofing.UserSelectedAppSpoofSettings" />
     </PreferenceCategory>
 
+    <!-- Hardware Spoofing Category -->
+    <PreferenceCategory
+        android:key="hardware_spoof_category"
+        android:title="@string/hardware_spoof_category_title">
+
+        <!-- Advanced CPU / GPU spoofing -->
+        <Preference
+            android:key="advanced_app_spoof"
+            android:title="@string/advanced_app_spoof_title"
+            android:summary="@string/advanced_app_spoof_summary"
+            android:fragment="com.android.settings.system.spoofing.AdvancedAppSpoofSettings" />
+
+    </PreferenceCategory>
+
     <!-- Miscellaneous Category -->
     <PreferenceCategory
         android:key="miscellaneous_category"
