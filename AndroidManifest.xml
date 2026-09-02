@@ -1768,6 +1768,19 @@ SPDX-License-Identifier: BSD-3-Clause-Clear -->
             <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
                 android:value="com.android.settings.DisplaySettings" />
         </activity-alias>
+
+        <activity
+            android:name="Settings$SmartPixelsActivity"
+            android:label="@string/smart_pixels_title"
+            android:icon="@drawable/ic_homepage_display"
+            android:exported="true">
+            <intent-filter android:priority="1">
+                <action android:name="android.settings.SMART_PIXELS_SETTINGS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
+                android:value="com.android.settings.custom.smartpixel.SmartPixelsSettings" />
+        </activity>
             <activity android:name="Settings$SMQQtiFeedbackActivity"
                 android:exported="true"
                 android:label="@string/qtifeedback_settings_title"

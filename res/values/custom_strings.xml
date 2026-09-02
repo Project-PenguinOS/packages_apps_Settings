@@ -1295,6 +1295,14 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="short_label">Short</string>
     <string name="long_label">Long</string>
 
+
+    <!-- Smart Pixels -->
+    <string name="smart_pixels_title">Smart Pixels</string>
+    <string name="smart_pixels_summary">Shut off pixels to reduce battery consumption</string>
+    <string name="smart_pixels_enable_title">Enable Smart Pixels</string>
+    <string name="smart_pixels_enable_summary">Turn off a percentage of display pixels to save battery on OLED screens</string>
+    <string name="smart_pixels_percent_title">Pixel percentage</string>
+    <string name="smart_pixels_percent_summary">Percentage of pixels to shut off</string>
 </resources>
 
 

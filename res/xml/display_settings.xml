@@ -95,6 +95,12 @@
             settings:keywords="@string/keywords_reduce_bright_colors"
             settings:controller="com.android.settings.accessibility.ReduceBrightColorsPreferenceController"/>
 
+        <Preference
+            android:key="smart_pixels"
+            android:title="@string/smart_pixels_title"
+            android:summary="@string/smart_pixels_summary"
+            android:fragment="com.android.settings.custom.smartpixel.SmartPixelsSettings" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

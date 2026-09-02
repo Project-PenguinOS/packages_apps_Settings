@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The Neoteric OS Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:settings="http://schemas.android.com/apk/res-auto"
+    android:title="@string/smart_pixels_title">
+
+    <com.android.settings.custom.preference.SecureSettingSwitchPreference
+        android:key="smart_pixel_filter_enabled"
+        android:title="@string/smart_pixels_enable_title"
+        android:summary="@string/smart_pixels_enable_summary"
+        android:defaultValue="false" />
+
+    <com.android.settings.custom.preference.SecureSettingSeekBarPreference
+        android:key="smart_pixel_filter_percent"
+        android:title="@string/smart_pixels_percent_title"
+        android:summary="@string/smart_pixels_percent_summary"
+        android:defaultValue="25"
+        android:max="75"
+        settings:min="10"
+        settings:interval="1"
+        settings:units="%"
+        android:dependency="smart_pixel_filter_enabled" />
+
+</PreferenceScreen>
