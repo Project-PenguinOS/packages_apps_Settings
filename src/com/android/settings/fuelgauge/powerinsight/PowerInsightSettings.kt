@@ -401,8 +401,18 @@ fun AppsTab(apps: List<com.android.internal.os.PowerInsightAppUsage>) {
                                 fontWeight = FontWeight.SemiBold
                             )
                         }
+                        val usageText = when {
+                            app.foregroundTimeMs > 0 && app.backgroundTimeMs > 0 ->
+                                "FG ${formatTime(app.foregroundTimeMs)} • BG ${formatTime(app.backgroundTimeMs)}"
+                            app.foregroundTimeMs > 0 ->
+                                "FG ${formatTime(app.foregroundTimeMs)}"
+                            app.backgroundTimeMs > 0 ->
+                                "BG ${formatTime(app.backgroundTimeMs)}"
+                            else ->
+                                "Background / System usage"
+                        }
                         Text(
-                            "FG ${formatTime(app.foregroundTimeMs)} • BG ${formatTime(app.backgroundTimeMs)}",
+                            usageText,
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
