@@ -39,6 +39,10 @@
      <string name="qs_panel_style_penguin">Penguin</string>
      <string name="qs_panel_style_myui">MyUI</string>
 
+     <!-- Connectivity folder -->
+    <string name="qs_connectivity_folder_title">Connectivity folder</string>
+    <string name="qs_connectivity_folder_summary">Group Wifi, mobile data and Bluetooth into one Quick Settings card</string>
+
      <!-- Power menu style -->
      <string name="power_menu_style_title">Power menu style</string>
      <string name="power_menu_style_penguin">Penguin</string>
