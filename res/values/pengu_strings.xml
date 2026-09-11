@@ -39,6 +39,14 @@
      <string name="qs_panel_style_penguin">Penguin</string>
      <string name="qs_panel_style_myui">MyUI</string>
 
+     <!-- Connectivity folder -->
+     <string name="qs_connectivity_folder_title">Connectivity folder</string>
+     <string name="qs_connectivity_folder_summary">Group Wi\u2011Fi, mobile data and Bluetooth into one Quick Settings card</string>
+
+     <!-- Dynamic island -->
+     <string name="dynamic_island_title">Dynamic Island</string>
+     <string name="dynamic_island_summary">Show media, alarms and other activity in a pill around the camera cutout</string>
+
      <!-- Power menu style -->
      <string name="power_menu_style_title">Power menu style</string>
      <string name="power_menu_style_penguin">Penguin</string>
