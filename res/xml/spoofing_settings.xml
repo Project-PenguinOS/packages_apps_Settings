@@ -10,31 +10,12 @@
         android:key="system_spoof_category"
         android:title="@string/system_spoof_title">
 
-        <!-- Play Integrity Fix -->
+        <!-- TEE Simulator -->
         <Preference
-            android:key="play_integrity_fix"
-            android:title="@string/play_integrity_fix_title"
-            android:summary="@string/play_integrity_fix_summary"
-            android:fragment="com.android.settings.custom.spoofing.PlayIntegrityFix" />
-
-        <!-- TrickyStore -->
-        <Preference
-            android:key="tricky_store"
-            android:title="@string/tricky_store_title"
-            android:summary="@string/tricky_store_summary"
-            android:fragment="com.android.settings.custom.spoofing.TrickyStore" />
-
-        <!-- Game Spoofing -->
-        <Preference
-            android:key="game_spoofing"
-            android:title="@string/game_spoofing_title"
-            android:summary="@string/game_spoofing_summary"
-            android:fragment="com.android.settings.custom.spoofing.GameSpoofing" />
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:key="miscellaneous_category"
-        android:title="@string/miscellaneous_title">
+            android:key="tee_simulator"
+            android:title="@string/tee_simulator_title"
+            android:summary="@string/tee_simulator_summary"
+            android:fragment="com.android.settings.custom.spoofing.TeeSimulatorSettings" />
 
         <!-- App Spoofing -->
         <Preference
@@ -42,6 +23,11 @@
             android:title="@string/user_selectable_app_spoofing_title"
             android:summary="@string/user_selectable_app_spoofing_summary"
             android:fragment="com.android.settings.system.spoofing.UserSelectedAppSpoofSettings" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="miscellaneous_category"
+        android:title="@string/miscellaneous_title">
 
         <com.android.settings.custom.preference.GlobalSettingSwitchPreference
             android:key="window_ignore_secure"
@@ -53,7 +39,7 @@
             android:key="pm_downgrade_allowed"
             android:title="@string/app_downgrade_title"
             android:summary="@string/app_downgrade_summary"
-            android:defaultValue="false" />        
+            android:defaultValue="false" />
     </PreferenceCategory>
 
 </PreferenceScreen>

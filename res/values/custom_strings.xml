@@ -1192,6 +1192,36 @@ When the screen is off, the torch can be enabled with one of the following key c
     <!-- Smart 5G -->
     <string name="smart_5g_title">Smart 5G</string>
     <string name="smart_5g_summary">Automatically switch between 5G and 4G to reduce battery consumption</string>
+
+    <!-- TEE Simulator -->
+    <string name="tee_simulator_title">TEE Simulator</string>
+    <string name="tee_simulator_summary">Simulate hardware-backed key attestation using software KeyMint and keybox</string>
+    <string name="tee_simulator_enable_title">Enable TEE Simulator</string>
+    <string name="tee_simulator_keybox_management">Keybox management</string>
+    <string name="tee_simulator_import_keybox">Import keybox</string>
+    <string name="tee_simulator_no_keybox">No keybox installed</string>
+    <string name="tee_simulator_keybox_installed">Keybox installed</string>
+    <string name="tee_simulator_keybox_imported">Keybox imported successfully</string>
+    <string name="tee_simulator_keybox_failed">Failed to import keybox</string>
+    <string name="tee_simulator_delete_keybox">Delete keybox</string>
+    <string name="tee_simulator_delete_keybox_title">Delete keybox?</string>
+    <string name="tee_simulator_delete_keybox_message">The keybox file will be permanently removed.</string>
+    <string name="tee_simulator_keybox_deleted">Keybox deleted</string>
+    <string name="tee_simulator_target_configuration">Target configuration</string>
+    <string name="tee_simulator_manage_targets">Manage target apps</string>
+    <string name="tee_simulator_no_targets">No target apps configured</string>
+    <string name="tee_simulator_target_apps_count">%d apps configured</string>
+    <string name="tee_simulator_selected_count">%d selected</string>
+    <string name="tee_simulator_import_targets">Import targets</string>
+    <string name="tee_simulator_export_targets">Export targets</string>
+    <string name="tee_simulator_targets_imported">Target list imported</string>
+    <string name="tee_simulator_targets_exported">Target list exported</string>
+    <string name="tee_simulator_reset_defaults">Reset to defaults</string>
+    <string name="tee_simulator_mode_auto">Auto</string>
+    <string name="tee_simulator_mode_leaf">Leaf</string>
+    <string name="tee_simulator_mode_cert">Cert</string>
+    <string name="tee_simulator_info_title">About TEE Simulator</string>
+    <string name="tee_simulator_info_summary">Intercepts attestation requests in Keystore2 at the native Binder KeyMint boundary to serve authentic attestation chains signed by your Keybox.</string>
 </resources>
 
 
