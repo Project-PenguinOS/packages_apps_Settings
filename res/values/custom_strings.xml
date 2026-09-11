@@ -1473,6 +1473,10 @@ When the screen is off, the torch can be enabled with one of the following key c
     <!-- USB configuration -->
     <string name="usb_default_config_title">USB configuration</string>
     <string name="usb_default_config_summary">Choose the default behavior when connected to a device via USB</string>
+
+    <!-- USB mode picker dialog -->
+    <string name="usb_mode_picker_dialog_title">USB mode picker</string>
+    <string name="usb_mode_picker_dialog_summary">Show a bottom sheet dialog to select USB connection mode when connected to a device</string>
 </resources>
 
 
