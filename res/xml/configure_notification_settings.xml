@@ -20,6 +20,17 @@
                   android:key="configure_notification_settings">
 
     <PreferenceCategory
+        android:key="heads_up_notifications_category"
+        android:title="@string/heads_up_notifications_title">
+
+        <Preference
+            android:key="heads_up_notifications"
+            android:summary="@string/heads_up_notifications_summary"
+            android:title="@string/heads_up_notifications_title"
+            android:fragment="com.android.settings.notification.HeadsUpSettings"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:key="general_notifications_category"
         android:title="@string/general_notification_header">
         <!-- See all apps button -->
@@ -236,18 +247,5 @@
             android:title="@string/notification_assistant_title"
             android:summary="@string/notification_assistant_summary"
             settings:controller="com.android.settings.notification.NotificationAssistantPreferenceController"/>
-
-        <!-- Heads up
-        <com.android.settings.custom.preference.GlobalSettingSwitchPreference
-            android:key="heads_up_notifications_enabled"
-            android:order="24"
-            android:title="@string/heads_up_notifications_enabled_title"
-            android:summary="@string/heads_up_notifications_enabled_summary" /> -->
-
-        <Preference
-            android:key="heads_up_notifications"
-            android:summary="@string/heads_up_notifications_summary"
-            android:title="@string/heads_up_notifications_title"
-            android:fragment="com.android.settings.notification.HeadsUpSettings"/>    
     </PreferenceCategory>
 </PreferenceScreen>

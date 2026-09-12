@@ -234,6 +234,9 @@ import com.android.settings.wifi.savedaccesspoints2.SavedAccessPointsWifiSetting
 import com.android.settings.wifi.tether.WifiTetherSettings;
 import com.android.settings.custom.font.FontSettings;
 import com.android.settings.display.refreshrate.ScreenRefreshRateFragment;
+import com.android.settings.notification.HeadsUpBlacklistSettings;
+import com.android.settings.notification.HeadsUpSettings;
+import com.android.settings.notification.HeadsUpStoplistSettings;
 
 
 public class SettingsGateway {
@@ -243,6 +246,9 @@ public class SettingsGateway {
      * security exception if the fragment it needs to display is not in this list.
      */
     public static final String[] ENTRY_FRAGMENTS = {
+            HeadsUpSettings.class.getName(),
+            HeadsUpStoplistSettings.class.getName(),
+            HeadsUpBlacklistSettings.class.getName(),
             FontSettings.class.getName(),
             AdvancedConnectedDeviceDashboardFragment.class.getName(),
             CreateShortcut.class.getName(),
