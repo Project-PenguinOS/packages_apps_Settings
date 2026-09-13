@@ -28,6 +28,18 @@
     <string name="display_rotation_180_title">180 degrees</string>
     <string name="display_rotation_270_title">270 degrees</string>
     
+
+
+    <string name="system_spoof_category_title">Integrity &amp; attestation</string>
+    <string name="hardware_spoof_category_title">Hardware &amp; app spoofing</string>
+    <string name="google_media_spoof_category_title">Google &amp; media features</string>
+    <string name="system_tweaks_category_title">System &amp; privacy utilities</string>
+
+    <string name="loading">Loading&#8230;</string>
+
+
+
+
     <!-- Status bar Icon Manager -->
     <string name="icon_manager_title">Icon manager</string>
     <string name="icon_manager_summary">Control visibility of status bar icons</string>
@@ -1370,7 +1382,6 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="smart_pixels_percent_summary">Percentage of pixels to shut off</string>
     
     <!-- Advanced CPU / GPU spoofing -->
-    <string name="hardware_spoof_category_title">Hardware Spoofing</string>
     <string name="advanced_app_spoof_title">Advanced CPU / GPU Spoof</string>
     <string name="advanced_app_spoof_summary">Spoof GPU renderer, CPU model and SoC info per-app at process start</string>
     <string name="advanced_spoof_count">%d app(s) configured</string>

@@ -450,7 +450,7 @@
     <string name="display_rotation_90_title">90 degrees</string>
     <string name="display_rotation_180_title">180 degrees</string>
     <string name="display_rotation_270_title">270 degrees</string>
-    <string name="spoof_settings_title">Spoofing</string>
+    <string name="spoof_settings_title">Spoofing &amp; utilities</string>
     <string name="auto_select">Auto-select</string>
     <string name="cancel">Cancel</string>
     <string name="clear_search">Clear search</string>
@@ -461,7 +461,7 @@
     <string name="show_system_apps">Show system apps</string>
     <string name="system_badge">SYS</string>
     <string name="play_integrity_fix_title">Play Integrity Fix</string>
-    <string name="play_integrity_fix_summary">Manage PIF configuration and device fingerprints for basic integrity</string>
+    <string name="play_integrity_fix_summary">Manage Play Integrity attestation and PIF device properties</string>
     <string name="pif_status">Status</string>
     <string name="pif_active_config">Active configuration</string>
     <string name="pif_no_config">No configuration loaded</string>
@@ -552,7 +552,7 @@
     <string name="gs_loading_apps">Loading apps\u2026</string>
     <string name="gs_failed">Failed: %s</string>
     <!-- Added Spoofing & Custom Strings -->
-    <string name="spoofing_category_summary">Play Integrity Fix, TrickyStore, and game spoofing</string>
+    <string name="spoofing_category_summary">Play Integrity, hardware spoofing, Google Photos &amp; system tools</string>
     <string name="system_spoof_title">System spoof</string>
     <string name="miscellaneous_title">Miscellaneous</string>
     <string name="pif_manage_targets">Spoofed apps</string>
