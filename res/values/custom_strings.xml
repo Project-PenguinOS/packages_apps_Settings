@@ -914,6 +914,7 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="pulse_renderer_minimal_wave">Minimal Wave</string>
     <string name="pulse_renderer_sparkle">Sparkle</string>
     <string name="pulse_renderer_matrix">Matrix</string>
+    <string name="pulse_renderer_dot_wave">Dot wave</string>
     <string name="custom_color">Custom color</string>
     <string name="pulse_height_multiplier_title">Pulse height</string>
     <string name="pulse_height_multiplier_summary">Adjust the visualization height</string>

@@ -388,6 +388,7 @@
         <item>@string/pulse_renderer_minimal_wave</item>
         <item>@string/pulse_renderer_sparkle</item>
         <item>@string/pulse_renderer_matrix</item>
+        <item>@string/pulse_renderer_dot_wave</item>
     </string-array>
 
     <string-array name="pulse_renderer_values" translatable="false">
@@ -398,6 +399,7 @@
         <item>minimal</item>
         <item>sparkle</item>
         <item>matrix</item>
+        <item>dotwave</item>
     </string-array>
 
     <!-- Custom clock style -->
