@@ -51,6 +51,8 @@ public class PulseSettings extends DashboardFragment implements
                 Settings.Secure.PULSE_RENDERER, "solid", UserHandle.USER_CURRENT);
         Settings.Secure.putIntForUser(resolver,
                 Settings.Secure.PULSE_HEIGHT_MULTIPLIER, 100, UserHandle.USER_CURRENT);
+        Settings.Secure.putIntForUser(resolver,
+                Settings.Secure.PULSE_CAPTURE_MODE, 0, UserHandle.USER_CURRENT);
     }
 
     @Override
