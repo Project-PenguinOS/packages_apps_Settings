@@ -897,6 +897,8 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="pulse_settings_summary">Show a bar visualizer on the lock screen while music is playing</string>
     <string name="pulse_show_on_ambient_title">Show on ambient display</string>
     <string name="pulse_show_on_ambient_summary">Display visualizer on always-on display and ambient mode. Disable to show only on lockscreen.</string>
+    <string name="pulse_bass_haptics_title">Bass haptics</string>
+    <string name="pulse_bass_haptics_summary">Subtle vibration on sharp bass spikes</string>
     <string name="pulse_rounded_bars_title">Rounded bars</string>
     <string name="pulse_rounded_bars_summary">Display visualizer bars with rounded corners</string>
     <string name="pulse_color">Visualizer color</string>

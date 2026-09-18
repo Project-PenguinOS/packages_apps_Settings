@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.ContentResolver;
 import android.os.Bundle;
 import android.os.UserHandle;
+import android.os.Vibrator;
 import android.provider.Settings;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ public class PulseSettings extends DashboardFragment implements
     private static final String TAG = "PulseSettings";
     private static final String KEY_PULSE_COLOR = "pulse_color";
     private static final String KEY_PULSE_CUSTOM_COLOR = "pulse_custom_color";
+    private static final String KEY_PULSE_BASS_HAPTICS = "pulse_bass_haptics";
     private static final String COLOR_MODE_CUSTOM = "custom";
 
     private Preference mPulseColor;
@@ -53,11 +55,23 @@ public class PulseSettings extends DashboardFragment implements
                 Settings.Secure.PULSE_HEIGHT_MULTIPLIER, 100, UserHandle.USER_CURRENT);
         Settings.Secure.putIntForUser(resolver,
                 Settings.Secure.PULSE_CAPTURE_MODE, 0, UserHandle.USER_CURRENT);
+        Settings.Secure.putIntForUser(resolver,
+                Settings.Secure.PULSE_BASS_HAPTICS, 0, UserHandle.USER_CURRENT);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final Vibrator vibrator = getContext() != null
+                ? (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE)
+                : null;
+        if (vibrator == null || !vibrator.hasVibrator()) {
+            final Preference hapticsPref = findPreference(KEY_PULSE_BASS_HAPTICS);
+            if (hapticsPref != null) {
+                getPreferenceScreen().removePreference(hapticsPref);
+            }
+        }
 
         mPulseColor = findPreference(KEY_PULSE_COLOR);
         mPulseCustomColor = findPreference(KEY_PULSE_CUSTOM_COLOR);
