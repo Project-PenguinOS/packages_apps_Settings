@@ -389,6 +389,8 @@
         <item>@string/pulse_renderer_sparkle</item>
         <item>@string/pulse_renderer_matrix</item>
         <item>@string/pulse_renderer_dot_wave</item>
+        <item>@string/pulse_renderer_particle</item>
+        <item>@string/pulse_renderer_waveform</item>
     </string-array>
 
     <string-array name="pulse_renderer_values" translatable="false">
@@ -400,6 +402,8 @@
         <item>sparkle</item>
         <item>matrix</item>
         <item>dotwave</item>
+        <item>particle</item>
+        <item>waveform</item>
     </string-array>
 
     <string-array name="pulse_capture_mode_entries" translatable="false">
