@@ -945,6 +945,14 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="lockscreen_custom_clock_aod_anim_title">Custom clock AOD animation</string>
     <string name="lockscreen_custom_clock_aod_anim_summary">Set AOD animation for custom clock style</string>
     <string name="custom_color_summary">Custom color some clock styles</string>
+    <string name="custom_clock_weather_title">Custom clock weather</string>
+    <string name="custom_clock_weather_summary">Display weather information in custom clock</string>
+    <string name="lockscreen_custom_clock_frame_margin_start_title">Custom clock horizontal position</string>
+    <string name="lockscreen_custom_clock_frame_margin_start_summary">Adjust the horizontal position of custom clock style</string>
+    <string name="lockscreen_custom_clock_wobble_on_charge_title">Wobble on charge</string>
+    <string name="lockscreen_custom_clock_wobble_on_charge_summary">Clock wobbles when plugged into a charger</string>
+    <string name="lockscreen_custom_clock_gradient_enabled_title">Custom clock gradient</string>
+    <string name="lockscreen_custom_clock_gradient_enabled_summary">Apply linear color gradient to custom clock text</string>
     <string name="default_value">Default</string>
 
     <!-- Lockscreen clock: album art color override -->

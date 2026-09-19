@@ -30,7 +30,13 @@
         android:key="lock_screen_custom_clock_album_art_color"
         android:title="@string/clock_album_art_color_title"
         android:summary="@string/clock_album_art_color_summary"
-        android:defaultValue="false" />    
+        android:defaultValue="false" />
+
+    <com.android.settings.custom.preference.SecureSettingSwitchPreference
+        android:key="custom_clock_weather"
+        android:title="@string/custom_clock_weather_title"
+        android:summary="@string/custom_clock_weather_summary"
+        android:defaultValue="true" />
 
     <com.android.settings.custom.preference.SecureSettingListPreference
         android:key="lock_screen_custom_clock_color_mode"
@@ -39,6 +45,12 @@
         android:entryValues="@array/lockscreen_custom_clock_color_mode_values"
         android:summary="%s"
         android:defaultValue="default" />
+
+    <com.android.settings.custom.preference.SecureSettingSwitchPreference
+        android:key="lock_screen_custom_clock_gradient_enabled"
+        android:title="@string/lockscreen_custom_clock_gradient_enabled_title"
+        android:summary="@string/lockscreen_custom_clock_gradient_enabled_summary"
+        android:defaultValue="false" />
 
     <com.android.settings.custom.preference.SecureSettingSeekBarPreference
         android:key="lock_screen_custom_clock_size_scale"
@@ -70,6 +82,12 @@
         android:summary="@string/lockscreen_custom_clock_aod_anim_summary"
         android:defaultValue="true" />
 
+    <com.android.settings.custom.preference.SecureSettingSwitchPreference
+        android:key="lock_screen_custom_clock_wobble_on_charge"
+        android:title="@string/lockscreen_custom_clock_wobble_on_charge_title"
+        android:summary="@string/lockscreen_custom_clock_wobble_on_charge_summary"
+        android:defaultValue="true" />
+
     <com.android.settings.custom.preference.SecureSettingSeekBarPreference
         android:key="lock_screen_custom_clock_margin_top"
         android:title="@string/lockscreen_custom_clock_frame_margin_top_title"
@@ -77,6 +95,15 @@
         android:defaultValue="15"
         android:max="100"
         settings:min="0" 
+        settings:units="@string/unit_pixels" />
+
+    <com.android.settings.custom.preference.SecureSettingSeekBarPreference
+        android:key="lock_screen_custom_clock_margin_start"
+        android:title="@string/lockscreen_custom_clock_frame_margin_start_title"
+        android:summary="@string/lockscreen_custom_clock_frame_margin_start_summary"
+        android:defaultValue="0"
+        android:max="100"
+        settings:min="-100" 
         settings:units="@string/unit_pixels" />
 
     <com.android.settingslib.widget.FooterPreference
