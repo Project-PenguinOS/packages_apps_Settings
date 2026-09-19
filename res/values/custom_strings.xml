@@ -959,6 +959,26 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="clock_album_art_color_title">Album art color clocks</string>
     <string name="clock_album_art_color_summary">Override clock color with the album art palette when media is playing</string>
 
+    <!-- Lockscreen clock customizer UI -->
+    <string name="lockscreen_clock_title">Clock</string>
+    <string name="clock_face_scale">Clock face scale</string>
+    <string name="clock_adjustments">Clock adjustments</string>
+    <string name="clock_opacity">Opacity</string>
+    <string name="clock_top_margin">Top margin</string>
+    <string name="clock_start_margin">Start margin</string>
+    <string name="clock_colour">Clock colour</string>
+    <string name="clock_colour_accent">Accent</string>
+    <string name="clock_colour_custom">Custom</string>
+    <string name="clock_colour_gradient">Gradient</string>
+    <string name="clock_gradient_text">Gradient text</string>
+    <string name="clock_primary_color">Primary Color</string>
+    <string name="clock_secondary_color">Secondary Color</string>
+    <string name="clock_gradient_anchor">Gradient anchor</string>
+    <string name="clock_gradient_spread">Gradient spread</string>
+    <string name="clock_tab_style">Style</string>
+    <string name="clock_tab_colour">Colour</string>
+    <string name="clock_tab_misc">Misc</string>
+
     <!-- Lockscreen clock -->
     <string name="theme_customization_lock_clock_title">Clock font style</string>
     <string name="lock_screen_interface_category">Interface</string>
