@@ -7,6 +7,9 @@ package com.android.settings.lockscreen;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.provider.Settings;
+
+import androidx.preference.Preference;
 
 import com.android.internal.logging.nano.MetricsProto;
 import com.android.settings.R;
@@ -20,12 +23,25 @@ import java.util.List;
 public class LockScreenWeather extends SettingsPreferenceFragment {
 
     public static final String TAG = "LockScreenWeather";
+    private static final String KEY_WEATHER_ENABLED = "lockscreen_weather_enabled";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.settings_lock_screen_weather);
+
+        Preference weatherEnabled = findPreference(KEY_WEATHER_ENABLED);
+        if (weatherEnabled != null) {
+            weatherEnabled.setOnPreferenceChangeListener((preference, newValue) -> {
+                boolean enabled = (Boolean) newValue;
+                Settings.Secure.putInt(
+                        getContentResolver(),
+                        Settings.Secure.LOCK_SCREEN_WEATHER_ENABLED,
+                        enabled ? 1 : 0);
+                return true;
+            });
+        }
     }
 
     @Override
