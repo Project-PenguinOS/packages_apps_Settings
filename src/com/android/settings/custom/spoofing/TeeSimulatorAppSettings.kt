@@ -117,7 +117,7 @@ class TeeSimulatorAppSettings : SettingsPreferenceFragment() {
     companion object {
         const val TARGET_KEY = "tee_simulator_packages"
         const val FALLBACK_TARGET_KEY = "spoof_trickystore_target"
-        const val STORE_DIR = "/data/system/tee_simulator"
+        const val STORE_DIR = "/data/system/keystore_compat"
         const val CONFIG_FILE = "config.conf"
 
         val DEFAULT_TARGETS = setOf(

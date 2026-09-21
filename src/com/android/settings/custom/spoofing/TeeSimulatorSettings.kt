@@ -322,7 +322,7 @@ class TeeSimulatorSettings : SettingsPreferenceFragment() {
     }
 
     companion object {
-        const val STORE_DIR = "/data/system/tee_simulator"
+        const val STORE_DIR = "/data/system/keystore_compat"
         const val CONFIG_FILE = "config.conf"
         const val KEYBOX_FILE = "keybox.xml"
 
