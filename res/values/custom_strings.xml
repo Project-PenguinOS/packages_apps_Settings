@@ -1357,8 +1357,8 @@ When the screen is off, the torch can be enabled with one of the following key c
     <string name="auto_update_pif_title">Automatic PIF update</string>
     <string name="auto_update_pif_summary">Periodically check and update Play Integrity fix in the background</string>
     <string name="pif_update_category_title">Fetch updates</string>
-    <string name="pif_update_title">Fetch PIF (Neoteric server)</string>
-    <string name="pif_update_summary">Fetch updated PIF from Neoteric server. This will replace any custom PIF.</string>
+    <string name="pif_update_title">Fetch PIF (Penguin server)</string>
+    <string name="pif_update_summary">Fetch updated PIF from Penguin server. This will replace any custom PIF.</string>
     <string name="pif_update_random_title">Fetch PIF (Random)</string>
     <string name="pif_update_random_summary">Get random spoofing device from Google list (Requires internet connection)</string>
     <string name="pif_random_fetching_title">Please wait</string>
