@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="outdoor_mode_title">Outdoor mode</string>
+    <string name="outdoor_mode_summary">Pinned apps, louder calls and a longer screen timeout</string>
+</resources>

@@ -71,6 +71,15 @@
             android:summary="@string/dynamic_island_summary"
             android:fragment="com.android.settings.display.DynamicIslandSettings" />
 
+        <Preference
+            android:key="outdoor_mode"
+            android:title="@string/outdoor_mode_title"
+            android:summary="@string/outdoor_mode_summary">
+            <intent
+                android:action="com.android.launcher3.action.OUTDOOR_MODE_SETTINGS"
+                android:targetPackage="com.android.launcher3" />
+        </Preference>
+
         <com.android.settings.custom.preference.SecureSettingSwitchPreference
             android:key="qs_show_auto_brightness"
             android:title="@string/status_bar_brightness_slider_auto_title"
