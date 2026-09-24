@@ -405,6 +405,7 @@ public class Settings extends SettingsActivity {
         }
     }
     public static class RunningServicesActivity extends SettingsActivity { /* empty */ }
+    public static class DevRunningServicesActivity extends SettingsActivity { /* empty */ }
     public static class BatterySaverSettingsActivity extends SettingsActivity { /* empty */ }
     public static class BatterySaverScheduleSettingsActivity extends SettingsActivity { /* empty */ }
     public static class AccountSyncSettingsActivity extends SettingsActivity { /* empty */ }

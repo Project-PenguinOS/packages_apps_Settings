@@ -2328,6 +2328,20 @@ SPDX-License-Identifier: BSD-3-Clause-Clear -->
         </activity>
 
         <!-- Provide direct entry into manage apps showing running services. -->
+        <!-- Developer options' running services, for the Recents memory indicator. -->
+        <activity android:name="Settings$DevRunningServicesActivity"
+                android:exported="true"
+                android:label="@string/runningservices_settings_title">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
+                android:value="com.android.settings.applications.RunningServices" />
+            <meta-data android:name="com.android.settings.HIGHLIGHT_MENU_KEY"
+                       android:value="@string/menu_key_system"/>
+        </activity>
+
         <activity android:name="Settings$RunningServicesActivity"
                 android:exported="true"
                 android:knownActivityEmbeddingCerts="@array/config_known_host_certs"
