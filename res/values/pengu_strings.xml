@@ -72,15 +72,22 @@
     <string name="dynamic_island_footer_title">About Dynamic Island</string>
     <string name="dynamic_island_intro">Turn on Dynamic island and choose the features you want in the centered chip.</string>
 
-     <!-- Power menu style -->
-     <string name="power_menu_style_title">Power menu style</string>
-     <string name="power_menu_style_penguin">Penguin</string>
-     <string name="power_menu_style_ios">iOS</string>
+    <!-- Power menu style -->
+    <string name="power_menu_style_title">Power menu style</string>
+    <string name="power_menu_style_penguin">Penguin</string>
+    <string name="power_menu_style_ios">iOS</string>
 
-     <!-- Volume panel style -->
-     <string name="volume_panel_style_title">Volume panel style</string>
-     <string name="volume_panel_style_default">Default</string>
-     <string name="volume_panel_style_expandable">Expandable</string>
-     <string name="volume_panel_style_oneui">One UI</string>
+    <!-- Volume panel style -->
+    <string name="volume_panel_style_title">Volume panel style</string>
+    <string name="volume_panel_style_default">Default</string>
+    <string name="volume_panel_style_expandable">Expandable</string>
+    <string name="volume_panel_style_oneui">One UI</string>
+
+    <string name="depth_wallpaper_bottom_fade_title">Bottom fade</string>
+    <string name="depth_wallpaper_bottom_fade_summary">Fade out the wallpaper at the bottom</string>
+    <string name="depth_wallpaper_fade_curve_title">Fade curve</string>
+    <string name="depth_wallpaper_fade_curve_summary">Adjust the fade curve of the wallpaper</string>
+    <string name="depth_wallpaper_bottom_inset_title">Bottom inset</string>
+    <string name="depth_wallpaper_bottom_inset_summary">Adjust the inset of the wallpaper at the bottom</string>
 
 </resources>
