@@ -91,4 +91,37 @@
     <string name="depth_wallpaper_bottom_inset_title">Bottom inset</string>
     <string name="depth_wallpaper_bottom_inset_summary">Adjust the inset of the wallpaper at the bottom</string>
 
+    <!-- Dynamic island: lock screen and system events -->
+    <string name="dynamic_island_events_title">System events</string>
+    <string name="dynamic_island_lockscreen_title">Show on lock screen</string>
+    <string name="dynamic_island_lockscreen_summary">Keep the island on the lock screen</string>
+    <string name="dynamic_island_battery_title">Charging</string>
+    <string name="dynamic_island_battery_summary">Show charging details when a charger is connected</string>
+    <string name="dynamic_island_unlock_title">Unlock</string>
+    <string name="dynamic_island_unlock_summary">Show a moment when the phone is unlocked with biometrics</string>
+    <string name="dynamic_island_bluetooth_title">Bluetooth devices</string>
+    <string name="dynamic_island_bluetooth_summary">Show connected headphones and their battery</string>
+    <string name="dynamic_island_calls_title">Calls</string>
+    <string name="dynamic_island_calls_summary">Show incoming and ongoing calls</string>
+    <string name="dynamic_island_notifications_title">Notifications</string>
+    <string name="dynamic_island_notifications_summary">Show new notifications in the island</string>
+    <string name="dynamic_island_ongoing_activities_title">Ongoing activities</string>
+    <string name="dynamic_island_ongoing_activities_summary">Show promoted ongoing notifications</string>
+    <string name="dynamic_island_hotspot_title">Hotspot</string>
+    <string name="dynamic_island_hotspot_summary">Show when the hotspot is on and who is connected</string>
+    <string name="dynamic_island_vpn_title">VPN</string>
+    <string name="dynamic_island_vpn_summary">Show when a VPN connects</string>
+    <string name="dynamic_island_ringer_title">Sound mode</string>
+    <string name="dynamic_island_ringer_summary">Show changes between ring, vibrate and silent</string>
+    <string name="dynamic_island_clipboard_title">Clipboard</string>
+    <string name="dynamic_island_clipboard_summary">Show copied text</string>
+    <string name="dynamic_island_timer_title">Timers</string>
+    <string name="dynamic_island_timer_summary">Show running timers</string>
+    <string name="dynamic_island_audio_recording_title">Audio recording</string>
+    <string name="dynamic_island_audio_recording_summary">Show when an app records audio</string>
+    <string name="dynamic_island_now_playing_title">Now playing</string>
+    <string name="dynamic_island_now_playing_summary">Show songs recognised by Now Playing</string>
+    <string name="dynamic_island_recent_apps_title">Recent apps</string>
+    <string name="dynamic_island_recent_apps_summary">Show the app you switched from</string>
+
 </resources>
