@@ -38,6 +38,7 @@
      <string name="qs_panel_style_default">Default</string>
      <string name="qs_panel_style_penguin">Penguin</string>
      <string name="qs_panel_style_myui">MyUI</string>
+     <string name="qs_panel_style_harmony">HarmonyOS</string>
 
      <!-- Connectivity folder -->
     <string name="qs_connectivity_folder_title">Connectivity folder</string>
