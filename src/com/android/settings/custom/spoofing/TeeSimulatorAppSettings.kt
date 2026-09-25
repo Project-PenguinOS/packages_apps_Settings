@@ -264,15 +264,22 @@ private fun TeeSimulatorAppSettingsContent(
                 "target_packages=${targetLines.joinToString(",")}"
             ).joinToString("\n") + "\n"
 
+            val temp = File(storeDir, "${TeeSimulatorAppSettings.CONFIG_FILE}.tmp")
             try {
-                FileOutputStream(configFile).use { it.write(fileContent.toByteArray(Charsets.UTF_8)) }
-            } catch (_: Exception) {
-                val temp = File(context.cacheDir, "config.conf")
                 FileOutputStream(temp).use { it.write(fileContent.toByteArray(Charsets.UTF_8)) }
-                val p = Runtime.getRuntime().exec(arrayOf("su", "-c",
-                    "cp ${temp.absolutePath} ${configFile.absolutePath} && chmod 664 ${configFile.absolutePath} && chown 1000:1000 ${configFile.absolutePath} && restorecon ${configFile.absolutePath}"))
-                p.waitFor()
-                temp.delete()
+                temp.setReadable(true, false)
+                temp.setWritable(true, true)
+                if (!temp.renameTo(configFile)) {
+                    FileOutputStream(configFile).use { it.write(fileContent.toByteArray(Charsets.UTF_8)) }
+                    configFile.setReadable(true, false)
+                    configFile.setWritable(true, true)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                if (temp.exists()) {
+                    temp.delete()
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
