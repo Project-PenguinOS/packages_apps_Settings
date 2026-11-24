@@ -59,13 +59,6 @@
             android:defaultValue="true"
             android:dependency="penguin_taskbar_dock" />
 
-        <com.android.settings.custom.preference.SecureSettingSwitchPreference
-            android:key="penguin_taskbar_dock_glass"
-            android:title="@string/taskbar_dock_glass_title"
-            android:summary="@string/taskbar_dock_glass_summary"
-            android:defaultValue="false"
-            android:dependency="penguin_taskbar_dock" />
-
         <com.android.settings.custom.preference.SecureSettingSeekBarPreference
             android:key="penguin_taskbar_dock_blur"
             android:title="@string/taskbar_dock_blur_title"
@@ -75,7 +68,7 @@
             settings:min="0"
             settings:interval="5"
             settings:units="%"
-            android:dependency="penguin_taskbar_dock_glass" />
+            android:dependency="penguin_taskbar_dock" />
 
     </PreferenceCategory>
 
