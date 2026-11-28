@@ -536,19 +536,15 @@ public class SettingsHomepageActivity extends FragmentActivity implements
         glassDrawable.setShape(GradientDrawable.RECTANGLE);
         glassDrawable.setCornerRadius(28f * density);
         
-        int attrId = getResources().getIdentifier("colorSurfaceContainerHigh", "attr", getPackageName());
-        if (attrId == 0) {
-            attrId = android.R.attr.colorBackgroundFloating;
-        }
-        int surfaceColor = Utils.getColorAttrDefaultColor(this, attrId);
+        // The Material attributes are not set in this theme, so looking them up gave transparent
+        // black: a grey glass on the light theme. The settingslib colours follow the theme.
+        int surfaceColor = getColor(
+                com.android.settingslib.widget.theme.R.color.settingslib_materialColorSurfaceContainerHigh);
         int tintColor = androidx.core.graphics.ColorUtils.setAlphaComponent(surfaceColor, (int)(255 * alpha));
         glassDrawable.setColor(tintColor);
         
-        int outlineAttrId = getResources().getIdentifier("colorOutlineVariant", "attr", getPackageName());
-        if (outlineAttrId == 0) {
-            outlineAttrId = android.R.attr.colorControlActivated;
-        }
-        int outlineColor = Utils.getColorAttrDefaultColor(this, outlineAttrId);
+        int outlineColor = getColor(
+                com.android.settingslib.widget.theme.R.color.settingslib_materialColorOutlineVariant);
         int softOutlineColor = androidx.core.graphics.ColorUtils.setAlphaComponent(outlineColor, (int)(255 * 0.30f));
         glassDrawable.setStroke((int)(0.5f * density), softOutlineColor);
         
